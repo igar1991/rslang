@@ -12,9 +12,9 @@ function App() {
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
         </p>
-        <span>
+           <span>
           <span>Learn </span>
-          <a
+                 <a
             className="App-link"
             href="https://reactjs.org/"
             target="_blank"
