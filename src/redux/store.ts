@@ -1,7 +1,9 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
+import wordsSlice from "./slices/wordsSlice";
 
 export const store = configureStore({
     reducer: {
+        words: wordsSlice
     },
 });
 
