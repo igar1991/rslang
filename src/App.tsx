@@ -1,45 +1,26 @@
-import {
-    BrowserRouter as Router,
-    Routes,
-    Route,
-    Link
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Authorization from "./pages/authorization";
+import Header from "./pages/components/header";
+import Games from "./pages/games";
+import Main from "./pages/main";
+import Statistics from "./pages/statistics";
+import Vocabulary from "./pages/vocabulary";
 
-function App () {
-    return (
-        <Router>
-            <nav>
-                <ul>
-                    <li>
-                        <Link to="/">Home</Link>
-                    </li>
-                    <li>
-                        <Link to="/about">About</Link>
-                    </li>
-                    <li>
-                        <Link to="/users">Users</Link>
-                    </li>
-                </ul>
-            </nav>
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/users" element={<Users />} />
-            </Routes>
-        </Router>
-    );
-}
-
-function Home() {
-    return <h2>Home</h2>;
-}
-
-function About() {
-    return <h2>About</h2>;
-}
-
-function Users() {
-    return <h2>Users</h2>;
+function App() {
+  return (
+    <>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Main />} />
+          <Route path="/vocabulary" element={<Vocabulary />} />
+          <Route path="/games" element={<Games />} />
+          <Route path="/statistics" element={<Statistics />} />
+          <Route path="/authorization" element={<Authorization />} />
+        </Routes>
+      </Router>
+    </>
+  );
 }
 
 export default App;

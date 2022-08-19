@@ -1,0 +1,77 @@
+.advantages {
+  background-repeat: no-repeat;
+  background-position: left;
+  background-size: 35%;
+}
+
+.advantages__cards {
+  display: flex;
+  margin-left: auto;
+  flex-wrap: wrap;
+  gap: 35px;
+}
+
+.card {
+  display: flex;
+  width: 45%;
+  height: 208px;
+  align-items: center;
+}
+
+.card__title {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 150%;
+}
+
+.card__text {
+  margin-top: 11px;
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 143%;
+  text-align: justify;
+  letter-spacing: 0.17px;
+}
+
+@media (max-width: 900px) {
+  .advantages {
+    background-size: 50%;
+  }
+
+  .advantages__cards {
+    gap: 10px;
+  }
+
+  .card__title {
+    font-size: 14px;
+  }
+
+  .card__text {
+    font-size: 9px;
+    margin-top: 7px;
+  }
+
+  .card {
+    width: 208px;
+    height: 143px;
+  }
+
+  .card:nth-child(2n) {
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .advantages {
+    background-image: none;
+  }
+
+  .card {
+    margin: 0 auto;
+    width: 80%;
+  }
+}
