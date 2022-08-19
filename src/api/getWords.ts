@@ -6,3 +6,9 @@ export const fetchGetWords = async (page: number, group: number): Promise<Word[]
     const res = await response.json();
     return res;
 };
+
+export const fetchGetWord = async (id: string): Promise<Word>=>{
+    const response = await fetch(`${url}/words/${id}`);
+    const res = await response.json();
+    return res;
+};
