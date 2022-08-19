@@ -1,12 +1,12 @@
-import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
-import authUserSlice from "./slices/authUserSlice";
-import wordsSlice from "./slices/wordsSlice";
+import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+import authUserSlice from './slices/authUserSlice';
+import wordsSlice from './slices/wordsSlice';
 
 export const store = configureStore({
-    reducer: {
-        words: wordsSlice,
-        auth: authUserSlice
-    },
+  reducer: {
+    words: wordsSlice,
+    auth: authUserSlice
+  },
 });
 
 export type AppDispatch = typeof store.dispatch;
