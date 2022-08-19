@@ -1,0 +1,30 @@
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 23px;
+  padding: 0 25px;
+  border-right: 1px solid var(--lightOtherDividerColor);
+}
+
+.nav__item {
+  color: var(--lightTextPrimaryColor);
+  font-family: 'Roboto';
+  font-weight: 500;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all .3s;
+  border-bottom: 2px solid transparent;
+}
+
+.nav__item:hover {
+  color: var(--lightSecondaryMainColor);
+}
+
+.nav__active-item {
+  border-color: var(--lightSecondaryMainColor);
+  cursor: default;
+}
+
+.nav__active-item:hover {
+  color: var(--lightTextPrimaryColor);
+}
