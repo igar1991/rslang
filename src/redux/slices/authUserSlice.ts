@@ -36,7 +36,6 @@ export const loginUser = createAsyncThunk(
     "auth/fetchLoginUser",
     async (user: User) => {
         const response = await fetchLoginUser(user);
-        console.log("1");
         return response;
     }
 );
@@ -56,7 +55,6 @@ export const authUserSlice = createSlice({
                 state.status = "idle";
                 state.email = action.payload.email;
                 state.id = action.payload.id;
-                state.isAuth = true;
             })
             .addCase(createUser.rejected, (state) => {
                 state.status = "failed";

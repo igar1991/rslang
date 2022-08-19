@@ -7,7 +7,6 @@ export interface WordsState {
   items: Word[];
   error: null | string;
   status: string;
-
 }
 
 const initialState: WordsState = {
