@@ -1,11 +1,12 @@
 :root {
   --lightTextPrimaryColor: rgba(0, 0, 0, 0.87);
   --lightTextSecondaryColor: rgba(0, 0, 0, 0.6);;
+  --lightTextSecondaryShadesColor: rgba(0, 0, 0, 0.18);
   --lightSecondaryMainColor: #9C27B0;
+  --lightSecondaryDarkColor: #7B1FA2;
   --lightOtherDividerColor: rgba(0, 0, 0, 0.12);
   --lightActionActiveColor: rgba(0, 0, 0, 0.54);
   --backgroundColor: #EFEFEF;
-
 }
 
 * {
@@ -13,6 +14,18 @@
   margin: 0;
 }
 
-section {
-  padding: 50px 0;
+body{
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+}
+
+main {
+  flex-grow: 1;
+}
+
+#root {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
 }

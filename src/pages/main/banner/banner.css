@@ -11,8 +11,6 @@
 
 .banner__title {
   margin-bottom: 50px;
-  font-family: 'Roboto';
-  font-weight: 400;
   font-size: 48px;
   line-height: 116.7%;
   color: var(--lightTextPrimaryColor);
@@ -51,9 +49,9 @@
   }
 
   .banner__text-container {
+    padding: 0 0 80vw 0;
     align-self: center;
     text-align: center;
-    padding: 0 0 80vw 0;
   }
 
   .banner__title {

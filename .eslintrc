@@ -1,10 +1,7 @@
-
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
-  "plugins": [
-    "@typescript-eslint"
-  ],
+  "plugins": ["@typescript-eslint"],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
@@ -16,17 +13,8 @@
     "project": "./tsconfig.json"
   },
   "rules": {
-    "indent": [
-      "error",
-      2
-  ],
-  "quotes": [
-      "error",
-      "single"
-  ],
-  "semi": [
-      "error",
-      "always"
-  ]
+    "indent": ["error", 2],
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"]
   }
 }

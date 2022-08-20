@@ -19,8 +19,6 @@
 }
 
 .card__title {
-  font-family: 'Roboto';
-  font-style: normal;
   font-weight: 700;
   font-size: 16px;
   line-height: 150%;
@@ -28,9 +26,6 @@
 
 .card__text {
   margin-top: 11px;
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 400;
   font-size: 12px;
   line-height: 143%;
   text-align: justify;

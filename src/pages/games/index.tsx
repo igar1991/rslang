@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react';
 
 export default function Games() {
   return (
-    <main className="container">
+    <main className='container'>
       Games page
     </main>
   );
