@@ -1,9 +1,8 @@
-section {
-  margin-top: 50px;
+.section {
+  margin-top: 100px !important;
 }
 
 .section-title {
-  font-family: 'Roboto';
   font-size: 34px;
   font-weight: 400;
   line-height: 123.5%;
@@ -19,6 +18,10 @@ section {
 }
 
 @media (max-width: 600px) {
+  .section {
+    margin-top: 60px !important;
+  }
+
   .section-title {
     font-size: 20px;
   }
