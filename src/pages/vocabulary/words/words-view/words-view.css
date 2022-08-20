@@ -1,0 +1,33 @@
+.words {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  column-gap: 4rem;
+  padding: 2rem;
+  width: 100%;
+}
+
+.words__words-column {
+  display: flex;
+  flex-direction: column;
+  row-gap: 3rem;
+  width: 100%;
+}
+
+@media (max-width: 769px) {
+  .words  {
+    padding: 1.3rem;
+    column-gap: 2rem;
+  }
+
+  .words__words-column  {
+    row-gap: 2rem;
+  }
+}
+
+@media (max-width: 376px) {
+  .words {
+    display: flex;
+    flex-direction: column;
+    row-gap: 2.5rem;
+  }
+}

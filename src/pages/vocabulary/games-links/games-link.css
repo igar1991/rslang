@@ -1,0 +1,30 @@
+.vocabulary__games-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 4rem;
+}
+
+.games-links__title {
+  color: var(--lightTextSecondaryColor);
+}
+
+.game-cards__wrapper {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
+@media (max-width: 769px) {
+  .vocabulary__games-links {
+    row-gap: 2rem;
+  }
+}
+
+@media (max-width: 376px) {
+  .game-cards__wrapper {
+    flex-direction: column;
+    align-items: center;
+    row-gap: 1.5rem;
+  }
+}

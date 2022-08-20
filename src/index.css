@@ -12,6 +12,7 @@
 * {
   box-sizing: border-box;
   margin: 0;
+  overflow-x: hidden;
 }
 
 body{
@@ -28,4 +29,5 @@ main {
   display: flex;
   min-height: 100vh;
   flex-direction: column;
+  background-color: var(--backgroundColor);
 }

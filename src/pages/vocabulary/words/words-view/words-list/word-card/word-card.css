@@ -1,0 +1,20 @@
+.words__word-card {
+  background-color: white;
+  border-radius: 10px;
+  width: 135px;
+  height: 90px;
+}
+
+@media (max-width: 769px) {
+  .words__word-card {
+    width: 100px;
+    height: 70px;
+  }
+}
+
+@media (max-width: 376px) {
+  .words__word-card {
+    width: 155px;
+    height: 100px;
+  }
+}
