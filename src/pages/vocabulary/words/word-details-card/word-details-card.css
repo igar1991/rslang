@@ -1,0 +1,13 @@
+.word__details-card {
+  background-color: white;
+  border-radius: 10px;
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 376px) {
+  .word__details-card {
+    width: 330px;
+    height: 450px;
+  }
+}
