@@ -1,5 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { fetchGetWords } from '../../api/getWords';
+import { createSlice } from '@reduxjs/toolkit';
 import { Word } from '../../types/types';
 import { RootState } from '../store';
 
@@ -15,31 +14,10 @@ const initialState: WordsState = {
   status: 'idle'
 };
 
-export const getWords = createAsyncThunk(
-  'words/fetchGetWords',
-  async ({page, group}: { page: number, group: number }) => {
-    const response = await fetchGetWords(page, group);
-    return response;
-  }
-);
-
 export const wordsSlice = createSlice({
   name: 'words',
   initialState,
-  reducers: {},
-  extraReducers: (bulder) => {
-    bulder
-      .addCase(getWords.pending, (state) => {
-        state.status = 'loading';
-      })
-      .addCase(getWords.fulfilled, (state, action) => {
-        state.status = 'idle';
-        state.items = action.payload;
-      })
-      .addCase(getWords.rejected, (state) => {
-        state.status = 'failed';
-      });
-  }
+  reducers: {}
 });
 
 export const selectWords = (state: RootState) => state.words;
