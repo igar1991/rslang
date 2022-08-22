@@ -7,8 +7,8 @@ export const wordsAPI = api.injectEndpoints({
       query: ({page, group})=>({
         url: '/words',
         params: {
-          _page: page,
-          _group: group
+          page: page,
+          group: group
         }
       }),
       providesTags: () =>['Words']
