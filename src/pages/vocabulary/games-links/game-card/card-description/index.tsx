@@ -11,7 +11,7 @@ export const CardDescription = ({ img, title, description }: Props) => {
     <Box className='game__card-description'>
       <Box
         component='img'
-        alt='Sprint game image'
+        alt={`${title} game image`}
         src={img}
         sx={{
           height: {
