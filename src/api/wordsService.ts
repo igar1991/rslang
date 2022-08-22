@@ -18,5 +18,27 @@ export const wordsAPI = api.injectEndpoints({
         url: `/words/${id}`
       })
     }),
+    getWordsUser: build.query<Word[], string>({
+      query: (id)=>({
+        url: `/users/${id}/words`
+      })
+    }),
+    addUserWord: build.mutation<{id: string, wordId: string}, {id: string, wordId: string}>({
+      query: ({id, wordId})=>({
+        url: `/users/${id}/words/${wordId}`,
+        method: 'POST',
+      }),
+    }),
+    getUserWordById: build.query<Word, {id: string, wordId: string}>({
+      query: ({id, wordId})=>({
+        url: `/users/${id}/words/${wordId}`
+      })
+    }),
+    removeUserWord: build.mutation<{id: string, wordId: string}, {id: string, wordId: string}>({
+      query: ({id, wordId})=>({
+        url: `/users/${id}/words/${wordId}`,
+        method: 'DELETE',
+      }),
+    }),
   })
 });

@@ -5,8 +5,8 @@ import { RootState } from '../store';
 export interface AuthState {
   isAuth: boolean;
   id: string;
-  refreshToken: string;
-  token: string;
+  refreshToken: string | null;
+  token: string | null;
   error: null | string;
   status: string;
 
@@ -15,8 +15,8 @@ export interface AuthState {
 const initialState: AuthState = {
   isAuth: false,
   id: '',
-  refreshToken: '',
-  token: '',
+  refreshToken: null,
+  token: null,
   error: null,
   status: 'idle'
 };
