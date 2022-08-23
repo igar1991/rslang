@@ -43,7 +43,7 @@ export default function Header(): JSX.Element {
       <AppBar
         color='transparent'
         position='relative'
-        sx={{ boxShadow: 'none', backgroundColor: 'var(--backgroundColor)', py: 2 }}
+        sx={{  backgroundColor: 'transparent', py: 2, boxShadow: 'none' }}
       >
         <Container sx={{ display: 'flex' }}>
           <Typography sx={{ flexGrow: 1 }}>

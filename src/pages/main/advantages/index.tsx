@@ -1,5 +1,4 @@
 import React from 'react';
-import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -48,13 +47,13 @@ export default function Advantages(): JSX.Element {
 
       <Grid xs={12} sm={6} md={8} className='advantages__cards'>
         {CARDS.map((card) => (
-          <Card key={card.title} className='card'>
+          <div key={card.title} className='card'>
             <CardMedia component='img' sx={{ width: '40%', height: {xs: '100%', sm: 'auto'} }} image={card.img} alt={card.title} />
             <CardContent>
               <h3 className='card__title'>{card.title}</h3>
               <p className='card__text'>{card.description}</p>
             </CardContent>
-          </Card>
+          </div>
         ))}
       </Grid>
     </Grid>

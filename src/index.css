@@ -19,6 +19,11 @@ body{
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 400;
+  background-color: var(--backgroundColor);
+  background-repeat: no-repeat;
+  background-position: bottom;
+  block-size: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg width='2560' height='840' viewBox='0 0 1280 420' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M-208.732 276.981C-208.732 122.869 -227.531 188.648 -120.375 245.031C-13.2182 301.413 107.098 72.7508 319.531 173.613C531.964 274.475 672.959 308.931 849.673 308.931C1024.51 308.931 1195.58 233.754 1289.58 141.663C1383.58 49.5714 1377.94 -93.2642 1377.94 87.1597C1377.94 267.584 1377.94 419.816 1377.94 419.816H1289.58C1201.22 419.816 1024.51 419.816 849.673 419.816C672.959 419.816 496.245 419.816 319.531 419.816C144.696 419.816 -32.0176 419.816 -120.375 419.816H-208.732C-208.732 419.816 -208.732 431.093 -208.732 276.981Z' fill='%23F9F9F9'/%3E%3C/svg%3E%0A");
 }
 
 main {
@@ -30,4 +35,15 @@ main {
   min-height: 100vh;
   flex-direction: column;
   background-color: var(--backgroundColor);
+}
+
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 420px;
+  padding: 40px;
+  background-color: white;
+  border-radius: 10px;
 }

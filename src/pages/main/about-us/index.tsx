@@ -1,5 +1,4 @@
 import React from 'react';
-import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import { Box, Link } from '@mui/material';
@@ -36,7 +35,7 @@ export default function About(): JSX.Element {
 
       <Box sx={{ display: { xs: 'block', sm: 'flex' } }} className='developers'>
         {DEVELOPERS.map((dev) => (
-          <Card key={dev.name} className='developer'>
+          <div key={dev.name} className='developer'>
             <CardMedia
               component='img'
               className='developer__img'
@@ -51,7 +50,7 @@ export default function About(): JSX.Element {
               </Link>
               <p className='developer__desc'>{dev.description}</p>
             </CardContent>
-          </Card>
+          </div>
         ))}
       </Box>
     </Box>

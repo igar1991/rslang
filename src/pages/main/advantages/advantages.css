@@ -16,6 +16,8 @@
   width: 45%;
   height: 208px;
   align-items: center;
+  background-color: white;
+  border-radius: 5px;
 }
 
 .card__title {
