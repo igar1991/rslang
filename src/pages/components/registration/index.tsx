@@ -1,34 +1,25 @@
-import React, { useState, FormEvent, ChangeEvent } from 'react';
+import React, { useState, FormEvent } from 'react';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
-import IconButton from '@mui/material/IconButton';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-import InputAdornment from '@mui/material/InputAdornment';
-import FormHelperText from '@mui/material/FormHelperText';
-import FormControl from '@mui/material/FormControl';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+
+import { authAPI } from '../../../api/authService';
+import RegistrationInput from './registration-input';
 
 import './registration.css';
-import { fetchCreateUser } from '../../../api/authUser';
 
 type InRegistrationType = {
   registerModal: boolean;
   closeRegisterModal: () => void;
+  setMessageModal: React.Dispatch<React.SetStateAction<{ open: boolean; text: string }>>;
 };
 
-type ValuesType = {
+export type ValuesType = {
   [key: string]: string;
 };
 
-type HidePassType = {
-  [key: string]: boolean;
-};
-
-type ErrorsType = {
+export type ErrorsType = {
   [key: string]: { error: boolean; message: string };
 };
 
@@ -39,9 +30,15 @@ const REGISTER__INPUT = [
   { id: 'confirmPass', text: 'Confirm password' },
 ];
 
-export default function Registration({ registerModal, closeRegisterModal }: InRegistrationType): JSX.Element {
+export default function Registration({
+  registerModal,
+  closeRegisterModal,
+  setMessageModal,
+}: InRegistrationType): JSX.Element {
+  const [createUser] = authAPI.useCreateUserMutation();
+  const [loginUser] = authAPI.useLoginUserMutation();
+
   const [values, setValues] = useState<ValuesType>({ name: '', email: '', pass: '', confirmPass: '' });
-  const [hidePass, setHidePass] = useState<HidePassType>({ pass: true, confirmPass: true });
   const [errors, setErrors] = useState<ErrorsType>({
     name: { error: false, message: ' ' },
     email: { error: false, message: ' ' },
@@ -51,7 +48,37 @@ export default function Registration({ registerModal, closeRegisterModal }: InRe
 
   const onSubmitForm = async (ev: FormEvent) => {
     ev.preventDefault();
+    if (errorsChecking()) {
+      const newUser = await createUser({ name: values.name, email: values.email, password: values.pass });
 
+      if ('data' in newUser) {
+        const authUser = await loginUser({ email: values.email, password: values.pass });
+        if ('data' in authUser) {
+          setMessageModal({ open: true, text: `Welcome ${authUser.data.name}!` });
+          setValues({ name: '', email: '', pass: '', confirmPass: '' });
+          closeRegisterModal();
+        }
+        setTimeout(() => {
+          setMessageModal({ open: false, text: '' });
+        }, 2000);
+      }
+
+      if ('error' in newUser) {
+        if ('originalStatus' in newUser.error && newUser.error.originalStatus === 417) {
+          setErrors({ ...errors, email: { error: true, message: 'User with this e-mail exists' } });
+          setMessageModal({ open: true, text: 'User with this e-mail exists' });
+        } else if ('error' in newUser.error) setMessageModal({ open: true, text: `${newUser.error.error}!` });
+        else if ('message' in newUser.error) setMessageModal({ open: true, text: `${newUser.error.message}!` });
+        else setMessageModal({ open: true, text: 'Unknown error. Try again' });
+        clearPass();
+        setTimeout(() => {
+          setMessageModal({ open: false, text: '' });
+        }, 3000);
+      }
+    }
+  };
+
+  const errorsChecking = () => {
     const newErrors = { ...errors };
     const regexp = /^[\w\d%$:.-]+@\w+\.\w{2,5}$/;
 
@@ -65,61 +92,34 @@ export default function Registration({ registerModal, closeRegisterModal }: InRe
       if (!values[input.id]) newErrors[input.id] = { error: true, message: 'The field is empty' };
     });
 
-    if (Object.values(newErrors).every((err) => !err.error)) {
-      const user = {
-        name: values.name,
-        email: values.email,
-        password: values.pass,
-      };
-      const res = await fetchCreateUser(user);
-      console.log(res);
-    }
-
     setErrors({ ...newErrors });
+    return Object.values(newErrors).every((err) => !err.error);
   };
 
-  const onInputChange = (ev: ChangeEvent) => {
-    const input = ev.target as HTMLInputElement;
-    setValues({ ...values, [input.id]: input.value });
+  const clearPass = () => {
+    setValues({ ...values, pass: '', confirmPass: '' });
+  };
+
+  const onModalClose = () => {
+    clearPass();
+    closeRegisterModal();
   };
 
   return (
-    <Modal open={registerModal} onClose={closeRegisterModal}>
+    <Modal open={registerModal} onClose={onModalClose}>
       <Box className='modal'>
         <h3 className='modal__title'>Create your profile</h3>
         <form onSubmit={onSubmitForm} className='modal__form'>
           {REGISTER__INPUT.map((input) => (
-            <FormControl key={input.id} className='modal__input' variant='outlined' color='secondary'>
-              <InputLabel htmlFor={input.id} error={errors[input.id].error}>
-                {input.text}
-              </InputLabel>
-              <OutlinedInput
-                error={errors[input.id].error}
-                id={input.id}
-                type={hidePass[input.id] ? 'password' : 'text'}
-                value={values[input.id]}
-                onChange={onInputChange}
-                onFocus={() => setErrors({ ...errors, [input.id]: { error: false, message: ' ' } })}
-                endAdornment={
-                  input.id === 'pass' || input.id === 'confirmPass' ? (
-                    <InputAdornment position='end'>
-                      <IconButton
-                        onClick={() => setHidePass({ ...hidePass, [input.id]: !hidePass[input.id] })}
-                        edge='end'
-                      >
-                        {hidePass[input.id] ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ) : (
-                    ''
-                  )
-                }
-                label={input.text}
-              />
-              <FormHelperText error={errors[input.id].error}>{errors[input.id].message}</FormHelperText>
-            </FormControl>
+            <RegistrationInput
+              key={input.id}
+              input={input}
+              values={values}
+              setValues={setValues}
+              errors={errors}
+              setErrors={setErrors}
+            />
           ))}
-
           <Button variant='contained' color='secondary' type='submit' className='modal__button'>
             Start learning
           </Button>

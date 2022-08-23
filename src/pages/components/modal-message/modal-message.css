@@ -1,0 +1,7 @@
+.modal-message {
+  width: 300px !important;
+}
+
+.modal-message__text {
+  text-align: center;
+}
