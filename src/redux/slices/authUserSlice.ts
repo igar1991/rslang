@@ -7,9 +7,9 @@ export interface AuthState {
   id: string;
   refreshToken: string | null;
   token: string | null;
-  error: null | string;
+  error: string | null;
   status: string;
-
+  name: string | null;
 }
 
 const initialState: AuthState = {
@@ -18,13 +18,21 @@ const initialState: AuthState = {
   refreshToken: null,
   token: null,
   error: null,
-  status: 'idle'
+  status: 'idle',
+  name: null,
 };
 
 export const authUserSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    logout: () => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('userId');
+      return initialState;
+    },
+  },
   extraReducers: (bulder) => {
     bulder
       .addMatcher(authAPI.endpoints.loginUser.matchPending, (state) => {
@@ -36,13 +44,19 @@ export const authUserSlice = createSlice({
         state.id = action.payload.userId;
         state.refreshToken = action.payload.refreshToken;
         state.isAuth = true;
+        state.name = action.payload.name;
+        localStorage.setItem('token', action.payload.token);
+        localStorage.setItem('refreshToken', action.payload.refreshToken);
+        localStorage.setItem('userId', action.payload.userId);
       })
       .addMatcher(authAPI.endpoints.loginUser.matchRejected, (state) => {
         state.status = 'failed';
       });
-  }
+  },
 });
 
 export const selectAuth = (state: RootState) => state.auth;
+
+export const { logout } = authUserSlice.actions;
 
 export default authUserSlice.reducer;

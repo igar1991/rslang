@@ -4,7 +4,11 @@ import { Box } from '@mui/system';
 
 import './banner.css';
 
-export default function Banner(): JSX.Element {
+type InBannerType = {
+  openRegisterModal: () => void
+}
+
+export default function Banner({openRegisterModal}: InBannerType): JSX.Element {
   return (
     <Box
       className='banner'
@@ -20,7 +24,7 @@ export default function Banner(): JSX.Element {
           <Button variant='contained' color='secondary' className='banner__button'>
             Sign up for free
           </Button>
-          <Button variant='outlined' color='secondary' className='banner__button'>
+          <Button variant='outlined' color='secondary' className='banner__button' onClick={openRegisterModal}>
             I already have an account
           </Button>
         </Box>
