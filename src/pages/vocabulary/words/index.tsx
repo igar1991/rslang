@@ -2,24 +2,41 @@ import { Box, Pagination } from '@mui/material';
 import './words.css';
 import { WordsView } from './words-view';
 import { useDevice } from '../../hooks';
+import { useDispatch } from 'react-redux';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { setPage } from '../../../redux/slices/wordsSlice';
+import { PAGES } from './constants';
+import { Device } from '../../../types/types';
 
 const paginationSizeByDevice: Map<string, 'medium' | 'large'> = new Map([
-  ['desktop', 'large'],
-  ['tablet', 'medium'],
-  ['mobile', 'medium'],
+  [Device.DESKTOP, 'large'],
+  [Device.TABLET, 'medium'],
+  [Device.MOBILE, 'medium']
 ]);
 
 export const Words = () => {
   const device = useDevice();
+  const dispatch = useDispatch();
+
+  const [currentPage, setCurrentPage] = useState(0);
+  const changePageHandler = useCallback((event: ChangeEvent<unknown>, value: number) => {
+    setCurrentPage(value - 1);
+  }, [setCurrentPage]);
+
+  useEffect(() => {
+    dispatch(setPage(currentPage));
+  }, [currentPage]);
 
   return (
     <Box className='vocabulary__words-links'>
       <WordsView isMobile={device === 'mobile'} />
       <Pagination
-        count={30}
+        count={PAGES}
+        page={currentPage + 1}
         size={paginationSizeByDevice.get(device)}
         color='secondary'
         variant='outlined'
+        onChange={changePageHandler}
       />
     </Box>
   );

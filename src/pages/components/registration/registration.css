@@ -1,0 +1,38 @@
+.modal__title {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 160%;
+  text-align: center;
+  letter-spacing: 0.15px;
+}
+
+.modal__form {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.modal__button {
+  margin-top: 10px !important;
+  width: 50%;
+}
+
+.modal__text {
+  margin-top: 30px;
+  font-size: 12px;
+  line-height: 20px;
+  text-align: right;
+  letter-spacing: 0.4px;
+}
+
+.modal__link {
+  color: var(--lightSecondaryDarkColor) !important;
+  text-decoration: none !important;
+  border-bottom: 1px solid transparent;
+  cursor: pointer;
+  transition: all .3s;
+}
+
+.modal__link:hover {
+  color: var(--lightSecondaryMainColor) !important;
+  border-color: var(--lightSecondaryMainColor);
+}

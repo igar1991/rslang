@@ -1,16 +1,28 @@
-import { useMediaQuery } from '@mui/material';
+import { Device } from '../../types/types';
+import { useLayoutEffect, useState } from 'react';
 
 export const useDevice = () => {
-  const isTablet = useMediaQuery('(min-width:768px)');
-  const isMobile = useMediaQuery('(max-width:376px)');
+  const [width, setWidth] = useState(0);
 
-  if (isTablet) {
-    return 'tablet';
+  const updateWidth = () => {
+    setWidth(window.innerWidth);
+  };
+
+  useLayoutEffect(() => {
+    window.addEventListener('resize', updateWidth);
+
+    updateWidth();
+
+    return () => window.removeEventListener('resize', updateWidth);
+  }, []);
+
+  if (width >= 900) {
+    return Device.DESKTOP;
   }
 
-  if (isMobile) {
-    return 'mobile';
+  if (width >= 600) {
+    return Device.TABLET;
   }
 
-  return 'desktop';
+  return Device.MOBILE;
 };
