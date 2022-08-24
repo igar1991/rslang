@@ -3,23 +3,30 @@ import { NavLink } from 'react-router-dom';
 import { ListItemIcon } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
+import Avatar from '@mui/material/Avatar';
 
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import CloseIcon from '@mui/icons-material/Close';
+import LoginRoundedIcon from '@mui/icons-material/LoginRounded';
 
+import { useAppSelector } from '../../../../redux/hooks';
+import { selectAuth } from '../../../../redux/slices/authUserSlice';
 import './mobile-nav.css';
 
 type MobileNavType = {
   mobileOpen: boolean;
   onMobileBtnClick: () => void;
   navLinks: { url: string; name: string; icon: JSX.Element }[];
+  openAuthorizationModal: () => void
 };
 
-export default function MobileNav({ mobileOpen, onMobileBtnClick, navLinks }: MobileNavType): JSX.Element {
+export default function MobileNav({ mobileOpen, onMobileBtnClick, navLinks, openAuthorizationModal }: MobileNavType): JSX.Element {
   const setActive = ({ isActive }: { isActive: boolean }) =>
     isActive ? 'mobile-nav__item mobile-nav__active-item' : 'mobile-nav__item';
+
+  const user = useAppSelector(selectAuth);
 
   return (
     <Drawer
@@ -44,7 +51,7 @@ export default function MobileNav({ mobileOpen, onMobileBtnClick, navLinks }: Mo
             <CloseIcon className='nav__icon' />
           </IconButton>
         </Box>
-        <List sx={{}} className='mobile-nav__items'>
+        <List className='mobile-nav__items'>
           {navLinks.map((item) => (
             <NavLink key={item.name} to={item.url} className={setActive}>
               <ListItemButton className='mobile-nav__button'>
@@ -53,6 +60,20 @@ export default function MobileNav({ mobileOpen, onMobileBtnClick, navLinks }: Mo
               </ListItemButton>
             </NavLink>
           ))}
+          {user.isAuth ? (
+            <Avatar sx={{ bgcolor: '#7B1FA2' }}>
+              {user.name?.[0]}
+            </Avatar>
+          ) : (
+            <div>
+              <ListItemButton className='mobile-nav__button' onClick={openAuthorizationModal}>
+                <p className='mobile-nav__text'>Sign In</p>
+                <ListItemIcon className='mobile-nav__icon'>
+                  <LoginRoundedIcon />
+                </ListItemIcon>
+              </ListItemButton>
+            </div>
+          )}
         </List>
       </Box>
     </Drawer>

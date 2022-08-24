@@ -45,3 +45,10 @@ main {
   background-color: white;
   border-radius: 5px;
 }
+
+@media (max-width: 600px) {
+  .modal {
+    width: 300px;
+    padding: 20px;
+  }
+}
