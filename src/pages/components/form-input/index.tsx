@@ -8,8 +8,7 @@ import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-import { ErrorsType, ValuesType } from '..';
-import './registration-input.css';
+import './form-input.css';
 
 type InInputType = {
   input: { id: string; text: string };
@@ -19,7 +18,15 @@ type InInputType = {
   setErrors: React.Dispatch<React.SetStateAction<ErrorsType>>;
 };
 
-export default function RegistrationInput({ input, values, setValues, errors, setErrors }: InInputType): JSX.Element {
+export type ValuesType = {
+  [key: string]: string;
+};
+
+export type ErrorsType = {
+  [key: string]: { error: boolean; message: string };
+};
+
+export default function FormInput({ input, values, setValues, errors, setErrors }: InInputType): JSX.Element {
   const [hidePass, setHidePass] = useState(true);
 
   const onInputChange = (ev: ChangeEvent) => {
@@ -36,7 +43,7 @@ export default function RegistrationInput({ input, values, setValues, errors, se
   };
 
   return (
-    <FormControl key={input.id} className='modal__input' variant='outlined' color='secondary'>
+    <FormControl key={input.id} className='modal__input' variant='outlined' color='secondary' size='small'>
       <InputLabel htmlFor={input.id} error={errors[input.id].error}>
         {input.text}
       </InputLabel>

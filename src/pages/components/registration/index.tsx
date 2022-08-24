@@ -5,22 +5,15 @@ import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 
 import { authAPI } from '../../../api/authService';
-import RegistrationInput from './registration-input';
+import FormInput, { ErrorsType, ValuesType } from '../form-input';
 
 import './registration.css';
 
 type InRegistrationType = {
   registerModal: boolean;
   closeRegisterModal: () => void;
+  openAuthorizationModal: () => void;
   setMessageModal: React.Dispatch<React.SetStateAction<{ open: boolean; text: string }>>;
-};
-
-export type ValuesType = {
-  [key: string]: string;
-};
-
-export type ErrorsType = {
-  [key: string]: { error: boolean; message: string };
 };
 
 const REGISTER__INPUT = [
@@ -33,6 +26,7 @@ const REGISTER__INPUT = [
 export default function Registration({
   registerModal,
   closeRegisterModal,
+  openAuthorizationModal,
   setMessageModal,
 }: InRegistrationType): JSX.Element {
   const [createUser] = authAPI.useCreateUserMutation();
@@ -102,7 +96,18 @@ export default function Registration({
 
   const onModalClose = () => {
     clearPass();
+    setErrors({
+      name: { error: false, message: ' ' },
+      email: { error: false, message: ' ' },
+      pass: { error: false, message: ' ' },
+      confirmPass: { error: false, message: ' ' },
+    });
     closeRegisterModal();
+  };
+
+  const onSignInClick = () => {
+    onModalClose();
+    openAuthorizationModal();
   };
 
   return (
@@ -111,7 +116,7 @@ export default function Registration({
         <h3 className='modal__title'>Create your profile</h3>
         <form onSubmit={onSubmitForm} className='modal__form'>
           {REGISTER__INPUT.map((input) => (
-            <RegistrationInput
+            <FormInput
               key={input.id}
               input={input}
               values={values}
@@ -125,7 +130,7 @@ export default function Registration({
           </Button>
         </form>
         <p className='modal__text'>
-          I have an account, <Link className='modal__link'>Sign In</Link>
+          I have an account, <Link className='modal__link' onClick={onSignInClick}>Sign In</Link>
         </p>
       </Box>
     </Modal>

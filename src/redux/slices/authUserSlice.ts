@@ -13,13 +13,13 @@ export interface AuthState {
 }
 
 const initialState: AuthState = {
-  isAuth: false,
-  id: '',
-  refreshToken: null,
-  token: null,
+  isAuth: !!localStorage.getItem('userId'),
+  id: localStorage.getItem('userId') || '',
+  refreshToken: localStorage.getItem('refreshToken') || null,
+  token: localStorage.getItem('token') || null,
   error: null,
   status: 'idle',
-  name: null,
+  name: localStorage.getItem('name') || null,
 };
 
 export const authUserSlice = createSlice({
@@ -30,6 +30,7 @@ export const authUserSlice = createSlice({
       localStorage.removeItem('token');
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('userId');
+      localStorage.removeItem('name');
       return initialState;
     },
   },
@@ -48,9 +49,22 @@ export const authUserSlice = createSlice({
         localStorage.setItem('token', action.payload.token);
         localStorage.setItem('refreshToken', action.payload.refreshToken);
         localStorage.setItem('userId', action.payload.userId);
+        localStorage.setItem('name', action.payload.name);
       })
       .addMatcher(authAPI.endpoints.loginUser.matchRejected, (state) => {
         state.status = 'failed';
+      })
+      .addMatcher(authAPI.endpoints.getNewToken.matchFulfilled, (state, action) => {
+        state.status = 'idle';
+        state.token = action.payload.token;
+        state.id = action.payload.userId;
+        state.refreshToken = action.payload.refreshToken;
+        state.isAuth = true;
+        state.name = action.payload.name;
+        localStorage.setItem('token', action.payload.token);
+        localStorage.setItem('refreshToken', action.payload.refreshToken);
+        localStorage.setItem('userId', action.payload.userId);
+        localStorage.setItem('name', action.payload.name);
       });
   },
 });

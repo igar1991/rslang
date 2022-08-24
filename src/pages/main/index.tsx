@@ -9,13 +9,14 @@ import './main.css';
 
 type InMainType = {
   openRegisterModal: () => void;
+  openAuthorizationModal: () => void;
 };
 
-export default function Main({ openRegisterModal }: InMainType): JSX.Element {
+export default function Main({ openRegisterModal, openAuthorizationModal }: InMainType): JSX.Element {
   return (
     <Box  className='main'>
       <Container component='main'>
-        <Banner openRegisterModal={openRegisterModal} />
+        <Banner openRegisterModal={openRegisterModal} openAuthorizationModal={openAuthorizationModal} />
         <Advantages />
         <About />
       </Container>

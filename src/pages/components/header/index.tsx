@@ -11,8 +11,6 @@ import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import HomeIcon from '@mui/icons-material/Home';
 import AutoStoriesOutlinedIcon from '@mui/icons-material/AutoStoriesOutlined';
 import SignalCellularAltRoundedIcon from '@mui/icons-material/SignalCellularAltRounded';
-import LoginRoundedIcon from '@mui/icons-material/LoginRounded';
-import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 
 import Nav from './nav';
 import MobileNav from './mobile-nav';
@@ -26,13 +24,12 @@ const NAV_LINKS = [
   { url: '/statistics', name: 'Statistics', icon: <SignalCellularAltRoundedIcon /> },
 ];
 
-const LOG_IN_LINK = { url: '/authorization', name: 'Sign In', icon: <LoginRoundedIcon /> };
-const LOG_OUT_LINK = { url: '/authorization', name: 'Sign Out', icon: <LogoutRoundedIcon /> };
+type InHeaderType = {
+  openAuthorizationModal: () => void,
+}
 
-export default function Header(): JSX.Element {
+export default function Header({openAuthorizationModal}: InHeaderType): JSX.Element {
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  const navLinks = localStorage.getItem('user') ? NAV_LINKS.concat(LOG_OUT_LINK) : NAV_LINKS.concat(LOG_IN_LINK);
 
   const onMobileBtnClick = () => {
     setMobileOpen(!mobileOpen);
@@ -56,12 +53,12 @@ export default function Header(): JSX.Element {
             <MenuIcon className='nav__icon' />
           </IconButton>
 
-          <Nav navLinks={navLinks} />
+          <Nav navLinks={NAV_LINKS} openAuthorizationModal={openAuthorizationModal}/>
         </Container>
       </AppBar>
 
       <Box component='nav'>
-        <MobileNav mobileOpen={mobileOpen} onMobileBtnClick={onMobileBtnClick} navLinks={navLinks} />
+        <MobileNav mobileOpen={mobileOpen} onMobileBtnClick={onMobileBtnClick} navLinks={NAV_LINKS} openAuthorizationModal={openAuthorizationModal}/>
       </Box>
     </>
   );
