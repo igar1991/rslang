@@ -15,7 +15,18 @@ export interface Word {
   textExampleTranslate: string;
 }
 
+export interface WordsRequestParams {
+  page: number;
+  group: number;
+}
+
 export interface User {
   email: string;
   password: string;
+}
+
+export enum Device {
+  DESKTOP= 'desktop',
+  TABLET = 'tablet',
+  MOBILE = 'mobile',
 }

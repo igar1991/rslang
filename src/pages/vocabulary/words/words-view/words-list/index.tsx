@@ -1,12 +1,26 @@
 import { Box } from '@mui/material';
 import { WordCard } from './word-card';
-import { WORDS_PER_PAGE } from './constants';
+import { wordsAPI } from '../../../../../api/wordsService';
 import './list.css';
 
-export const WordsList = () => {
-  return (
+interface WordsProps {
+  page: number;
+  group: number;
+}
+
+export const WordsList = ({ page, group }: WordsProps) => {
+  const { data, isSuccess } = wordsAPI.useGetWordsQuery({ page, group });
+
+  return isSuccess ? (
     <Box className='words__words-list'>
-      {[...Array(WORDS_PER_PAGE)].map((word, index) => <WordCard key={index} />)}
+      {data.map((currentWord, index) => (
+        <WordCard
+          key={index}
+          word={currentWord.word}
+          translation={currentWord.wordTranslate}
+          id={currentWord.id}
+        />
+      ))}
     </Box>
-  );
+  ) : null;
 };

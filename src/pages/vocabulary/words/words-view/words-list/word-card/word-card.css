@@ -1,20 +1,48 @@
 .words__word-card {
   background-color: white;
-  border-radius: 10px;
-  width: 135px;
-  height: 90px;
+  border-radius: 5px;
+  min-height: 90px;
+
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+
+  cursor: pointer;
 }
 
-@media (max-width: 769px) {
+span.word-card__translation {
+  font-size: 10px;
+  color: var(--lightTextSecondaryColor);
+}
+
+h5.word-card__title {
+  font-size: 20px;
+}
+
+@media (max-width: 900px) {
   .words__word-card {
-    width: 100px;
-    height: 70px;
+    min-height: 70px;
+  }
+
+  span.word-card__translation {
+    font-size: 8px;
+  }
+
+  h5.word-card__title {
+    font-size: 14px;
   }
 }
 
-@media (max-width: 376px) {
+@media (max-width: 600px) {
   .words__word-card {
-    width: 155px;
-    height: 100px;
+    min-height: 100px;
+  }
+
+  span.word-card__translation {
+    font-size: 12px;
+  }
+
+  h5.word-card__title {
+    font-size: 16px;
   }
 }
