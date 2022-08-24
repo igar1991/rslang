@@ -1,19 +1,17 @@
 import { Box } from '@mui/material';
 import { WordCard } from './word-card';
-import { wordsAPI } from '../../../../../api/wordsService';
 import './list.css';
+import { Word } from '../../../../../types/types';
 
 interface WordsProps {
-  page: number;
-  group: number;
+  data: Word[] | undefined;
+  isSuccess: boolean;
 }
 
-export const WordsList = ({ page, group }: WordsProps) => {
-  const { data, isSuccess } = wordsAPI.useGetWordsQuery({ page, group });
-
+export const WordsList = ({ data, isSuccess }: WordsProps) => {
   return isSuccess ? (
     <Box className='words__words-list'>
-      {data.map((currentWord, index) => (
+      {data?.map((currentWord, index) => (
         <WordCard
           key={index}
           word={currentWord.word}
