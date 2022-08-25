@@ -18,7 +18,7 @@ type InRegistrationType = {
 
 const REGISTER__INPUT = [
   { id: 'name', text: 'Name' },
-  { id: 'email', text: 'Email' },
+  { id: 'email', text: 'E-mail' },
   { id: 'pass', text: 'Password' },
   { id: 'confirmPass', text: 'Confirm password' },
 ];

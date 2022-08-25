@@ -19,10 +19,11 @@ type MobileNavType = {
   mobileOpen: boolean;
   onMobileBtnClick: () => void;
   navLinks: { url: string; name: string; icon: JSX.Element }[];
-  openAuthorizationModal: () => void
+  openAuthorizationModal: () => void;
+  openProfileModal: () => void;
 };
 
-export default function MobileNav({ mobileOpen, onMobileBtnClick, navLinks, openAuthorizationModal }: MobileNavType): JSX.Element {
+export default function MobileNav({ mobileOpen, onMobileBtnClick, navLinks, openAuthorizationModal, openProfileModal }: MobileNavType): JSX.Element {
   const setActive = ({ isActive }: { isActive: boolean }) =>
     isActive ? 'mobile-nav__item mobile-nav__active-item' : 'mobile-nav__item';
 
@@ -61,7 +62,7 @@ export default function MobileNav({ mobileOpen, onMobileBtnClick, navLinks, open
             </NavLink>
           ))}
           {user.isAuth ? (
-            <Avatar sx={{ bgcolor: '#7B1FA2' }}>
+            <Avatar sx={{ bgcolor: '#7B1FA2' }} onClick={openProfileModal}>
               {user.name?.[0]}
             </Avatar>
           ) : (

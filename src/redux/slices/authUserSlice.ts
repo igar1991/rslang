@@ -31,7 +31,15 @@ export const authUserSlice = createSlice({
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('userId');
       localStorage.removeItem('name');
-      return initialState;
+      return {
+        isAuth: false,
+        id: '',
+        refreshToken: null,
+        token: null,
+        error: null,
+        status: 'idle',
+        name: null,
+      };
     },
   },
   extraReducers: (bulder) => {

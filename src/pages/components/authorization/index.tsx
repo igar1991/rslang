@@ -15,7 +15,7 @@ type InRegistrationType = {
 };
 
 const AUTORIZATION__INPUT = [
-  { id: 'email', text: 'Email' },
+  { id: 'email', text: 'E-mail' },
   { id: 'pass', text: 'Password' },
 ];
 
