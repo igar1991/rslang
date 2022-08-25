@@ -9,7 +9,7 @@ interface resLogin {
   name: string;
 }
 
-type CreateUser = { name: string; email: string; password: string };
+export type CreateUser = { name: string; email: string; password: string };
 
 export const authAPI = api.injectEndpoints({
   endpoints: (build) => ({
@@ -25,6 +25,12 @@ export const authAPI = api.injectEndpoints({
         url: '/signin',
         method: 'POST',
         body,
+      }),
+    }),
+    getUserById: build.query<CreateUser, {id: string}>({
+      query: ({id}) => ({
+        url: `/users/${id}`,
+        method: 'GET',
       }),
     }),
     getNewToken: build.query<resLogin, { id: string; refreshToken: string }>({

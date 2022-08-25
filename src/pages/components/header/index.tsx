@@ -26,9 +26,10 @@ const NAV_LINKS = [
 
 type InHeaderType = {
   openAuthorizationModal: () => void,
+  openProfileModal: () => void,
 }
 
-export default function Header({openAuthorizationModal}: InHeaderType): JSX.Element {
+export default function Header({openAuthorizationModal, openProfileModal}: InHeaderType): JSX.Element {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const onMobileBtnClick = () => {
@@ -53,12 +54,12 @@ export default function Header({openAuthorizationModal}: InHeaderType): JSX.Elem
             <MenuIcon className='nav__icon' />
           </IconButton>
 
-          <Nav navLinks={NAV_LINKS} openAuthorizationModal={openAuthorizationModal}/>
+          <Nav navLinks={NAV_LINKS} openAuthorizationModal={openAuthorizationModal} openProfileModal={openProfileModal}/>
         </Container>
       </AppBar>
 
       <Box component='nav'>
-        <MobileNav mobileOpen={mobileOpen} onMobileBtnClick={onMobileBtnClick} navLinks={NAV_LINKS} openAuthorizationModal={openAuthorizationModal}/>
+        <MobileNav mobileOpen={mobileOpen} onMobileBtnClick={onMobileBtnClick} navLinks={NAV_LINKS} openAuthorizationModal={openAuthorizationModal} openProfileModal={openProfileModal}/>
       </Box>
     </>
   );

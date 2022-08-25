@@ -50,12 +50,12 @@ export default function FormInput({ input, values, setValues, errors, setErrors 
       <OutlinedInput
         error={errors[input.id].error}
         id={input.id}
-        type={(input.id === 'pass' || input.id === 'confirmPass') && hidePass ? 'password' : 'text'}
+        type={(input.id === 'pass' || input.id === 'confirmPass' || input.id === 'newPass') && hidePass ? 'password' : 'text'}
         value={values[input.id]}
         onChange={onInputChange}
         onFocus={onInputFocus}
         endAdornment={
-          input.id === 'pass' || input.id === 'confirmPass' ? (
+          input.id === 'pass' || input.id === 'confirmPass' || input.id === 'newPass' ? (
             <InputAdornment position='end'>
               <IconButton onClick={onHidePassBtnClick} edge='end'>
                 {hidePass ? <VisibilityOff /> : <Visibility />}
