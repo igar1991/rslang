@@ -16,6 +16,19 @@
   object-fit: cover;
 }
 
+.word__details-card-buttons-group {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  column-gap: 0.3rem;
+}
+
+Button.details-card-button {
+  box-shadow: none;
+  border-radius: 20px;
+  font-size: 10px;
+}
+
 @media (max-width: 900px) {
   .word__details-card_image {
     height: 160px;

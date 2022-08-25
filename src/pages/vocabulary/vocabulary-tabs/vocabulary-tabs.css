@@ -1,0 +1,3 @@
+button[role='tab'] {
+  min-height: fit-content;
+}

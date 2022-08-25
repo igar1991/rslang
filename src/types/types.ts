@@ -26,7 +26,12 @@ export interface User {
 }
 
 export enum Device {
-  DESKTOP= 'desktop',
+  DESKTOP = 'desktop',
   TABLET = 'tablet',
   MOBILE = 'mobile',
+}
+
+export enum VocabularyTab {
+  VOCABULARY,
+  HARD_WORDS,
 }

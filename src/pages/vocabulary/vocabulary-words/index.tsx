@@ -14,7 +14,7 @@ const paginationSizeByDevice: Map<string, 'medium' | 'large'> = new Map([
   [Device.MOBILE, 'medium']
 ]);
 
-export const Words = () => {
+export const VocabularyWords = () => {
   const device = useDevice();
   const dispatch = useDispatch();
 
