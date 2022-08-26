@@ -1,13 +1,13 @@
 import { Box } from '@mui/material';
 import { LevelButton } from './level-button';
 import './levels.css';
-import { LEVELS } from '../../constants';
+import { GROUPS } from '../../constants';
 
 export const WordsLevels = () => (
   <Box className='words__levels'>
-    {LEVELS.map((level, index) => <LevelButton
+    {GROUPS.map((level, index) => <LevelButton
       key={level}
-      buttonName={level}
+      level={level}
       group={index}
     />)}
   </Box>

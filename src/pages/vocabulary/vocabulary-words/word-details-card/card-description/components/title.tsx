@@ -3,6 +3,7 @@ import { VolumeUp } from '@mui/icons-material';
 import '../card-description.css';
 import { API_BASE_URL } from '../../../../../../api/api';
 import { Device } from '../../../../../../types/types';
+import { useGroupColor } from '../../../../../hooks';
 
 interface Props {
   device: string;
@@ -16,6 +17,7 @@ const playAudio = (audio: HTMLAudioElement) => () => {
 };
 
 export const Title = ({ device, title, transcription, audio }: Props) => {
+  const color = useGroupColor();
   const audioFiles = audio.map((audioFile) => new Audio(`${[API_BASE_URL, audioFile].join('/')}`));
   const [audioWord, audioMeaning, audioExample] = audioFiles;
 
@@ -40,7 +42,7 @@ export const Title = ({ device, title, transcription, audio }: Props) => {
         {transcription}
       </Typography>
       <IconButton
-        color='secondary'
+        color={color}
         aria-label='listen word pronunciation'
         onClick={audioStartHandler}
       >
