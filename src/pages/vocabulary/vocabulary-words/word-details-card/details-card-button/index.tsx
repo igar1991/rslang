@@ -1,4 +1,5 @@
 import { Button } from '@mui/material';
+import { useGroupColor } from '../../../../hooks';
 
 interface Props {
   handleClick: () => void;
@@ -6,10 +7,12 @@ interface Props {
 }
 
 export const DetailsCardButton = ({ handleClick, title }: Props) => {
+  const color = useGroupColor();
+
   return (
     <Button
       variant='contained'
-      color='secondary'
+      color={color}
       size='small'
       className='details-card-button'
       onClick={handleClick}

@@ -1,7 +1,7 @@
 import { Box, Pagination } from '@mui/material';
 import './words.css';
 import { WordsView } from './words-view';
-import { useDevice } from '../../hooks';
+import { useDevice, useGroupColor } from '../../hooks';
 import { useDispatch } from 'react-redux';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { setPage } from '../../../redux/slices/wordsSlice';
@@ -16,8 +16,9 @@ const paginationSizeByDevice: Map<string, 'medium' | 'large'> = new Map([
 
 export const VocabularyWords = () => {
   const device = useDevice();
-  const dispatch = useDispatch();
+  const color = useGroupColor();
 
+  const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState(0);
   const changePageHandler = useCallback((event: ChangeEvent<unknown>, value: number) => {
     setCurrentPage(value - 1);
@@ -34,8 +35,8 @@ export const VocabularyWords = () => {
         count={PAGES}
         page={currentPage + 1}
         size={paginationSizeByDevice.get(device)}
-        color='secondary'
-        variant='outlined'
+        color={color}
+        variant='text'
         onChange={changePageHandler}
       />
     </Box>

@@ -3,26 +3,29 @@ import './levels.css';
 import { useDispatch } from 'react-redux';
 import { setGroup } from '../../../../../redux/slices/wordsSlice';
 import { useCallback } from 'react';
+import { Colors, ColorsByGroupMap } from './constants';
+import { LEVELS } from '../../constants';
 
 interface Props {
-  buttonName: string;
+  level: LEVELS;
   group: number;
 }
 
-export const LevelButton = ({ buttonName, group }: Props) => {
+export const LevelButton = ({ level, group }: Props) => {
   const dispatch = useDispatch();
   const onClickHandler = useCallback(() => {
     return dispatch(setGroup(group));
   }, []);
+  const color = ColorsByGroupMap.get(level) as Colors;
 
   return (
     <Button
-      variant='outlined'
-      color='secondary'
+      variant='contained'
+      color={color}
       className='level-button'
       onClick={onClickHandler}
     >
-      {buttonName}
+      {level}
     </Button>
   );
 };
