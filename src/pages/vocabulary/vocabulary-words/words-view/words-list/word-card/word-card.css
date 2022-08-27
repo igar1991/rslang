@@ -4,11 +4,22 @@
   min-height: 90px;
 
   display: flex;
+  justify-content: space-between;
   flex-direction: column;
   padding: 8px;
 
   cursor: pointer;
   transition: 0.5s ease;
+}
+
+.words-card-description {
+  display: flex;
+  flex-direction: column;
+}
+
+Button.hard-word-icon {
+  max-height: 20px;
+  align-self: flex-end;
 }
 
 span.word-card__translation {

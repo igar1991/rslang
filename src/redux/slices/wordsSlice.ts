@@ -17,11 +17,11 @@ export interface WordsState {
 
 const initialState: WordsState = {
   items: [],
-  page: 0,
-  group: 0,
-  selectedWordId: '5e9f5ee35eb9e72bc21af4a4',
-  selectedWordColor: 'elementary',
-  selectedTab: VocabularyTab.VOCABULARY,
+  page: Number(localStorage.getItem('page')) ?? 0,
+  group: Number(localStorage.getItem('group')) ?? 0,
+  selectedWordId: localStorage.getItem('selectedWordId') ?? '5e9f5ee35eb9e72bc21af4a4',
+  selectedWordColor: localStorage.getItem('selectedWordColor') as Colors ?? 'elementary',
+  selectedTab: Number(localStorage.getItem('selectedTab')) ?? VocabularyTab.VOCABULARY,
   usersHardWords: [],
   error: null,
   status: 'idle'
@@ -42,18 +42,23 @@ export const wordsSlice = createSlice({
   initialState,
   reducers: {
     setGroup: (state, { payload: group }: { payload: number }) => {
+      localStorage.setItem('group', group.toString());
       state.group = group;
     },
     setPage: (state, { payload: page }: { payload: number }) => {
+      localStorage.setItem('page', page.toString());
       state.page = page;
     },
     setSelectedWordId: (state, { payload: id }: { payload: string }) => {
+      localStorage.setItem('selectedWordId', id);
       state.selectedWordId = id;
     },
     setSelectedTab: (state, { payload: tab }: { payload: number }) => {
+      localStorage.setItem('selectedTab', tab.toString());
       state.selectedTab = tab;
     },
     setSelectedWordColor: (state, { payload: color }: { payload: Colors }) => {
+      localStorage.setItem('selectedWordColor', color);
       state.selectedWordColor = color;
     },
     markWordAsHard: markWordAsHardReducer
