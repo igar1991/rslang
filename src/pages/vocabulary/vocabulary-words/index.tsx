@@ -4,9 +4,10 @@ import { WordsView } from './words-view';
 import { useDevice, useGroupColor } from '../../hooks';
 import { useDispatch } from 'react-redux';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
-import { setPage } from '../../../redux/slices/wordsSlice';
 import { PAGES } from './constants';
 import { Device } from '../../../types/types';
+import { useAppSelector } from '../../../redux/hooks';
+import { setPage } from '../../../redux/slices/wordsSlice';
 
 const paginationSizeByDevice: Map<string, 'medium' | 'large'> = new Map([
   [Device.DESKTOP, 'large'],
@@ -17,9 +18,10 @@ const paginationSizeByDevice: Map<string, 'medium' | 'large'> = new Map([
 export const VocabularyWords = () => {
   const device = useDevice();
   const color = useGroupColor();
+  const page = useAppSelector((state) => state.words.page);
 
   const dispatch = useDispatch();
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(page);
   const changePageHandler = useCallback((event: ChangeEvent<unknown>, value: number) => {
     setCurrentPage(value - 1);
   }, [setCurrentPage]);

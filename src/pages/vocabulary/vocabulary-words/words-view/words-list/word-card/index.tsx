@@ -1,5 +1,5 @@
 import './word-card.css';
-import { Typography } from '@mui/material';
+import { IconButton } from '@mui/material';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { setSelectedWordColor, setSelectedWordId } from '../../../../../../redux/slices/wordsSlice';
@@ -8,6 +8,8 @@ import { useAppSelector } from '../../../../../../redux/hooks';
 import { GROUPS } from '../../../constants';
 import { Colors, ColorsByGroupMap } from '../../words-levels/constants';
 import { Word } from '../../../../../../types/types';
+import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+import { WordWithTranslation } from './word-with-translation';
 
 interface WordCardProps {
   word: Word;
@@ -16,10 +18,12 @@ interface WordCardProps {
 export const WordCard = ({ word: { word, wordTranslate, id, group } }: WordCardProps) => {
   const dispatch = useDispatch();
   const selectedWordId = useAppSelector((state) => state.words.selectedWordId);
+  const usersHardWords = useAppSelector((state) => state.words.usersHardWords);
   const onSelectWord = useCallback(() => {
     dispatch(setSelectedWordColor(color));
     dispatch(setSelectedWordId(id));
   }, [dispatch, id]);
+  const isHardWord = usersHardWords.map(({ id }) => id).includes(id);
 
   const color = ColorsByGroupMap.get(GROUPS[group]) as Colors;
 
@@ -31,18 +35,19 @@ export const WordCard = ({ word: { word, wordTranslate, id, group } }: WordCardP
       onClick={onSelectWord}
       color={color}
     >
-      <Typography
-        variant='h5'
-        className='word-card__title'
-      >
-        {word}
-      </Typography>
-      <Typography
-        variant='caption'
-        className='word-card__translation'
-      >
-        {wordTranslate}
-      </Typography>
+      <WordWithTranslation
+        word={word}
+        wordTranslate={wordTranslate}
+      />
+      {isHardWord &&
+        <IconButton
+          disableRipple
+          size='small'
+          className='hard-word-icon'
+        >
+          <FitnessCenterIcon />
+        </IconButton>
+      }
     </StyledWordCardWrapper>
   );
 };
