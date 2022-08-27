@@ -6,7 +6,7 @@ import { LEVELS } from '../../constants';
 interface Props {
   level: LEVELS;
   group: number;
-  onClickHandler: (group: number)=>void
+  onClickHandler: (group: number) => void;
 }
 
 export const LevelButton = ({ level, group, onClickHandler }: Props) => {
@@ -17,7 +17,7 @@ export const LevelButton = ({ level, group, onClickHandler }: Props) => {
       variant='contained'
       color={color}
       className='level-button'
-      onClick={()=>onClickHandler(group)}
+      onClick={() => onClickHandler(group)}
     >
       {level}
     </Button>

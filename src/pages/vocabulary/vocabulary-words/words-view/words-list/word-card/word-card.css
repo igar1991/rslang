@@ -8,6 +8,7 @@
   padding: 8px;
 
   cursor: pointer;
+  transition: 0.5s ease;
 }
 
 span.word-card__translation {

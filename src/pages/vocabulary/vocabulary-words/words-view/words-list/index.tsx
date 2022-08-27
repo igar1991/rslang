@@ -11,12 +11,10 @@ interface WordsProps {
 export const WordsList = ({ data, isSuccess }: WordsProps) => {
   return isSuccess ? (
     <Box className='words__words-list'>
-      {data?.map((currentWord, index) => (
+      {data?.map((currentWord) => (
         <WordCard
-          key={index}
-          word={currentWord.word}
-          translation={currentWord.wordTranslate}
-          id={currentWord.id}
+          key={currentWord.id}
+          word={currentWord}
         />
       ))}
     </Box>

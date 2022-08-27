@@ -16,8 +16,10 @@ interface Props {
 export const WordDetailsCard = ({ id }: Props) => {
   const dispatch = useDispatch();
   const isUserLoggedIn = useAppSelector((state) => state.auth.isAuth);
+  const selectedWordColor = useAppSelector((state) => state.words.selectedWordColor);
 
   const { data, isSuccess } = wordsAPI.useGetWordByIdQuery(id);
+
   const handleClick = useCallback(() => {
     if (data) {
       dispatch(markWordAsHard(data));
@@ -36,10 +38,12 @@ export const WordDetailsCard = ({ id }: Props) => {
         <Box className='word__details-card-buttons-group'>
           <DetailsCardButton
             handleClick={handleClick}
+            color={selectedWordColor}
             title={'Hard word'}
           />
           <DetailsCardButton
             handleClick={handleClick}
+            color={selectedWordColor}
             title={'Known word'}
           />
         </Box>
