@@ -3,7 +3,7 @@ import { LevelButton } from './level-button';
 import './levels.css';
 import { GROUPS } from '../../constants';
 
-export const WordsLevels = ({onClickHandler}: {onClickHandler: (group: number)=>void}) => (
+export const WordsLevels = ({ onClickHandler }: { onClickHandler: (group: number) => void }) => (
   <Box className='words__levels'>
     {GROUPS.map((level, index) => <LevelButton
       key={level}

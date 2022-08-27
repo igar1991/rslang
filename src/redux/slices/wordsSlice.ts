@@ -1,12 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { VocabularyTab, Word } from '../../types/types';
 import { RootState } from '../store';
+import { Colors } from '../../pages/vocabulary/vocabulary-words/words-view/words-levels/constants';
 
 export interface WordsState {
   items: Word[];
   page: number;
   group: number;
   selectedWordId: string;
+  selectedWordColor: Colors;
   selectedTab: number;
   usersHardWords: Word[];
   error: null | string;
@@ -18,6 +20,7 @@ const initialState: WordsState = {
   page: 0,
   group: 0,
   selectedWordId: '5e9f5ee35eb9e72bc21af4a4',
+  selectedWordColor: 'elementary',
   selectedTab: VocabularyTab.VOCABULARY,
   usersHardWords: [],
   error: null,
@@ -50,12 +53,22 @@ export const wordsSlice = createSlice({
     setSelectedTab: (state, { payload: tab }: { payload: number }) => {
       state.selectedTab = tab;
     },
+    setSelectedWordColor: (state, { payload: color }: { payload: Colors }) => {
+      state.selectedWordColor = color;
+    },
     markWordAsHard: markWordAsHardReducer
   }
 });
 
 export const selectWords = (state: RootState) => state.words;
 
-export const { setGroup, setPage, setSelectedWordId, setSelectedTab, markWordAsHard } = wordsSlice.actions;
+export const {
+  setGroup,
+  setPage,
+  setSelectedWordId,
+  setSelectedTab,
+  setSelectedWordColor,
+  markWordAsHard
+} = wordsSlice.actions;
 
 export default wordsSlice.reducer;

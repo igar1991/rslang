@@ -3,7 +3,7 @@ import { VolumeUp } from '@mui/icons-material';
 import '../card-description.css';
 import { API_BASE_URL } from '../../../../../../api/api';
 import { Device } from '../../../../../../types/types';
-import { useGroupColor } from '../../../../../hooks';
+import { useAppSelector } from '../../../../../../redux/hooks';
 
 interface Props {
   device: string;
@@ -17,7 +17,7 @@ const playAudio = (audio: HTMLAudioElement) => () => {
 };
 
 export const Title = ({ device, title, transcription, audio }: Props) => {
-  const color = useGroupColor();
+  const color = useAppSelector((state) => state.words.selectedWordColor);
   const audioFiles = audio.map((audioFile) => new Audio(`${[API_BASE_URL, audioFile].join('/')}`));
   const [audioWord, audioMeaning, audioExample] = audioFiles;
 

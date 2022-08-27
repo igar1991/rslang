@@ -2,24 +2,26 @@ import './word-card.css';
 import { Typography } from '@mui/material';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { setSelectedWordId } from '../../../../../../redux/slices/wordsSlice';
+import { setSelectedWordColor, setSelectedWordId } from '../../../../../../redux/slices/wordsSlice';
 import { StyledWordCardWrapper } from './StyledWordCardWrapper';
-import { useGroupColor } from '../../../../../hooks';
 import { useAppSelector } from '../../../../../../redux/hooks';
+import { GROUPS } from '../../../constants';
+import { Colors, ColorsByGroupMap } from '../../words-levels/constants';
+import { Word } from '../../../../../../types/types';
 
 interface WordCardProps {
-  word: string;
-  translation: string;
-  id: string;
+  word: Word;
 }
 
-export const WordCard = ({ word, translation, id }: WordCardProps) => {
+export const WordCard = ({ word: { word, wordTranslate, id, group } }: WordCardProps) => {
   const dispatch = useDispatch();
+  const selectedWordId = useAppSelector((state) => state.words.selectedWordId);
   const onSelectWord = useCallback(() => {
+    dispatch(setSelectedWordColor(color));
     dispatch(setSelectedWordId(id));
   }, [dispatch, id]);
-  const color = useGroupColor();
-  const selectedWordId = useAppSelector((state) => state.words.selectedWordId);
+
+  const color = ColorsByGroupMap.get(GROUPS[group]) as Colors;
 
   return (
     <StyledWordCardWrapper
@@ -39,7 +41,7 @@ export const WordCard = ({ word, translation, id }: WordCardProps) => {
         variant='caption'
         className='word-card__translation'
       >
-        {translation}
+        {wordTranslate}
       </Typography>
     </StyledWordCardWrapper>
   );
