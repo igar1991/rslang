@@ -7,6 +7,7 @@ import ModalMessage from './pages/components/modal-message';
 import ProfileModal from './pages/components/profile';
 import Registration from './pages/components/registration';
 import Games from './pages/games';
+import AudioCall from './pages/games/audiocall';
 import Main from './pages/main';
 import Statistics from './pages/statistics';
 import Vocabulary from './pages/vocabulary';
@@ -34,6 +35,7 @@ function App(): JSX.Element {
           <Route path='/' element={<Main openRegisterModal={openRegisterModal} openAuthorizationModal={openAuthorizationModal} />} />
           <Route path='/vocabulary' element={<Vocabulary />} />
           <Route path='/games' element={<Games />} />
+          <Route path='/audiocall' element={<AudioCall />} />
           <Route path='/statistics' element={<Statistics />} />
         </Routes>
         <Registration openAuthorizationModal={openAuthorizationModal} registerModal={registerModal} closeRegisterModal={closeRegisterModal} setMessageModal={setMessageModal} />

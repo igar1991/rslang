@@ -1,0 +1,14 @@
+.container_audiocall {
+	background-color: rgb(204, 204, 204);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	color: #ffffff;
+
+}
+.title {
+  font-size: 34px;
+  font-weight: 400;
+  color: #ffffff;
+}
