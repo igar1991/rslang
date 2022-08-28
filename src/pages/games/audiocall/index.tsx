@@ -21,6 +21,7 @@ import { useGroupColor } from '../../hooks';
 import './audiocall.css';
 import { API_BASE_URL } from '../../../api/api';
 import { Result } from '../components/result/result';
+import { Start } from '../components/start/start';
 
 export default function AudioCall() {
   const dispatch = useDispatch();
@@ -103,23 +104,7 @@ export default function AudioCall() {
   return (
     <main className="container_audiocall">
       <Container>
-        {stage === 'start' && (
-          <>
-            <>
-              <Typography variant="h3" gutterBottom>
-                Аудиовызов
-              </Typography>
-              <Typography
-                sx={{ marginBottom: '50px' }}
-                variant="h6"
-                gutterBottom
-              >
-                Тренеровка Аудиовызов улучшает твое восприятие речи на слух.
-              </Typography>
-            </>
-            <WordsLevels onClickHandler={onClickHandler} />
-          </>
-        )}
+        {stage === 'start' && <Start onClickHandler={onClickHandler} title='Аудиовызов' description='Тренеровка Аудиовызов улучшает твое восприятие речи на слух.' />}
         {stage === 'pending' && (
           <>
             {data && (
