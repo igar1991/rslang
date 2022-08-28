@@ -20,6 +20,17 @@ export interface WordsRequestParams {
   group: number;
 }
 
+export interface NewWordRequestParams {
+  difficulty: string,
+  optional: Record<string, unknown>,
+}
+
+export interface UserWordData {
+  difficulty: string,
+  id: string,
+  wordId: string,
+}
+
 export interface User {
   email: string;
   password: string;

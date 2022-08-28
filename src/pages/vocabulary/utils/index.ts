@@ -1,6 +1,6 @@
-import { useAppSelector } from '../../../../redux/hooks';
-import { VocabularyTab, Word } from '../../../../types/types';
-import { wordsAPI } from '../../../../api/wordsService';
+import { useAppSelector } from '../../../redux/hooks';
+import { VocabularyTab, Word } from '../../../types/types';
+import { wordsAPI } from '../../../api/wordsService';
 
 export const getWordsData = (): { data: Word[] | undefined, isSuccess: boolean } => {
   const group = useAppSelector((state) => state.words.group);

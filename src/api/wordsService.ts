@@ -1,4 +1,4 @@
-import { Word, WordsRequestParams } from '../types/types';
+import { NewWordRequestParams, UserWordData, Word, WordsRequestParams } from '../types/types';
 import { api } from './api';
 
 export const wordsAPI = api.injectEndpoints({
@@ -18,15 +18,23 @@ export const wordsAPI = api.injectEndpoints({
         url: `/words/${id}`
       })
     }),
-    getWordsUser: build.query<Word[], string>({
+    getUserWords: build.query<UserWordData[], string>({
       query: (id) => ({
         url: `/users/${id}/words`
       })
     }),
-    addUserWord: build.mutation<{ id: string, wordId: string }, { id: string, wordId: string }>({
-      query: ({ id, wordId }) => ({
+    addUserWord: build.mutation<{ addedWord: UserWordData }, { id: string, wordId: string, body: NewWordRequestParams }>({
+      query: ({ id, wordId, body }) => ({
         url: `/users/${id}/words/${wordId}`,
-        method: 'POST'
+        method: 'POST',
+        body: body
+      })
+    }),
+    updateUserWord: build.mutation<{ addedWord: UserWordData }, { id: string, wordId: string, body: NewWordRequestParams }>({
+      query: ({ id, wordId, body }) => ({
+        url: `/users/${id}/words/${wordId}`,
+        method: 'PUT',
+        body: body
       })
     }),
     getUserWordById: build.query<Word, { id: string, wordId: string }>({
