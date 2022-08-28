@@ -12,6 +12,16 @@
   transition: 0.5s ease;
 }
 
+div.disabled {
+  pointer-events: none;
+  background-color: #f8f8f8;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+div.disabled span {
+  color: rgba(0, 0, 0, 0.2);
+}
+
 .words-card-description {
   display: flex;
   flex-direction: column;
@@ -29,6 +39,11 @@ span.word-card__translation {
 
 h5.word-card__title {
   font-size: 20px;
+}
+
+.words-icons-group {
+  display: flex;
+  justify-content: flex-end;
 }
 
 @media (max-width: 900px) {
