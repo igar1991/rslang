@@ -39,6 +39,17 @@ const markWordAsHardReducer = (state: WordsState, { payload: word }: { payload: 
   state.usersHardWords.push(word);
 };
 
+const removeWordFromHardReducer = (state: WordsState, { payload: word }: { payload: Word }) => {
+  const hardWordIds = state.usersHardWords.map(({ id }) => id);
+
+  if (!hardWordIds.includes(word.id)) {
+    return;
+  }
+
+  const wordIndex = state.usersHardWords.indexOf(word);
+  state.usersHardWords.splice(wordIndex, 1);
+};
+
 const markWordAsLearnedReducer = (state: WordsState, { payload: word }: { payload: Word }) => {
   const hardWordIds = state.usersLearnedWords.map(({ id }) => id);
 
@@ -74,6 +85,7 @@ export const wordsSlice = createSlice({
       state.selectedWordColor = color;
     },
     markWordAsHard: markWordAsHardReducer,
+    removeWordFromHard: removeWordFromHardReducer,
     markWordAsLearned: markWordAsLearnedReducer
   }
 });
@@ -87,6 +99,7 @@ export const {
   setSelectedTab,
   setSelectedWordColor,
   markWordAsHard,
+  removeWordFromHard,
   markWordAsLearned
 } = wordsSlice.actions;
 

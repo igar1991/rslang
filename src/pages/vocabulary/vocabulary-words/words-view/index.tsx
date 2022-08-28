@@ -4,10 +4,11 @@ import { WordsLevels } from './words-levels';
 import { WordsList } from './words-list';
 import './words-view.css';
 import { useAppSelector } from '../../../../redux/hooks';
-import { getWordsData } from './utils';
 import { useDispatch } from 'react-redux';
 import { useCallback } from 'react';
 import { setGroup } from '../../../../redux/slices/wordsSlice';
+import { getWordsData } from '../../utils';
+import { wordsAPI } from '../../../../api/wordsService';
 
 interface ViewProps {
   isMobile: boolean;
@@ -15,20 +16,23 @@ interface ViewProps {
 
 export const WordsView = ({ isMobile }: ViewProps) => {
   const selectedWordId = useAppSelector((state) => state.words.selectedWordId);
+  const { data: word, isSuccess: isWordLoaded } = wordsAPI.useGetWordByIdQuery(selectedWordId);
   const { data, isSuccess } = getWordsData();
   const dispatch = useDispatch();
   const onClickHandler = useCallback((group: number) => {
     dispatch(setGroup(group));
-  }, []);
+  }, [dispatch]);
 
   return (
     <Box className='words'>
       {isMobile ? (
         <>
           <WordsLevels onClickHandler={onClickHandler} />
-          <WordDetailsCard
-            id={selectedWordId}
-          />
+          {isWordLoaded ?
+            <WordDetailsCard
+              word={word}
+            /> : null
+          }
           <WordsList
             data={data}
             isSuccess={isSuccess}
@@ -43,9 +47,11 @@ export const WordsView = ({ isMobile }: ViewProps) => {
               isSuccess={isSuccess}
             />
           </Box>
-          <WordDetailsCard
-            id={selectedWordId}
-          />
+          {isWordLoaded ?
+            <WordDetailsCard
+              word={word}
+            /> : null
+          }
         </>
       )}
     </Box>

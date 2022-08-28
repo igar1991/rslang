@@ -17,3 +17,8 @@ export const GROUPS = [
 ];
 
 export const PAGES = 29;
+
+export enum DIFFICULTY {
+  HARD = 'hard',
+  EASY = 'easy'
+}
