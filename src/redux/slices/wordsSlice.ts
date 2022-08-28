@@ -11,6 +11,7 @@ export interface WordsState {
   selectedWordColor: Colors;
   selectedTab: number;
   usersHardWords: Word[];
+  usersLearnedWords: Word[];
   error: null | string;
   status: string;
 }
@@ -23,6 +24,7 @@ const initialState: WordsState = {
   selectedWordColor: localStorage.getItem('selectedWordColor') as Colors ?? 'elementary',
   selectedTab: Number(localStorage.getItem('selectedTab')) ?? VocabularyTab.VOCABULARY,
   usersHardWords: [],
+  usersLearnedWords: [],
   error: null,
   status: 'idle'
 };
@@ -35,6 +37,16 @@ const markWordAsHardReducer = (state: WordsState, { payload: word }: { payload: 
   }
 
   state.usersHardWords.push(word);
+};
+
+const markWordAsLearnedReducer = (state: WordsState, { payload: word }: { payload: Word }) => {
+  const hardWordIds = state.usersLearnedWords.map(({ id }) => id);
+
+  if (hardWordIds.includes(word.id)) {
+    return;
+  }
+
+  state.usersLearnedWords.push(word);
 };
 
 export const wordsSlice = createSlice({
@@ -61,7 +73,8 @@ export const wordsSlice = createSlice({
       localStorage.setItem('selectedWordColor', color);
       state.selectedWordColor = color;
     },
-    markWordAsHard: markWordAsHardReducer
+    markWordAsHard: markWordAsHardReducer,
+    markWordAsLearned: markWordAsLearnedReducer
   }
 });
 
@@ -73,7 +86,8 @@ export const {
   setSelectedWordId,
   setSelectedTab,
   setSelectedWordColor,
-  markWordAsHard
+  markWordAsHard,
+  markWordAsLearned
 } = wordsSlice.actions;
 
 export default wordsSlice.reducer;

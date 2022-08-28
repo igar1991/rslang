@@ -6,7 +6,7 @@ import { API_BASE_URL } from '../../../../api/api';
 import { DetailsCardButton } from './details-card-button';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { markWordAsHard } from '../../../../redux/slices/wordsSlice';
+import { markWordAsHard, markWordAsLearned } from '../../../../redux/slices/wordsSlice';
 import { useAppSelector } from '../../../../redux/hooks';
 
 interface Props {
@@ -20,9 +20,15 @@ export const WordDetailsCard = ({ id }: Props) => {
 
   const { data, isSuccess } = wordsAPI.useGetWordByIdQuery(id);
 
-  const handleClick = useCallback(() => {
+  const handleClickHardWord = useCallback(() => {
     if (data) {
       dispatch(markWordAsHard(data));
+    }
+  }, [data, dispatch]);
+
+  const handleClickLearnedWord = useCallback(() => {
+    if (data) {
+      dispatch(markWordAsLearned(data));
     }
   }, [data, dispatch]);
 
@@ -37,14 +43,14 @@ export const WordDetailsCard = ({ id }: Props) => {
       {isUserLoggedIn &&
         <Box className='word__details-card-buttons-group'>
           <DetailsCardButton
-            handleClick={handleClick}
+            handleClick={handleClickHardWord}
             color={selectedWordColor}
             title={'Hard word'}
           />
           <DetailsCardButton
-            handleClick={handleClick}
+            handleClick={handleClickLearnedWord}
             color={selectedWordColor}
-            title={'Known word'}
+            title={'Learned word'}
           />
         </Box>
       }
