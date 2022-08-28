@@ -1,28 +1,31 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { Word } from '../../types/types';
 import { RootState } from '../store';
 
-export interface AudioCallState {
+export interface GamesSlice {
   page: number;
   group: number;
-  selectedWordId: string;
   error: null | string;
   status: string;
   stage: 'start' | 'pending' | 'result';
-  currentWord: number
+  currentWord: number;
+  trueAnswers: Word[];
+  falseAnswers: Word[];
 }
 
-const initialState: AudioCallState = {
+const initialState: GamesSlice = {
   page: 0,
   group: 0,
   currentWord: 0, 
-  selectedWordId: '5e9f5ee35eb9e72bc21af4a4',
+  trueAnswers: [],
+  falseAnswers: [],
   error: null,
   status: 'idle',
   stage: 'start'
 };
 
 
-export const audioCallSlice = createSlice({
+export const gamesSlice = createSlice({
   name: 'audio',
   initialState,
   reducers: {
@@ -35,17 +38,21 @@ export const audioCallSlice = createSlice({
     setStage: (state, { payload: stage } : { payload: 'start' | 'pending' | 'result' }) => {
       state.stage = stage;
     },
-    setSelectedWordId: (state, { payload: id } : { payload: string }) => {
-      state.selectedWordId = id;
-    },
     setCurrentWord: (state, { payload: index } : { payload: number }) => {
       state.currentWord = index;
     },
+    setTrueAnswers: (state, { payload: word } : { payload: Word }) => {
+      state.trueAnswers = [...state.trueAnswers, word];
+    },
+    setFalseAnswers: (state, { payload: word } : { payload: Word }) => {
+      state.falseAnswers = [...state.falseAnswers, word];
+    },
+    clearGame: () => initialState,
   }
 });
 
-export const selectAudio = (state: RootState) => state.audio;
+export const selectGames = (state: RootState) => state.games;
 
-export const { setGroup, setPage, setSelectedWordId, setStage, setCurrentWord } = audioCallSlice.actions;
+export const { setGroup, setPage, setStage, setCurrentWord, setTrueAnswers, setFalseAnswers, clearGame } = gamesSlice.actions;
 
-export default audioCallSlice.reducer;
+export default gamesSlice.reducer;
