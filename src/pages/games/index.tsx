@@ -5,7 +5,7 @@ export default function Games() {
   return (
     <main className='container'>
       <NavLink to='/audiocall'>audiocall</NavLink>
-      Games page
+      <NavLink to='/sprint'>sprint</NavLink>
     </main>
   );
 }
