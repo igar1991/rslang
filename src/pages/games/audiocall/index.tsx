@@ -5,18 +5,9 @@ import { useDispatch } from 'react-redux';
 import { wordsAPI } from 'api/wordsService';
 import { useAppSelector } from 'redux/hooks';
 import { VolumeUp } from '@mui/icons-material';
-import {
-  setGroup,
-  setPage,
-  setStage,
-  setCurrentWord,
-  setTrueAnswers,
-  setFalseAnswers,
-  clearGame,
-  selectGames,
-} from 'redux/slices/gamesSlice';
-import { Word } from 'types/types';
-import { useGroupColor } from '../../hooks';
+import VolumeUpOutlinedIcon from '@mui/icons-material/VolumeUpOutlined';
+import { setGroup, setPage, setStage, setCurrentWord, setTrueAnswers, setFalseAnswers, clearGame, selectGames } from '../../../redux/slices/gamesSlice';
+import { Word } from '../../../types/types';
 import './audiocall.css';
 import { API_BASE_URL } from 'api/api';
 import { Result } from '../components/result/result';
@@ -28,13 +19,12 @@ export default function AudioCall() {
   const { data } = wordsAPI.useGetWordsQuery({ page, group });
 
   const random = (num: number) => Math.floor(Math.random() * num);
-  const color = useGroupColor();
   const [option, setOption] = useState<number[]>([]);
   const [isAnswer, setIsAnswer] = useState<null | string>(null);
 
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(clearGame());
-  },[]);
+  }, []);
 
   const startCall = () => {
     addQuest(0);
@@ -77,12 +67,12 @@ export default function AudioCall() {
   };
 
   const nextQuest = (currentIndex: number) => {
-    if (data && currentIndex >=data?.length-1) {
+    if (data && currentIndex >= data?.length - 1) {
       dispatch(setStage('result'));
       return;
     }
-
-    if(data && isAnswer === null) {
+    
+    if (data && isAnswer === null) {
       setIsAnswer(data[currentIndex].id);
       dispatch(setFalseAnswers(data[currentWord]));
     } else {
@@ -101,42 +91,47 @@ export default function AudioCall() {
   };
 
   return (
-    <main className="container_audiocall">
+    <main className='container_audiocall'>
       <Container>
-        {stage === 'start' && <Start onClickHandler={onClickHandler} title='Аудиовызов' description='Тренеровка Аудиовызов улучшает твое восприятие речи на слух.' />}
+        {stage === 'start' && (
+          <Start
+            onClickHandler={onClickHandler}
+            title='AudioCall'
+            description='The AudioCall training improves your listening comprehension.'
+          />
+        )}
         {stage === 'pending' && (
           <>
             {data && (
               <>
-                <Box>
+                <Box className='audiocall__question'>
                   {isAnswer === null ? (
-                    <IconButton
-                      color={color}
-                      aria-label="listen word pronunciation"
-                      onClick={() => audioStartHandler(data[currentWord].audio)}
-                      size="large"
-                    >
-                      <VolumeUp sx={{ width: '3em', height: '3em' }} />
-                    </IconButton>
+                    <>
+                      <IconButton
+                        aria-label='listen word pronunciation'  
+                        onClick={() => audioStartHandler(data[currentWord].audio)}
+                        size='large'
+                      >
+                        <VolumeUpOutlinedIcon className='audiocall__icon' />
+                      </IconButton>
+                    </>
                   ) : (
                     <>
                       <Box
-                        component="img"
-                        alt="Word image"
-                        src={`${[API_BASE_URL, data[currentWord].image].join(
-                          '/'
-                        )}`}
-                        className="word__details-card_image"
+                        component='img'
+                        alt='Word image'
+                        src={`${[API_BASE_URL, data[currentWord].image].join('/')}`}
+                        className='word__details-card_image'
                       />
                       <Typography
                         variant='h5'
-                        className='word-title'
+                        className='word_title'
                       >
                         <IconButton
-                          color={color}
-                          aria-label="listen word pronunciation"
+                          color='secondary'
+                          aria-label='listen word pronunciation'
                           onClick={() => audioStartHandler(data[currentWord].audio)}
-                          size="large"
+                          size='large'
                         >
                           <VolumeUp />
                         </IconButton>
@@ -145,35 +140,32 @@ export default function AudioCall() {
                     </>
                   )}
                 </Box>
-                {option.map((item) => {
-                  return (
-                    <Button
-                      key={data[item].id}
-                      variant={
-                        isAnswer === data[item].id ||
-                        (isAnswer && data[currentWord].id === data[item].id)
-                          ? 'contained'
-                          : 'outlined'
-                      }
-                      color={chooseColor(data[item].id)}
-                      onClick={() => checkAnsewr(data[item])}
-                      sx={{ margin: '5px' }}
-                    >
-                      {data[item].wordTranslate}
-                    </Button>
-                  );
-                })}
+                <Box className='audiocall__answers'>
+                  {option.map((item) => {
+                    return (
+                      <Button
+                        key={data[item].id}
+                        variant={isAnswer === data[item].id || (isAnswer && data[currentWord].id === data[item].id) ? 'contained' : 'outlined'}
+                        color={chooseColor(data[item].id)}
+                        onClick={() => checkAnsewr(data[item])}
+                        sx={{ margin: '5px' }}
+                        className='audiocall__answer-btn'
+                      >
+                        {data[item].wordTranslate}
+                      </Button>
+                    );
+                  })}
+                </Box>
               </>
             )}
-            <Box>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => nextQuest(currentWord)}
-              >
-                {isAnswer === null ? 'Не знаю' : 'Дальше'}
-              </Button>
-            </Box>
+            <Button
+              variant='contained'
+              color='secondary'
+              onClick={() => nextQuest(currentWord)}
+              className='audiocall__next-btn'
+            >
+              {isAnswer === null ? 'Don\'t know' : 'Next'}
+            </Button>
           </>
         )}
         {stage === 'result' && <Result audioStartHandler={audioStartHandler} />}

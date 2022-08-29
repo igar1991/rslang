@@ -4,6 +4,10 @@ import { clearGame, selectGames } from 'redux/slices/gamesSlice';
 import { useGroupColor } from 'pages/hooks';
 import { VolumeUp } from '@mui/icons-material';
 import { useDispatch } from 'react-redux';
+import CircularProgress from '@mui/material/CircularProgress';
+
+
+import './result.css';
 
 interface ResultAnswers {
   audioStartHandler: (audioFile: string)=>void
@@ -12,22 +16,25 @@ interface ResultAnswers {
 export const Result =({audioStartHandler}: ResultAnswers)=>{
   const { trueAnswers, falseAnswers } = useAppSelector(selectGames);
   const color = useGroupColor();
+  const culc = trueAnswers.length / (trueAnswers.length + falseAnswers.length) * 100;
   const dispatch = useDispatch();
   return (
     <Box>
+      <CircularProgress variant="determinate" color='success' size={50} value={culc} />
+
       <Button
         variant="contained"
         color="secondary"
         onClick={() => dispatch(clearGame())}
       >
-        Играть ещё
+        Play again
       </Button>
       <Button
         variant="contained"
         color="secondary"
         onClick={() => console.log('go')}
       >
-        К списку игр
+        To games list
       </Button>
       <Typography
         variant='h5'

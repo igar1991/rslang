@@ -11,13 +11,14 @@ export const Start =({onClickHandler, title, description }:StartInterface)=>{
   return (
     <>
       <>
-        <Typography variant="h3" gutterBottom>
+        <Typography variant="h3" gutterBottom className='game__title'>
           {title}
         </Typography>
         <Typography
           sx={{ marginBottom: '50px' }}
           variant="h6"
           gutterBottom
+          className='game__description'
         >
           {description}
         </Typography>
