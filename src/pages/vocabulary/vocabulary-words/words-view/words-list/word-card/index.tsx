@@ -1,7 +1,7 @@
 import './word-card.css';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { setSelectedWordColor, setSelectedWordId } from '../../../../../../redux/slices/wordsSlice';
+import { selectWords, setSelectedWordColor, setSelectedWordId } from '../../../../../../redux/slices/wordsSlice';
 import { StyledWordCardWrapper } from './StyledWordCardWrapper';
 import { useAppSelector } from '../../../../../../redux/hooks';
 import { GROUPS } from '../../../constants';
@@ -13,17 +13,16 @@ import { HardLearnedIconsGroup } from './hard-learned-icons';
 interface WordCardProps {
   word: Word;
   isHardWord: boolean;
+  isLearnedWord: boolean;
 }
 
-export const WordCard = ({ word: { word, wordTranslate, id, group }, isHardWord }: WordCardProps) => {
+export const WordCard = ({ word: { word, wordTranslate, id, group }, isHardWord, isLearnedWord }: WordCardProps) => {
   const dispatch = useDispatch();
-  const selectedWordId = useAppSelector((state) => state.words.selectedWordId);
-  const usersLearnedWords = useAppSelector((state) => state.words.usersLearnedWords);
+  const { selectedWordId } = useAppSelector(selectWords);
   const onSelectWord = useCallback(() => {
     dispatch(setSelectedWordColor(color));
     dispatch(setSelectedWordId(id));
   }, [dispatch, id]);
-  const isLearnedWord = usersLearnedWords.map(({ id }) => id).includes(id);
 
   const color = ColorsByGroupMap.get(GROUPS[group]) as Colors;
 
