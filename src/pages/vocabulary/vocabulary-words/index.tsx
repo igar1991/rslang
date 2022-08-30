@@ -5,9 +5,9 @@ import { useDevice, useGroupColor } from '../../hooks';
 import { useDispatch } from 'react-redux';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { PAGES } from './constants';
-import { Device } from '../../../types/types';
+import { Device, VocabularyTab } from '../../../types/types';
 import { useAppSelector } from '../../../redux/hooks';
-import { setPage } from '../../../redux/slices/wordsSlice';
+import { selectWords, setPage } from '../../../redux/slices/wordsSlice';
 
 const paginationSizeByDevice: Map<string, 'medium' | 'large'> = new Map([
   [Device.DESKTOP, 'large'],
@@ -18,7 +18,7 @@ const paginationSizeByDevice: Map<string, 'medium' | 'large'> = new Map([
 export const VocabularyWords = () => {
   const device = useDevice();
   const color = useGroupColor();
-  const page = useAppSelector((state) => state.words.page);
+  const { page, selectedTab } = useAppSelector(selectWords);
 
   const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState(page);
@@ -33,14 +33,16 @@ export const VocabularyWords = () => {
   return (
     <Box className='vocabulary__words-links'>
       <WordsView isMobile={device === 'mobile'} />
-      <Pagination
-        count={PAGES}
-        page={currentPage + 1}
-        size={paginationSizeByDevice.get(device)}
-        color={color}
-        variant='text'
-        onChange={changePageHandler}
-      />
+      {selectedTab === VocabularyTab.VOCABULARY &&
+        <Pagination
+          count={PAGES}
+          page={currentPage + 1}
+          size={paginationSizeByDevice.get(device)}
+          color={color}
+          variant='text'
+          onChange={changePageHandler}
+        />
+      }
     </Box>
   );
 };

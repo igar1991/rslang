@@ -1,5 +1,4 @@
-export interface Word {
-  id: string;
+interface WordDetails {
   group: number;
   page: number;
   word: string;
@@ -15,6 +14,17 @@ export interface Word {
   textExampleTranslate: string;
 }
 
+interface WordId {
+  id: string;
+}
+
+interface AggregatedWordId {
+  _id: string;
+}
+
+export type Word = WordId & WordDetails;
+export type AggregatedWord = AggregatedWordId & WordDetails;
+
 export interface WordsRequestParams {
   page: number;
   group: number;
@@ -23,6 +33,11 @@ export interface WordsRequestParams {
 export interface NewWordRequestParams {
   difficulty: string,
   optional: Record<string, unknown>,
+}
+
+export interface AggregatedWords {
+  paginatedResults: AggregatedWord[];
+  totalCount: number;
 }
 
 export interface UserWordData {

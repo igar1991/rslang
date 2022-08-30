@@ -6,39 +6,35 @@ import { API_BASE_URL } from '../../../../api/api';
 import { DetailsCardButton } from './details-card-button';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { markWordAsHard, markWordAsLearned, removeWordFromHard } from '../../../../redux/slices/wordsSlice';
+import { markWordAsLearned, selectWords } from '../../../../redux/slices/wordsSlice';
 import { useAppSelector } from '../../../../redux/hooks';
-import { Word } from '../../../../types/types';
 import { DIFFICULTY } from '../constants';
+import { selectAuth } from '../../../../redux/slices/authUserSlice';
 
-interface Props {
-  word: Word;
-}
-
-export const WordDetailsCard = ({ word }: Props) => {
+export const WordDetailsCard = () => {
   const dispatch = useDispatch();
-  const isUserLoggedIn = useAppSelector((state) => state.auth.isAuth);
-  const selectedWordColor = useAppSelector((state) => state.words.selectedWordColor);
-  const userId = useAppSelector((state) => state.auth.id);
-  const usersHardWords = useAppSelector((state) => state.words.usersHardWords);
+  const { isAuth: isUserLoggedIn, id: userId } = useAppSelector(selectAuth);
+  const { selectedWordColor, selectedWordId } = useAppSelector(selectWords);
 
-  const isHardWord = usersHardWords.map(({ id }) => id).includes(word.id);
+  const { data: word, isSuccess: isWordLoaded } = wordsAPI.useGetWordByIdQuery(selectedWordId);
+  const { data: usersWords, isSuccess: isUserWordsLoaded } = wordsAPI.useGetUserWordsQuery(userId);
 
-  const { data: allUserWords } = wordsAPI.useGetUserWordsQuery(userId);
+  const usersHardWordsIds = isUserWordsLoaded ? usersWords
+    .reduce((acc, word) => {
+      if (word.difficulty === DIFFICULTY.HARD) {
+        acc.push(word.wordId);
+      }
+
+      return acc;
+    }, [] as string[]): [];
+
   const [addUserWord] = wordsAPI.useAddUserWordMutation();
   const [updateUserWord, { isLoading: isUpdating }] = wordsAPI.useUpdateUserWordMutation();
 
-  const isNeedToCreate = allUserWords && !allUserWords.map(({ wordId }) => wordId).includes(word.id);
+  const isNeedToCreate = word && isUserWordsLoaded && !usersWords.map(({ wordId }) => wordId).includes(word.id);
+  const isHardWord = word && usersHardWordsIds.includes(word.id);
 
   const handleClickHardWord = useCallback(() => {
-    if (word && !isHardWord) {
-      dispatch(markWordAsHard(word));
-    }
-
-    if (word && isHardWord) {
-      dispatch(removeWordFromHard(word));
-    }
-
     if (word && isNeedToCreate) {
       addUserWord({
         id: userId,
@@ -68,7 +64,7 @@ export const WordDetailsCard = ({ word }: Props) => {
     }
   }, [word, dispatch]);
 
-  return (
+  return isWordLoaded ? (
     <Box className='word__details-card'>
       <Box
         component='img'
@@ -92,5 +88,5 @@ export const WordDetailsCard = ({ word }: Props) => {
       }
       <DetailsCardDescription selectedWord={word} />
     </Box>
-  );
+  ) : null;
 };

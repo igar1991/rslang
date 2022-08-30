@@ -31,6 +31,7 @@ export const authUserSlice = createSlice({
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('userId');
       localStorage.removeItem('name');
+      localStorage.removeItem('selectedTab');
       return {
         isAuth: false,
         id: '',
