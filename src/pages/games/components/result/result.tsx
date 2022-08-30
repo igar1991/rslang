@@ -23,6 +23,7 @@ export const Result = ({ audioStartHandler }: ResultAnswers) => {
   const dispatch = useDispatch();
   
   const getTitle = () => {
+    if (trueAnswers.length === 0) return 'Maybe another time...';
     const persent = (trueAnswers.length / (trueAnswers.length + falseAnswers.length)) * 100;
     if (persent < 40) return 'Next time will be better!';
     if (persent < 70) return 'Not a bad result!';
@@ -36,7 +37,7 @@ export const Result = ({ audioStartHandler }: ResultAnswers) => {
         <Box sx={{ position: 'relative', display: 'inline-flex' }}>
           <CircularProgress
             variant='determinate'
-            color='success'
+            color={trueAnswers.length === 0 ? 'error' : 'success'}
             className='result__diagramm'
             size={150}
             value={(trueAnswers.length / (trueAnswers.length + falseAnswers.length)) * 100}

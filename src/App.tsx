@@ -36,8 +36,8 @@ function App(): JSX.Element {
           <Route path='/' element={<Main openRegisterModal={openRegisterModal} openAuthorizationModal={openAuthorizationModal} />} />
           <Route path='/vocabulary' element={<Vocabulary />} />
           <Route path='/games' element={<Games />} />
-          <Route path='/audiocall' element={<AudioCall />} />
-          <Route path='/sprint' element={<Sprint />} />
+          <Route path='/games/audiocall' element={<AudioCall />} />
+          <Route path='/games/sprint' element={<Sprint />} />
           <Route path='/statistics' element={<Statistics />} />
         </Routes>
         <Registration openAuthorizationModal={openAuthorizationModal} registerModal={registerModal} closeRegisterModal={closeRegisterModal} setMessageModal={setMessageModal} />

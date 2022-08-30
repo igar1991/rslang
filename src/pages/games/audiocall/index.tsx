@@ -1,17 +1,28 @@
-import { Button, Typography, Box, IconButton } from '@mui/material';
-import { Container } from '@mui/system';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { wordsAPI } from 'api/wordsService';
-import { useAppSelector } from 'redux/hooks';
+import { Button, Typography, Box, IconButton } from '@mui/material';
+import { Container } from '@mui/system';
 import { VolumeUp } from '@mui/icons-material';
 import VolumeUpOutlinedIcon from '@mui/icons-material/VolumeUpOutlined';
-import { setGroup, setPage, setStage, setCurrentWord, setTrueAnswers, setFalseAnswers, clearGame, selectGames } from '../../../redux/slices/gamesSlice';
+import { wordsAPI } from '../../../api/wordsService';
+import { useAppSelector } from '../../../redux/hooks';
+import {
+  setGroup,
+  setPage,
+  setStage,
+  setCurrentWord,
+  setTrueAnswers,
+  setFalseAnswers,
+  clearGame,
+  selectGames,
+} from '../../../redux/slices/gamesSlice';
 import { Word } from '../../../types/types';
-import './audiocall.css';
-import { API_BASE_URL } from 'api/api';
+import { API_BASE_URL } from '../../../api/api';
 import { Result } from '../components/result/result';
 import { Start } from '../components/start/start';
+import { Background } from '../components/background';
+
+import './audiocall.css';
 
 export default function AudioCall() {
   const dispatch = useDispatch();
@@ -71,7 +82,7 @@ export default function AudioCall() {
       dispatch(setStage('result'));
       return;
     }
-    
+
     if (data && isAnswer === null) {
       setIsAnswer(data[currentIndex].id);
       dispatch(setFalseAnswers(data[currentWord]));
@@ -91,13 +102,13 @@ export default function AudioCall() {
   };
 
   return (
-    <main className='container_audiocall'>
+    <main className='games__container'>
       <Container>
         {stage === 'start' && (
           <Start
             onClickHandler={onClickHandler}
-            title='AudioCall'
-            description='The AudioCall training improves your listening comprehension.'
+            title='Audio Challenge'
+            description='The Audio Challenge training improves your listening comprehension.'
           />
         )}
         {stage === 'pending' && (
@@ -106,15 +117,15 @@ export default function AudioCall() {
               <>
                 <Box className='audiocall__question'>
                   {isAnswer === null ? (
-                    <>
+                    <Box className='audiocall__icon-container'>
                       <IconButton
-                        aria-label='listen word pronunciation'  
+                        aria-label='listen word pronunciation'
                         onClick={() => audioStartHandler(data[currentWord].audio)}
                         size='large'
                       >
                         <VolumeUpOutlinedIcon className='audiocall__icon' />
                       </IconButton>
-                    </>
+                    </Box>
                   ) : (
                     <>
                       <Box
@@ -123,10 +134,7 @@ export default function AudioCall() {
                         src={`${[API_BASE_URL, data[currentWord].image].join('/')}`}
                         className='word__details-card_image'
                       />
-                      <Typography
-                        variant='h5'
-                        className='word_title'
-                      >
+                      <Typography variant='h5' className='word_title'>
                         <IconButton
                           color='secondary'
                           aria-label='listen word pronunciation'
@@ -145,7 +153,11 @@ export default function AudioCall() {
                     return (
                       <Button
                         key={data[item].id}
-                        variant={isAnswer === data[item].id || (isAnswer && data[currentWord].id === data[item].id) ? 'contained' : 'outlined'}
+                        variant={
+                          isAnswer === data[item].id || (isAnswer && data[currentWord].id === data[item].id)
+                            ? 'contained'
+                            : 'outlined'
+                        }
                         color={chooseColor(data[item].id)}
                         onClick={() => checkAnsewr(data[item])}
                         sx={{ margin: '5px' }}
@@ -169,6 +181,7 @@ export default function AudioCall() {
           </>
         )}
         {stage === 'result' && <Result audioStartHandler={audioStartHandler} />}
+        <Background word='AUDIOCHALLENGE' />
       </Container>
     </main>
   );
