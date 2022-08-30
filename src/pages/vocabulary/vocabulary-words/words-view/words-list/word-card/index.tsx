@@ -12,18 +12,17 @@ import { HardLearnedIconsGroup } from './hard-learned-icons';
 
 interface WordCardProps {
   word: Word;
+  isHardWord: boolean;
 }
 
-export const WordCard = ({ word: { word, wordTranslate, id, group } }: WordCardProps) => {
+export const WordCard = ({ word: { word, wordTranslate, id, group }, isHardWord }: WordCardProps) => {
   const dispatch = useDispatch();
   const selectedWordId = useAppSelector((state) => state.words.selectedWordId);
-  const usersHardWords = useAppSelector((state) => state.words.usersHardWords);
   const usersLearnedWords = useAppSelector((state) => state.words.usersLearnedWords);
   const onSelectWord = useCallback(() => {
     dispatch(setSelectedWordColor(color));
     dispatch(setSelectedWordId(id));
   }, [dispatch, id]);
-  const isHardWord = usersHardWords.map(({ id }) => id).includes(id);
   const isLearnedWord = usersLearnedWords.map(({ id }) => id).includes(id);
 
   const color = ColorsByGroupMap.get(GROUPS[group]) as Colors;
