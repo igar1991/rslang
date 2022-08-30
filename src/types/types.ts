@@ -31,8 +31,8 @@ export interface WordsRequestParams {
 }
 
 export interface NewWordRequestParams {
-  difficulty: string,
-  optional: Record<string, unknown>,
+  difficulty: string;
+  optional: Record<string, unknown>;
 }
 
 export interface AggregatedWords {
@@ -41,9 +41,12 @@ export interface AggregatedWords {
 }
 
 export interface UserWordData {
-  difficulty: string,
-  id: string,
-  wordId: string,
+  difficulty: string;
+  optional: {
+    learned: boolean;
+  };
+  id: string;
+  wordId: string;
 }
 
 export interface User {

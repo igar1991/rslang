@@ -26,16 +26,27 @@ export const WordsList = ({ data, isSuccess, hardView }: WordsProps) => {
       return acc;
     }, [] as string[]): [];
 
+  const usersLearnedWordsIds = isUserWordsLoaded ? usersWords
+    .reduce((acc, word) => {
+      if (word.optional.learned) {
+        acc.push(word.wordId);
+      }
+
+      return acc;
+    }, [] as string[]): [];
+
   return isSuccess ? (
     <Box className='words__words-list'>
       {data?.map((currentWord) => {
         const isHardWord = usersHardWordsIds.includes(currentWord.id);
+        const isLearnedWord = usersLearnedWordsIds.includes(currentWord.id);
 
         return (
           <WordCard
             key={hardView ? `hard-${(currentWord.id)}` : `vocabulary-${currentWord.id}`}
             word={currentWord}
             isHardWord={isHardWord}
+            isLearnedWord={isLearnedWord}
           />
         );
       })}

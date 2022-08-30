@@ -6,7 +6,7 @@ import { API_BASE_URL } from '../../../../api/api';
 import { DetailsCardButton } from './details-card-button';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { markWordAsLearned, selectWords } from '../../../../redux/slices/wordsSlice';
+import { selectWords } from '../../../../redux/slices/wordsSlice';
 import { useAppSelector } from '../../../../redux/hooks';
 import { DIFFICULTY } from '../constants';
 import { selectAuth } from '../../../../redux/slices/authUserSlice';
@@ -41,7 +41,9 @@ export const WordDetailsCard = () => {
         wordId: word.id,
         body: {
           difficulty: DIFFICULTY.HARD,
-          optional: {}
+          optional: {
+            learned: false,
+          }
         }
       });
     }
@@ -52,15 +54,39 @@ export const WordDetailsCard = () => {
         wordId: word.id,
         body: {
           difficulty: DIFFICULTY.EASY,
-          optional: {}
+          optional: {
+            learned: false,
+          }
         }
       });
     }
-  }, [word, isHardWord, dispatch]);
+  }, [word, dispatch]);
 
   const handleClickLearnedWord = useCallback(() => {
-    if (word) {
-      dispatch(markWordAsLearned(word));
+    if (word && isNeedToCreate) {
+      addUserWord({
+        id: userId,
+        wordId: word.id,
+        body: {
+          difficulty: DIFFICULTY.EASY,
+          optional: {
+            learned: true,
+          }
+        }
+      });
+    }
+
+    if (word && !isUpdating && !isNeedToCreate) {
+      updateUserWord({
+        id: userId,
+        wordId: word.id,
+        body: {
+          difficulty: DIFFICULTY.EASY,
+          optional: {
+            learned: true,
+          }
+        }
+      });
     }
   }, [word, dispatch]);
 
