@@ -1,7 +1,7 @@
 import './words-view.css';
-import { useAppSelector } from '../../../../redux/hooks';
-import { selectWords } from '../../../../redux/slices/wordsSlice';
-import { VocabularyTab } from '../../../../types/types';
+import { useAppSelector } from 'redux/hooks';
+import { selectWords } from 'redux/slices/wordsSlice';
+import { VocabularyTab } from 'types/types';
 import { VocabularyView } from './vocabulary-view';
 import { HardWordsView } from './hard-words-view';
 

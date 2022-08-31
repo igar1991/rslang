@@ -1,10 +1,10 @@
 import React from 'react';
 import { Button } from '@mui/material';
-import { useAppSelector } from '../../../../redux/hooks';
-import { selectAuth } from '../../../../redux/slices/authUserSlice';
+import { useAppSelector } from 'redux/hooks';
+import { selectAuth } from 'redux/slices/authUserSlice';
 // import { authAPI, CreateUser } from '../../../../api/authService';
-import { useAppDispatch } from '../../../../redux/hooks';
-import { logout } from '../../../../redux/slices/authUserSlice';
+import { useAppDispatch } from 'redux/hooks';
+import { logout } from 'redux/slices/authUserSlice';
 
 import TabPanel from '../tab-panel';
 

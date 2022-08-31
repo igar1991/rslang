@@ -2,9 +2,9 @@ import { Tab, Tabs } from '@mui/material';
 import BookIcon from '@mui/icons-material/Book';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import { SyntheticEvent, useCallback, useEffect, useState } from 'react';
-import { Device, VocabularyTab } from '../../../types/types';
+import { Device, VocabularyTab } from 'types/types';
 import { useDispatch } from 'react-redux';
-import { setSelectedTab } from '../../../redux/slices/wordsSlice';
+import { setSelectedTab } from 'redux/slices/wordsSlice';
 import './vocabulary-tabs.css';
 import { useDevice } from '../../hooks';
 

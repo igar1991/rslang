@@ -3,8 +3,8 @@ import { Title } from './components/title';
 import './card-description.css';
 import { Meaning } from './components/meaning';
 import { Example } from './components/example';
-import { Word } from '../../../../../types/types';
-import { useDevice } from '../../../../hooks';
+import { Word } from 'types/types';
+import { useDevice } from 'pages/hooks';
 
 interface Props {
   selectedWord: Word;

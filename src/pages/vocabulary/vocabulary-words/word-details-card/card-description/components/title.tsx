@@ -1,9 +1,9 @@
 import { Box, IconButton, Typography } from '@mui/material';
 import { VolumeUp } from '@mui/icons-material';
 import '../card-description.css';
-import { API_BASE_URL } from '../../../../../../api/api';
-import { Device } from '../../../../../../types/types';
-import { useAppSelector } from '../../../../../../redux/hooks';
+import { API_BASE_URL } from 'api/api';
+import { Device } from 'types/types';
+import { useAppSelector } from 'redux/hooks';
 
 interface Props {
   device: string;

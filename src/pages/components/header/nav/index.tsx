@@ -4,12 +4,12 @@ import { Button, Box } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 
-import { useAppSelector } from '../../../../redux/hooks';
-import { selectAuth } from '../../../../redux/slices/authUserSlice';
+import { useAppSelector } from 'redux/hooks';
+import { selectAuth } from 'redux/slices/authUserSlice';
 
 import './nav.css';
 
-type NavType = { 
+type NavType = {
   navLinks: { url: string; name: string; icon: JSX.Element }[],
   openAuthorizationModal: () => void,
   openProfileModal: () => void,

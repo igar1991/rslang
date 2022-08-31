@@ -2,8 +2,8 @@ import { Button, Typography, Box, IconButton } from '@mui/material';
 import { Container } from '@mui/system';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { wordsAPI } from '../../../api/wordsService';
-import { useAppSelector } from '../../../redux/hooks';
+import { wordsAPI } from 'api/wordsService';
+import { useAppSelector } from 'redux/hooks';
 import { VolumeUp } from '@mui/icons-material';
 import {
   setGroup,
@@ -14,12 +14,11 @@ import {
   setFalseAnswers,
   clearGame,
   selectGames,
-} from '../../../redux/slices/gamesSlice';
-import { Word } from '../../../types/types';
-import { WordsLevels } from '../../vocabulary/vocabulary-words/words-view/words-levels';
+} from 'redux/slices/gamesSlice';
+import { Word } from 'types/types';
 import { useGroupColor } from '../../hooks';
 import './audiocall.css';
-import { API_BASE_URL } from '../../../api/api';
+import { API_BASE_URL } from 'api/api';
 import { Result } from '../components/result/result';
 import { Start } from '../components/start/start';
 
@@ -66,7 +65,7 @@ export default function AudioCall() {
 
   const checkAnsewr = (word: Word) => {
     if (isAnswer !== null) return;
-    
+
     if (data) {
       if (data[currentWord].id === word.id) {
         dispatch(setTrueAnswers(word));
@@ -82,12 +81,12 @@ export default function AudioCall() {
       dispatch(setStage('result'));
       return;
     }
-    
+
     if(data && isAnswer === null) {
       setIsAnswer(data[currentIndex].id);
       dispatch(setFalseAnswers(data[currentWord]));
     } else {
-      const index = currentIndex + 1; 
+      const index = currentIndex + 1;
       addQuest(index);
       dispatch(setCurrentWord(index));
       setIsAnswer(null);

@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material';
-import { WordsLevels } from '../../../vocabulary/vocabulary-words/words-view/words-levels';
+import { WordsLevels } from 'pages/vocabulary/vocabulary-words/words-view/words-levels';
 
 interface StartInterface {
   onClickHandler: (group: number)=>void;

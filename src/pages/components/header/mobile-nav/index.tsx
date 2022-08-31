@@ -11,8 +11,8 @@ import ListItemButton from '@mui/material/ListItemButton';
 import CloseIcon from '@mui/icons-material/Close';
 import LoginRoundedIcon from '@mui/icons-material/LoginRounded';
 
-import { useAppSelector } from '../../../../redux/hooks';
-import { selectAuth } from '../../../../redux/slices/authUserSlice';
+import { useAppSelector } from 'redux/hooks';
+import { selectAuth } from 'redux/slices/authUserSlice';
 import './mobile-nav.css';
 
 type MobileNavType = {

@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { Device } from '../../../../../../types/types';
+import { Device } from 'types/types';
 
 interface Props {
   device: string;

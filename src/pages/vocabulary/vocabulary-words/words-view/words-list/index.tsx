@@ -1,11 +1,11 @@
 import { Box } from '@mui/material';
 import { WordCard } from './word-card';
 import './list.css';
-import { Word } from '../../../../../types/types';
+import { Word } from 'types/types';
 import { DIFFICULTY } from '../../constants';
-import { useAppSelector } from '../../../../../redux/hooks';
-import { selectAuth } from '../../../../../redux/slices/authUserSlice';
-import { wordsAPI } from '../../../../../api/wordsService';
+import { useAppSelector } from 'redux/hooks';
+import { selectAuth } from 'redux/slices/authUserSlice';
+import { wordsAPI } from 'api/wordsService';
 
 interface WordsProps {
   data: Word[] | undefined;

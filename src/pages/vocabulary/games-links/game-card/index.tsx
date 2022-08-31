@@ -1,7 +1,7 @@
 import { Box, Button } from '@mui/material';
 import './game-card.css';
 import { CardDescription } from './card-description';
-import { useDevice } from '../../../hooks';
+import { useDevice } from 'pages/hooks';
 
 interface Props {
   img: string;
