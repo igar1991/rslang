@@ -4,10 +4,11 @@ import { Colors } from '../../words-view/words-levels/constants';
 interface Props {
   handleClick: () => void;
   color: Colors;
-  title: string
+  title: string;
+  disabled: boolean;
 }
 
-export const DetailsCardButton = ({ handleClick, color, title }: Props) => {
+export const DetailsCardButton = ({ handleClick, color, title, disabled }: Props) => {
   return (
     <Button
       variant='contained'
@@ -15,6 +16,7 @@ export const DetailsCardButton = ({ handleClick, color, title }: Props) => {
       size='small'
       className='details-card-button'
       onClick={handleClick}
+      disabled={disabled}
     >
       {title}
     </Button>

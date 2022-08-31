@@ -5,23 +5,32 @@ import { wordsAPI } from 'api/wordsService';
 import { API_BASE_URL } from 'api/api';
 import { DetailsCardButton } from './details-card-button';
 import { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
 import { selectWords } from 'redux/slices/wordsSlice';
 import { useAppSelector } from 'redux/hooks';
 import { DIFFICULTY } from '../constants';
 import { selectAuth } from 'redux/slices/authUserSlice';
 
 export const WordDetailsCard = () => {
-  const dispatch = useDispatch();
   const { isAuth: isUserLoggedIn, id: userId } = useAppSelector(selectAuth);
   const { selectedWordColor, selectedWordId } = useAppSelector(selectWords);
 
   const { data: word, isSuccess: isWordLoaded } = wordsAPI.useGetWordByIdQuery(selectedWordId);
   const { data: usersWords, isSuccess: isUserWordsLoaded } = wordsAPI.useGetUserWordsQuery(userId);
 
+  console.log('usersWords', usersWords);
+
   const usersHardWordsIds = isUserWordsLoaded ? usersWords
     .reduce((acc, word) => {
       if (word.difficulty === DIFFICULTY.HARD) {
+        acc.push(word.wordId);
+      }
+
+      return acc;
+    }, [] as string[]) : [];
+
+  const usersLearnedWordsIds = isUserWordsLoaded ? usersWords
+    .reduce((acc, word) => {
+      if (word.optional.learned) {
         acc.push(word.wordId);
       }
 
@@ -33,6 +42,7 @@ export const WordDetailsCard = () => {
 
   const isNeedToCreate = word && isUserWordsLoaded && !usersWords.map(({ wordId }) => wordId).includes(word.id);
   const isHardWord = word && usersHardWordsIds.includes(word.id);
+  const isLearnedWord = word && usersLearnedWordsIds.includes(word.id);
 
   const handleClickHardWord = useCallback(() => {
     if (word && isNeedToCreate) {
@@ -55,12 +65,12 @@ export const WordDetailsCard = () => {
         body: {
           difficulty: DIFFICULTY.EASY,
           optional: {
-            learned: false,
+            learned: false
           }
         }
       });
     }
-  }, [word, dispatch]);
+  }, [word, addUserWord, isUpdating, updateUserWord, userId, isNeedToCreate]);
 
   const handleClickLearnedWord = useCallback(() => {
     if (word && isNeedToCreate) {
@@ -71,6 +81,7 @@ export const WordDetailsCard = () => {
           difficulty: DIFFICULTY.EASY,
           optional: {
             learned: true,
+            date: (new Date()).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }),
           }
         }
       });
@@ -84,11 +95,12 @@ export const WordDetailsCard = () => {
           difficulty: DIFFICULTY.EASY,
           optional: {
             learned: true,
+            date: (new Date()).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }),
           }
         }
       });
     }
-  }, [word, dispatch]);
+  }, [word, addUserWord, isUpdating, updateUserWord, userId, isNeedToCreate]);
 
   return isWordLoaded ? (
     <Box className='word__details-card'>
@@ -104,11 +116,13 @@ export const WordDetailsCard = () => {
             handleClick={handleClickHardWord}
             color={selectedWordColor}
             title={isHardWord ? 'Easy word' : 'Hard word'}
+            disabled={isLearnedWord ?? false}
           />
           <DetailsCardButton
             handleClick={handleClickLearnedWord}
             color={selectedWordColor}
             title={'Learned word'}
+            disabled={isLearnedWord ?? false}
           />
         </Box>
       }

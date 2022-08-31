@@ -19,12 +19,12 @@ interface WordCardProps {
 export const WordCard = ({ word: { word, wordTranslate, id, group }, isHardWord, isLearnedWord }: WordCardProps) => {
   const dispatch = useDispatch();
   const { selectedWordId } = useAppSelector(selectWords);
+  const color = ColorsByGroupMap.get(GROUPS[group]) as Colors;
+
   const onSelectWord = useCallback(() => {
     dispatch(setSelectedWordColor(color));
     dispatch(setSelectedWordId(id));
-  }, [dispatch, id]);
-
-  const color = ColorsByGroupMap.get(GROUPS[group]) as Colors;
+  }, [dispatch, id, color]);
 
   return (
     <StyledWordCardWrapper

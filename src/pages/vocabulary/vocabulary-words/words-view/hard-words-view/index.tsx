@@ -19,8 +19,6 @@ export const HardWordsView = ({ isMobile }: ViewProps) => {
     filter: '{"userWord.difficulty":"hard"}'
   });
 
-  console.log('data', data);
-
   return isSuccess ? (
     <Box className='words'>
       {isMobile ? (
