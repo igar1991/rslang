@@ -2,7 +2,7 @@ import { Box } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { useCallback } from 'react';
 import { getVocabularyWordsData } from '../../../utils';
-import { setGroup } from '../../../../../redux/slices/wordsSlice';
+import { setGroup } from 'redux/slices/wordsSlice';
 import { WordsLevels } from '../words-levels';
 import { WordDetailsCard } from '../../word-details-card';
 import { WordsList } from '../words-list';

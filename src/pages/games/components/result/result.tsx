@@ -1,7 +1,7 @@
 import { Button, Typography, Box, IconButton } from '@mui/material';
-import { useAppSelector } from '../../../../redux/hooks';
-import { clearGame, selectGames } from '../../../../redux/slices/gamesSlice';
-import { useGroupColor } from '../../../hooks';
+import { useAppSelector } from 'redux/hooks';
+import { clearGame, selectGames } from 'redux/slices/gamesSlice';
+import { useGroupColor } from 'pages/hooks';
 import { VolumeUp } from '@mui/icons-material';
 import { useDispatch } from 'react-redux';
 

@@ -4,7 +4,7 @@ import './vocabualry.css';
 import { GamesLinks } from './games-links';
 import { Container } from '@mui/material';
 import { VocabularyTabs } from './vocabulary-tabs';
-import { useAppSelector } from '../../redux/hooks';
+import { useAppSelector } from 'redux/hooks';
 
 export default function Vocabulary() {
   const isUserLoggedIn = useAppSelector((state) => state.auth.isAuth);

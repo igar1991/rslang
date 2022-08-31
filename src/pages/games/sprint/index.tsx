@@ -2,8 +2,8 @@ import { Button, Typography, Box } from '@mui/material';
 import { Container } from '@mui/system';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { wordsAPI } from '../../../api/wordsService';
-import { useAppSelector } from '../../../redux/hooks';
+import { wordsAPI } from 'api/wordsService';
+import { useAppSelector } from 'redux/hooks';
 import {
   setGroup,
   setPage,
@@ -13,9 +13,9 @@ import {
   setFalseAnswers,
   clearGame,
   selectGames,
-} from '../../../redux/slices/gamesSlice';
-import { Word } from '../../../types/types';
-import { API_BASE_URL } from '../../../api/api';
+} from 'redux/slices/gamesSlice';
+import { Word } from 'types/types';
+import { API_BASE_URL } from 'api/api';
 import { Result } from '../components/result/result';
 import { Start } from '../components/start/start';
 import './sprint.css';
@@ -76,7 +76,7 @@ export default function Sprint() {const dispatch = useDispatch();
     }
   };
 
-  const checkAnsewr = (word: Word) => {    
+  const checkAnsewr = (word: Word) => {
     if (data) {
       if (data[currentWord].id === word.id) {
         dispatch(setTrueAnswers(word));
@@ -95,7 +95,7 @@ export default function Sprint() {const dispatch = useDispatch();
       dispatch(setStage('result'));
       return;
     }
-    const index = currentIndex + 1; 
+    const index = currentIndex + 1;
     addQuest(index);
     dispatch(setCurrentWord(index));
   };

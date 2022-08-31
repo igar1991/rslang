@@ -1,9 +1,9 @@
 import { Box } from '@mui/material';
 import { WordDetailsCard } from '../../word-details-card';
 import { WordsList } from '../words-list';
-import { wordsAPI } from '../../../../../api/wordsService';
-import { useAppSelector } from '../../../../../redux/hooks';
-import { selectAuth } from '../../../../../redux/slices/authUserSlice';
+import { wordsAPI } from 'api/wordsService';
+import { useAppSelector } from 'redux/hooks';
+import { selectAuth } from 'redux/slices/authUserSlice';
 import { HARD_WORDS_PER_PAGE } from '../../constants';
 import '../words-view.css';
 

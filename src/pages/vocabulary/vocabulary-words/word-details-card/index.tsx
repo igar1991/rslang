@@ -1,15 +1,15 @@
 import { Box } from '@mui/material';
 import { DetailsCardDescription } from './card-description';
 import './word-details-card.css';
-import { wordsAPI } from '../../../../api/wordsService';
-import { API_BASE_URL } from '../../../../api/api';
+import { wordsAPI } from 'api/wordsService';
+import { API_BASE_URL } from 'api/api';
 import { DetailsCardButton } from './details-card-button';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { selectWords } from '../../../../redux/slices/wordsSlice';
-import { useAppSelector } from '../../../../redux/hooks';
+import { selectWords } from 'redux/slices/wordsSlice';
+import { useAppSelector } from 'redux/hooks';
 import { DIFFICULTY } from '../constants';
-import { selectAuth } from '../../../../redux/slices/authUserSlice';
+import { selectAuth } from 'redux/slices/authUserSlice';
 
 export const WordDetailsCard = () => {
   const dispatch = useDispatch();

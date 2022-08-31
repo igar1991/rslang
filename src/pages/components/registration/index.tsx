@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 
-import { authAPI } from '../../../api/authService';
+import { authAPI } from 'api/authService';
 import FormInput, { ErrorsType, ValuesType } from '../form-input';
 
 import './registration.css';

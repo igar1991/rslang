@@ -3,8 +3,8 @@ import { Button } from '@mui/material';
 import { Box } from '@mui/system';
 
 import './banner.css';
-import { useAppSelector } from '../../../redux/hooks';
-import { selectAuth } from '../../../redux/slices/authUserSlice';
+import { useAppSelector } from 'redux/hooks';
+import { selectAuth } from 'redux/slices/authUserSlice';
 
 type InBannerType = {
   openRegisterModal: () => void,

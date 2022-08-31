@@ -1,6 +1,6 @@
-import { Device } from '../../types/types';
+import { Device } from 'types/types';
 import { useLayoutEffect, useState } from 'react';
-import { useAppSelector } from '../../redux/hooks';
+import { useAppSelector } from 'redux/hooks';
 import { Colors, ColorsByGroupMap } from '../vocabulary/vocabulary-words/words-view/words-levels/constants';
 import { GROUPS } from '../vocabulary/vocabulary-words/constants';
 

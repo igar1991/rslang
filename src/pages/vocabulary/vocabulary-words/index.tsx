@@ -5,9 +5,9 @@ import { useDevice, useGroupColor } from '../../hooks';
 import { useDispatch } from 'react-redux';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { PAGES } from './constants';
-import { Device, VocabularyTab } from '../../../types/types';
-import { useAppSelector } from '../../../redux/hooks';
-import { selectWords, setPage } from '../../../redux/slices/wordsSlice';
+import { Device, VocabularyTab } from 'types/types';
+import { useAppSelector } from 'redux/hooks';
+import { selectWords, setPage } from 'redux/slices/wordsSlice';
 
 const paginationSizeByDevice: Map<string, 'medium' | 'large'> = new Map([
   [Device.DESKTOP, 'large'],
