@@ -28,7 +28,7 @@ export const VocabularyWords = () => {
 
   useEffect(() => {
     dispatch(setPage(currentPage));
-  }, [currentPage]);
+  }, [currentPage, dispatch]);
 
   return (
     <Box className='vocabulary__words-links'>

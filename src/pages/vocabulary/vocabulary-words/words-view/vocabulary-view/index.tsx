@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { useCallback } from 'react';
-import { getVocabularyWordsData } from '../../../utils';
+import { useVocabularyWordsData } from '../../../utils';
 import { setGroup } from 'redux/slices/wordsSlice';
 import { WordsLevels } from '../words-levels';
 import { WordDetailsCard } from '../../word-details-card';
@@ -13,7 +13,7 @@ interface ViewProps {
 }
 
 export const VocabularyView = ({ isMobile }: ViewProps) => {
-  const { data, isSuccess } = getVocabularyWordsData();
+  const { data, isSuccess } = useVocabularyWordsData();
 
   const dispatch = useDispatch();
   const onClickHandler = useCallback((group: number) => {
