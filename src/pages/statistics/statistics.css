@@ -1,0 +1,33 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 80vh;
+}
+
+.title {
+  font-size: 50px;
+  font-weight: 500;
+  line-height: 160%;
+  text-align: center;
+  letter-spacing: 0.15px;
+  color: var(--lightTextPrimaryColor);
+}
+
+.container_result {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.title_num {
+  font-size: 80px;
+  font-weight: 500;
+  line-height: 160%;
+  text-align: center;
+  letter-spacing: 0.15px;
+  color: var(--lightTextPrimaryColor);
+}
