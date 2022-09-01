@@ -44,10 +44,13 @@ export interface UserWordData {
   difficulty: string;
   optional: {
     learned: boolean;
+    date?: string;
+    games?: {date: string, answer: boolean}[];
   };
   id: string;
   wordId: string;
 }
+
 
 export interface User {
   email: string;

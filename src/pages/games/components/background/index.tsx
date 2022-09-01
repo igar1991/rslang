@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './background.css';
+import 'pages/games/components/background/background.css';
 
 export function Background({ word }: { word: string }) {
   return (

@@ -5,10 +5,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Slide from '@mui/material/Slide';
+import { Word } from 'types/types';
 
-import ResultList from './result-list';
-import { Word } from '../../../../types/types';
-import './result.css';
+import ResultList from 'pages/games/components/result/result-list';
+import 'pages/games/components/result/result.css';
 
 interface ResultAnswers {
   playAgain: () => void,

@@ -65,7 +65,7 @@
   margin-top: 20px !important;
   margin-left: auto !important;
   align-items: center;
-  justify-content: end;
+  justify-content: flex-end;
   color: var(--lightSecondaryDarkColor) !important;
   text-decoration: none !important;
   transition: all 0.3s;

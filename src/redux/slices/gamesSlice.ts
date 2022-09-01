@@ -36,6 +36,9 @@ export const gamesSlice = createSlice({
     setPage: (state, { payload: page }: { payload: number }) => {
       state.page = page;
     },
+    setFromVoc: (state, { payload: vocabualry }: { payload: boolean }) => {
+      state.fromVoc = vocabualry;
+    },
     setStage: (state, { payload: stage }: { payload: 'start' | 'pending' | 'result' }) => {
       state.stage = stage;
     },
@@ -61,7 +64,7 @@ export const gamesSlice = createSlice({
 
 export const selectGames = (state: RootState) => state.games;
 
-export const { setGroup, setPage, setStage, setCurrentWord, setTrueAnswers, setFalseAnswers, clearGame } =
+export const { setGroup, setPage, setFromVoc, setStage, setCurrentWord, setTrueAnswers, setFalseAnswers, clearGame } =
   gamesSlice.actions;
 
 export default gamesSlice.reducer;

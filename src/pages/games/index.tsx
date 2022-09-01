@@ -1,40 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../redux/hooks';
+import { useAppDispatch } from 'redux/hooks';
 import { Alert, Box, Container, Button } from '@mui/material';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import Snackbar from '@mui/material/Snackbar';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
-import { Background } from './components/background';
-import { setGroup, setPage } from '../../redux/slices/gamesSlice';
+import { setGroup, setPage } from 'redux/slices/gamesSlice';
+import { Background } from 'pages/games/components/background';
 
-import './games.css';
-
-const GAMES = [
-  {
-    name: 'Sprint',
-    img: '/assets/game-sprint.png',
-    description: 'Quickly find if provided translation correct',
-    url: '/games/sprint',
-  },
-  {
-    name: 'Audio Challenge',
-    img: '/assets/game-listen.png',
-    description: 'Try to recognize the word speaker says',
-    url: '/games/audiocall',
-  },
-];
-
-const LEVELS = [
-  { name: 'A1', id: 1 },
-  { name: 'A2', id: 2 },
-  { name: 'B1', id: 3 },
-  { name: 'B2', id: 4 },
-  { name: 'C1', id: 5 },
-  { name: 'C2', id: 6 },
-];
+import { GAMES, LEVELS } from 'pages/games/constants';
+import 'pages/games/games.css';
 
 export default function Games(): JSX.Element {
   const [selectedGame, setSelectedGame] = useState('');

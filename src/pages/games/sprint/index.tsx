@@ -3,14 +3,16 @@ import { Button, Box, Rating, Grow } from '@mui/material';
 import { Container } from '@mui/system';
 import Stack from '@mui/material/Stack';
 import CircularProgress from '@mui/material/CircularProgress';
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import { setPage, selectGames } from '../../../redux/slices/gamesSlice';
-import { wordsAPI } from '../../../api/wordsService';
-import { Word } from '../../../types/types';
-import { Result } from '../components/result/result';
-import { Background } from '../components/background';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
+import { setPage, selectGames } from 'redux/slices/gamesSlice';
+import { wordsAPI } from 'api/wordsService';
+import { Word } from 'types/types';
+import { Result } from 'pages/games/components/result/result';
+import { Background } from 'pages/games/components/background';
 
-import './sprint.css';
+import 'pages/games/sprint/sprint.css';
+import { POINTS, SERIES_LENGTH, SPRINT_SECONDS } from '../constants';
+import { getArraySprint } from '../utils';
 
 type QuestionsType = {
   word: Word;
@@ -25,7 +27,7 @@ export default function Sprint() {
   const { data } = wordsAPI.useGetWordsQuery({ page, group });
   const [arr, setArr] = useState<QuestionsType[]>([]);
   const [answers, setAnswers] = useState<{ right: Word[]; errors: Word[] }>({ right: [], errors: [] });
-  const [seconds, setSeconds] = useState<number>(30);
+  const [seconds, setSeconds] = useState<number>(SPRINT_SECONDS);
   const [points, setPoints] = useState<number>(0);
   const [showPoint, setShowPoint] = useState<boolean>(false);
   const [series, setSeries] = useState<number>(0);
@@ -34,19 +36,7 @@ export default function Sprint() {
 
   useEffect(() => {
     if (data) {
-      const array = data.map((item, index) => {
-        const random = Math.floor(Math.random() * 2);
-        if (random === 0) {
-          return { word: item, answer: 'true', translate: item.wordTranslate };
-        } else {
-          let randomAnswer: number;
-          do {
-            randomAnswer = Math.floor(Math.random() * 20);
-          } while (randomAnswer === index);
-          return { word: item, answer: 'false', translate: data[randomAnswer].wordTranslate };
-        }
-      });
-      array.sort(() => Math.random() - 0.5);
+      const array = getArraySprint(data);
       setArr([...arr, ...array]);
     }
   }, [data]);
@@ -69,7 +59,7 @@ export default function Sprint() {
     if (stage === 'game') {
       setArr([]);
       dispatch(setPage(Math.floor(Math.random() * 30)));
-      setSeconds(30);
+      setSeconds(SPRINT_SECONDS);
       setPoints(0);
       setSeries(0);
       setCurId(0);
@@ -90,7 +80,7 @@ export default function Sprint() {
       const audioFiles = new Audio('/assets/audio/right.mp3');
       audioFiles.play();
       if (series != 3) setSeries(series + 1);
-      setPoints(points + 10 * (series != 3 ? series + 1 : series));
+      setPoints(points + POINTS * (series != SERIES_LENGTH ? series + 1 : series));
       setAnswers({ errors: [...answers.errors], right: [...answers.right, arr[curId].word] });
     } else {
       const audioFiles = new Audio('/assets/audio/error.mp3');
@@ -101,7 +91,7 @@ export default function Sprint() {
     if (curId === arr.length - 1) return setStage('result');
     if (curId > arr.length - 5) {
       if (fromVoc === true && page != 0) dispatch(setPage(page - 1));
-      if (fromVoc === false) dispatch(setPage(page === 0 ? 20 : page - 1));
+      if (fromVoc === false) dispatch(setPage(page === 0 ? 30 : page - 1));
     }
     setCurId(curId + 1);
   };
@@ -119,9 +109,14 @@ export default function Sprint() {
               <Box className='sprint__time-point'>
                 <Box className='poins__container'>
                   <p className='points'>{points}</p>
-                  <Rating name='read-only' value={series} readOnly max={3}/>
-                  <Grow in={showPoint} timeout={500} onTransitionEnd={() => setShowPoint(false)} className='points__current'>
-                    <p>+{10 * series}</p>
+                  <Rating name='read-only' value={series} readOnly max={SERIES_LENGTH} />
+                  <Grow
+                    in={showPoint}
+                    timeout={500}
+                    onTransitionEnd={() => setShowPoint(false)}
+                    className='points__current'
+                  >
+                    <p>+{POINTS * series}</p>
                   </Grow>
                 </Box>
                 <Box sx={{ position: 'relative', display: 'inline-flex' }}>
@@ -142,14 +137,7 @@ export default function Sprint() {
                 <p className='sprint__word-ru'>{arr[curId].translate}</p>
               </Box>
               <Box className='sprint__buttons'>
-                <Button
-                  variant='contained'
-                  className='sprint__btn'
-                  color='error'
-                  size='large'
-                  name='false'
-                  onClick={checkAnswer}
-                >
+                <Button variant='contained' className='sprint__btn' color='error' name='false' onClick={checkAnswer}>
                   False
                 </Button>
                 <Button variant='contained' className='sprint__btn' color='success' name='true' onClick={checkAnswer}>
@@ -165,4 +153,3 @@ export default function Sprint() {
     </Container>
   );
 }
-

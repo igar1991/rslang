@@ -3,15 +3,18 @@ import { Button, Typography, Box, IconButton, Stack, CircularProgress, Rating, G
 import { Container } from '@mui/system';
 import { VolumeUp } from '@mui/icons-material';
 import VolumeUpOutlinedIcon from '@mui/icons-material/VolumeUpOutlined';
-import { wordsAPI } from '../../../api/wordsService';
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import { setPage, selectGames } from '../../../redux/slices/gamesSlice';
-import { Word } from '../../../types/types';
-import { API_BASE_URL } from '../../../api/api';
-import { Result } from '../components/result/result';
-import { Background } from '../components/background';
+import { wordsAPI } from 'api/wordsService';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
+import { setPage, selectGames } from 'redux/slices/gamesSlice';
+import { Word } from 'types/types';
+import { API_BASE_URL } from 'api/api';
+import { Result } from 'pages/games/components/result/result';
+import { Background } from 'pages/games/components/background';
 
-import './audiocall.css';
+import { AUDIOCALL_QUESTIONS, POINTS, SERIES_LENGTH } from '../constants';
+import { audioStartHandler, getArrayAudiocall, userWordGame } from '../utils';
+import { selectAuth } from 'redux/slices/authUserSlice';
+import 'pages/games/audiocall/audiocall.css';
 
 type QuestionsType = {
   word: Word;
@@ -21,8 +24,10 @@ type QuestionsType = {
 export default function AudioCall() {
   const dispatch = useAppDispatch();
   const { page, group, fromVoc } = useAppSelector(selectGames);
-
   const { data } = wordsAPI.useGetWordsQuery({ page, group });
+  const { isAuth: isUserLoggedIn, id: userId } = useAppSelector(selectAuth);
+  const { data: usersWords } = wordsAPI.useGetUserWordsQuery(userId);
+
   const [arr, setArr] = useState<QuestionsType[]>([]);
   const [answers, setAnswers] = useState<{ right: Word[]; errors: Word[] }>({ right: [], errors: [] });
   const [points, setPoints] = useState<number>(0);
@@ -34,24 +39,10 @@ export default function AudioCall() {
 
   useEffect(() => {
     if (data) {
-      const array = data.map((item, index) => {
-        const answersId = [index];
-        do {
-          const random = Math.floor(Math.random() * 20);
-          if (!answersId.includes(random)) answersId.push(random);
-        } while (answersId.length < 5);
-        const answers = answersId.map((item) => {
-          return { id: data[item].id, translate: data[item].wordTranslate };
-        });
-
-        answers.sort(() => Math.random() - 0.5);
-
-        return { word: item, answers: answers };
-      });
-      array.sort(() => Math.random() - 0.5);
-      if (arr.length + array.length < 20) {
+      const array = getArrayAudiocall(data);
+      if (arr.length + array.length < AUDIOCALL_QUESTIONS) {
         if (fromVoc === true && page != 0) dispatch(setPage(page - 1));
-        if (fromVoc === false) dispatch(setPage(page === 0 ? 20 : page - 1));
+        if (fromVoc === false) dispatch(setPage(page === 0 ? 30 : page - 1));
       }
       setArr([...arr, ...array]);
       if (curId === 0) audioStartHandler(array[curId].word.audio);
@@ -64,8 +55,12 @@ export default function AudioCall() {
 
   useEffect(() => {
     if (stage === 'game') {
-      setArr([]);
-      dispatch(setPage(Math.floor(Math.random() * 30)));
+      if (isUserLoggedIn) {
+        console.log(arr);
+      } else {
+        setArr([]);
+        dispatch(setPage(Math.floor(Math.random() * 30)));
+      }
       setPoints(0);
       setSeries(0);
       setCurId(0);
@@ -85,8 +80,8 @@ export default function AudioCall() {
       setShowPoint(true);
       const audioFiles = new Audio('/assets/audio/right.mp3');
       audioFiles.play();
-      if (series != 3) setSeries(series + 1);
-      setPoints(points + 10 * (series != 3 ? series + 1 : series));
+      if (series != SERIES_LENGTH) setSeries(series + 1);
+      setPoints(points + POINTS * (series != SERIES_LENGTH ? series + 1 : series));
       setAnswers({ errors: [...answers.errors], right: [...answers.right, arr[curId].word] });
     } else {
       const audioFiles = new Audio('/assets/audio/error.mp3');
@@ -94,17 +89,14 @@ export default function AudioCall() {
       setSeries(0);
       setAnswers({ errors: [...answers.errors, arr[curId].word], right: [...answers.right] });
     }
+
+    if (isUserLoggedIn) userWordGame(usersWords, arr[curId].word.id, true);
   };
 
   const onNextClick = () => {
     setIsAnswer(null);
-    if (curId === 19) return setStage('result');
+    if (curId === AUDIOCALL_QUESTIONS - 1) return setStage('result');
     setCurId(curId + 1);
-  };
-
-  const audioStartHandler = (audioFile: string) => {
-    const audioFiles = new Audio(`${[API_BASE_URL, audioFile].join('/')}`);
-    audioFiles.play();
   };
 
   const chooseClass = (id: string) => {
@@ -125,17 +117,17 @@ export default function AudioCall() {
           {stage === 'game' && (
             <>
               <Box className='sprint__time-point'>
-                <Box sx={{width: '150px', height: '150px'}}></Box>
+                <Box sx={{ width: '150px', height: '150px' }}></Box>
                 <Box className='poins__audiocall'>
                   <p className='points'>{points}</p>
-                  <Rating name='read-only' value={series} readOnly max={3} />
+                  <Rating name='read-only' value={series} readOnly max={SERIES_LENGTH} />
                   <Grow
                     in={showPoint}
                     timeout={500}
                     className='points__current'
-                    onTransitionEnd={() => setShowPoint(false)} 
+                    onTransitionEnd={() => setShowPoint(false)}
                   >
-                    <p>+{10 * series}</p>
+                    <p>+{POINTS * series}</p>
                   </Grow>
                 </Box>
               </Box>
