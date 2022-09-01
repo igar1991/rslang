@@ -1,158 +1,155 @@
-import { Button, Typography, Box } from '@mui/material';
-import { Container } from '@mui/system';
 import { useCallback, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { Button, Box, Rating, Grow } from '@mui/material';
+import { Container } from '@mui/system';
+import Stack from '@mui/material/Stack';
+import CircularProgress from '@mui/material/CircularProgress';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
+import { setPage, selectGames } from 'redux/slices/gamesSlice';
 import { wordsAPI } from 'api/wordsService';
-import { useAppSelector } from 'redux/hooks';
-import {
-  setGroup,
-  setPage,
-  setStage,
-  setCurrentWord,
-  setTrueAnswers,
-  setFalseAnswers,
-  clearGame,
-  selectGames,
-} from 'redux/slices/gamesSlice';
 import { Word } from 'types/types';
-import { API_BASE_URL } from 'api/api';
-import { Result } from '../components/result/result';
-import { Start } from '../components/start/start';
-import './sprint.css';
+import { Result } from 'pages/games/components/result/result';
+import { Background } from 'pages/games/components/background';
 
-export default function Sprint() {const dispatch = useDispatch();
-  const { page, group, stage, currentWord } = useAppSelector(selectGames);
+import 'pages/games/sprint/sprint.css';
+import { POINTS, SERIES_LENGTH, SPRINT_SECONDS } from '../constants';
+import { getArraySprint } from '../utils';
+
+type QuestionsType = {
+  word: Word;
+  answer: string;
+  translate: string;
+};
+
+export default function Sprint() {
+  const dispatch = useAppDispatch();
+  const { page, group, fromVoc } = useAppSelector(selectGames);
+
   const { data } = wordsAPI.useGetWordsQuery({ page, group });
-
-  const random = (num: number) => Math.floor(Math.random() * num);
-  const [option, setOption] = useState<null | number>(null);
+  const [arr, setArr] = useState<QuestionsType[]>([]);
+  const [answers, setAnswers] = useState<{ right: Word[]; errors: Word[] }>({ right: [], errors: [] });
+  const [seconds, setSeconds] = useState<number>(SPRINT_SECONDS);
   const [points, setPoints] = useState<number>(0);
-  const [seconds, setSeconds ] =  useState<number>(30);
+  const [showPoint, setShowPoint] = useState<boolean>(false);
+  const [series, setSeries] = useState<number>(0);
+  const [curId, setCurId] = useState<number>(0);
+  const [stage, setStage] = useState<string>('game');
 
-  useEffect(()=>{
-    dispatch(clearGame());
-  },[]);
+  useEffect(() => {
+    if (data) {
+      const array = getArraySprint(data);
+      setArr([...arr, ...array]);
+    }
+  }, [data]);
 
-  useEffect(()=>{
+  useEffect(() => {
     const myInterval = setInterval(() => {
       if (seconds > 0) {
         setSeconds(seconds - 1);
       } else {
         clearInterval(myInterval);
-        dispatch(setStage('result'));
+        setStage('result');
       }
     }, 1000);
-    return ()=> {
+    return () => {
       clearInterval(myInterval);
     };
-  });
+  }, [seconds]);
 
-  const startCall = () => {
-    addQuest(0);
-    dispatch(setStage('pending'));
-    setPoints(0);
-  };
+  useEffect(() => {
+    if (stage === 'game') {
+      setArr([]);
+      dispatch(setPage(Math.floor(Math.random() * 30)));
+      setSeconds(SPRINT_SECONDS);
+      setPoints(0);
+      setSeries(0);
+      setCurId(0);
+      setAnswers({ right: [], errors: [] });
+      setArr(arr.sort(() => Math.random() - 0.5));
+    }
+  }, [stage]);
 
-  const audioStartHandler = (audioFile: string) => {
-    const audioFiles = new Audio(`${[API_BASE_URL, audioFile].join('/')}`);
-    audioFiles.play();
-  };
-
-  const onClickHandler = useCallback((group: number) => {
-    const randomPage = random(30);
-    startCall();
-    dispatch(setPage(randomPage));
-    dispatch(setGroup(group));
+  const playAgain = useCallback(() => {
+    setStage('game');
   }, []);
 
-  const addQuest = (answer: number) => {
-    const num = random(2);
-    console.log(num);
-    if(num === 0) {
-      setOption(answer);
+  const checkAnswer = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const btn = event.target as HTMLButtonElement;
+    const btnName = btn.name;
+    if (btnName === arr[curId].answer) {
+      setShowPoint(true);
+      const audioFiles = new Audio('/assets/audio/right.mp3');
+      audioFiles.play();
+      if (series != 3) setSeries(series + 1);
+      setPoints(points + POINTS * (series != SERIES_LENGTH ? series + 1 : series));
+      setAnswers({ errors: [...answers.errors], right: [...answers.right, arr[curId].word] });
     } else {
-      const item = random(20);
-      setOption(item);
+      const audioFiles = new Audio('/assets/audio/error.mp3');
+      audioFiles.play();
+      setSeries(0);
+      setAnswers({ errors: [...answers.errors, arr[curId].word], right: [...answers.right] });
     }
-  };
-
-  const checkAnsewr = (word: Word) => {
-    if (data) {
-      if (data[currentWord].id === word.id) {
-        dispatch(setTrueAnswers(word));
-        setPoints(prev=>prev+10);
-        console.log(true);
-      } else {
-        dispatch(setFalseAnswers(data[currentWord]));
-        console.log(false);
-      }
+    if (curId === arr.length - 1) return setStage('result');
+    if (curId > arr.length - 5) {
+      if (fromVoc === true && page != 0) dispatch(setPage(page - 1));
+      if (fromVoc === false) dispatch(setPage(page === 0 ? 30 : page - 1));
     }
-    nextQuest(currentWord);
-  };
-
-  const nextQuest = (currentIndex: number) => {
-    if (data && currentIndex >=data?.length-1) {
-      dispatch(setStage('result'));
-      return;
-    }
-    const index = currentIndex + 1;
-    addQuest(index);
-    dispatch(setCurrentWord(index));
+    setCurId(curId + 1);
   };
 
   return (
-    <main className="container_audiocall">
-      <Container>
-        {stage === 'start' && <Start onClickHandler={onClickHandler} title='Sprint' description='Sprint - training for speed. Try to guess as many words as you can in 30 seconds.' />}
-        {stage === 'pending' && (
-          <>
-            {data && (
-              <>
-                <Box>
-                  {data && <>
-                    <Typography
-                      variant='h1'
-                      className='word-title'
-                    >{seconds}
-                    </Typography>
-                    <Typography
-                      variant='h1'
-                      className='word-title'
-                    >{points}
-                    </Typography>
-                    <Typography
-                      variant='h3'
-                      className='word-title'
-                    >{data[currentWord].word}
-                    </Typography>
-                    <Typography
-                      variant='h5'
-                      className='word-title'
-                    >{data[option ?? 0].wordTranslate}</Typography>
-                    <Button
-                      variant='contained'
-                      color='error'
-                      onClick={() => checkAnsewr(data[option ?? 0])}
-                      sx={{ margin: '5px' }}
-                    >
-                    Неверно
-                    </Button>
-                    <Button
-                      variant='contained'
-                      color='success'
-                      onClick={() => checkAnsewr(data[option ?? 0])}
-                      sx={{ margin: '5px' }}
-                    >
-                    Верно
-                    </Button>
-                  </>}
+    <Container component='main' className='games__container'>
+      {!(arr.length > 0) ? (
+        <Stack sx={{ color: 'grey.500' }} spacing={2} direction='row'>
+          <CircularProgress color='secondary' />
+        </Stack>
+      ) : (
+        <>
+          {stage === 'game' && (
+            <Box className='sprint__container'>
+              <Box className='sprint__time-point'>
+                <Box className='poins__container'>
+                  <p className='points'>{points}</p>
+                  <Rating name='read-only' value={series} readOnly max={SERIES_LENGTH} />
+                  <Grow
+                    in={showPoint}
+                    timeout={500}
+                    onTransitionEnd={() => setShowPoint(false)}
+                    className='points__current'
+                  >
+                    <p>+{POINTS * series}</p>
+                  </Grow>
                 </Box>
-              </>
-            )}
-          </>
-        )}
-        {stage === 'result' && <Result audioStartHandler={audioStartHandler} />}
-      </Container>
-    </main>
+                <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+                  <CircularProgress
+                    variant='determinate'
+                    value={(seconds / 30) * 100}
+                    color='secondary'
+                    className='sprint__time'
+                    size={150}
+                  />
+                  <Box className='sprint__time-text-container'>
+                    <p className='sprint__time-text'>{seconds}</p>
+                  </Box>
+                </Box>
+              </Box>
+              <Box className='sprint__words'>
+                <p className='sprint__word-en'>{arr[curId].word.word}</p>
+                <p className='sprint__word-ru'>{arr[curId].translate}</p>
+              </Box>
+              <Box className='sprint__buttons'>
+                <Button variant='contained' className='sprint__btn' color='error' name='false' onClick={checkAnswer}>
+                  False
+                </Button>
+                <Button variant='contained' className='sprint__btn' color='success' name='true' onClick={checkAnswer}>
+                  True
+                </Button>
+              </Box>
+            </Box>
+          )}
+          {stage === 'result' && <Result playAgain={playAgain} answers={answers} />}
+          <Background word='SPRINTSPRINT' />
+        </>
+      )}
+    </Container>
   );
 }

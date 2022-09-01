@@ -1,0 +1,85 @@
+.result {
+  width: 100%;
+  margin-top: 50px;
+  margin-bottom: auto;
+}
+
+.result__title {
+  margin-bottom: 30px;
+  font-size: 40px;
+  font-weight: 500;
+  letter-spacing: 0.25px;
+	color: var(--lightTextSecondaryColor);
+}
+
+.result__container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 50px;
+}
+
+.result__diagramm {
+  background-color: red;
+  border-radius: 50%;
+  color: #46e94d !important;
+}
+
+.result__diagramm-error {
+  border-radius: 50%;
+  background-color: red;
+  color: red !important;
+}
+
+.result__diagramm-text-container {
+  position: absolute;
+  display: flex;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.result__diagramm-text {
+  display: flex;
+  width: 50px;
+  height: 50px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: var(--backgroundColor);
+}
+
+.result__button-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+}
+
+.result__show-more-btn {
+  display: flex;
+  width: max-content;
+  margin-top: 20px !important;
+  margin-left: auto !important;
+  align-items: center;
+  justify-content: flex-end;
+  color: var(--lightSecondaryDarkColor) !important;
+  text-decoration: none !important;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.result__show-more-btn:hover {
+  text-decoration: underline !important;
+}
+
+.result__table {
+  display: flex;
+  margin-top: 30px;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 10px;
+}

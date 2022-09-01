@@ -1,12 +1,66 @@
-.container_audiocall {
-	background-color: rgb(255, 255, 255);
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	text-align: center;
-
+.game__title {
+  font-size: 60px;
+  font-weight: 500;
+  line-height: 160%;
+  text-align: center;
+  letter-spacing: 0.15px;
+  color: var(--lightTextPrimaryColor);
 }
-.title {
-  font-size: 34px;
-  font-weight: 400;
+
+.game__description {
+  font-size: 20px;
+  line-height: 160%;
+  text-align: center;
+  letter-spacing: 0.15px;
+  color: var(--lightTextSecondaryColor);
+}
+
+.poins__audiocall {
+  position: relative;
+  margin-left: auto;
+}
+
+.audiocall__question {
+  display: flex;
+  flex-direction: column;
+  min-height: 270px;
+  justify-content: center;
+  align-items: center;
+}
+
+.audiocall__icon-container {
+  display: flex;
+  width: 210px;
+  height: 210px;
+  margin-bottom: 48px;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border-radius: 50%;
+}
+
+.audiocall__icon {
+  width: 3em !important;
+  height: 3em !important;
+  color: var(--lightSecondaryDarkColor);
+}
+
+.audiocall__answers {
+  display: flex;
+  justify-content: center;
+}
+
+.right-btn:disabled {
+  background-color: #46e94d !important;
+  color:black !important;
+}
+
+.error-btn:disabled {
+  background-color: red !important;
+  color:black !important;
+}
+
+.audiocall__next-btn {
+	width: 120px;
+	margin-top: 20px !important;
 }

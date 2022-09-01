@@ -25,11 +25,13 @@ export const GamesLinks = () => {
           img='/assets/game-sprint.png'
           title='Sprint'
           description='Quickly find if provided translation correct'
+          url='/games/sprint'
         />
         <GameCard
           img='/assets/game-listen.png'
           title='Audio Challenge'
           description='Try to recognize the word speaker says'
+          url='/games/audiocall'
         />
       </Box>
     </Box>

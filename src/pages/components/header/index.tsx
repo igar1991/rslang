@@ -46,7 +46,7 @@ export default function Header({openAuthorizationModal, openProfileModal}: InHea
         <Container sx={{ display: 'flex' }}>
           <Typography sx={{ flexGrow: 1 }}>
             <NavLink to='/'>
-              <img src='assets/logo.png' alt='logo' />
+              <img src='/assets/logo.png' alt='logo' />
             </NavLink>
           </Typography>
 

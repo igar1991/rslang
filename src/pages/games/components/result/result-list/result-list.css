@@ -1,0 +1,17 @@
+.result__list-title {
+  font-weight: 500;
+  line-height: 160%;
+  text-align: center;
+  letter-spacing: 0.15px;
+  color: var(--lightTextPrimaryColor);
+}
+
+.result__list-item {
+  padding: 0;
+  cursor: default;
+}
+
+.result__list-icon {
+  min-width: 40px !important;
+  cursor: pointer;
+}
