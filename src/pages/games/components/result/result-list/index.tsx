@@ -7,16 +7,21 @@ import ListItemText from '@mui/material/ListItemText';
 
 import { VolumeUp } from '@mui/icons-material';
 import { Word } from '../../../../../types/types';
+import { API_BASE_URL } from '../../../../../api/api';
 
 import './result-list.css';
 
 type ResultListType = {
     name: string;
     arr: Word[];
-    audioStartHandler: (audioFile: string) => void;
 }
 
-export default function ResultList({name, arr, audioStartHandler}: ResultListType) {
+export default function ResultList({name, arr}: ResultListType) {
+  const audioStartHandler = (audioFile: string) => {
+    const audioFiles = new Audio(`${[API_BASE_URL, audioFile].join('/')}`);
+    audioFiles.play();
+  };
+
   return (
     <Box>
       <h3 className='result__list-title'>{`${name} (${arr.length})`}</h3>

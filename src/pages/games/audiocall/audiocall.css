@@ -15,6 +15,11 @@
   color: var(--lightTextSecondaryColor);
 }
 
+.poins__audiocall {
+  position: relative;
+  margin-left: auto;
+}
+
 .audiocall__question {
   display: flex;
   flex-direction: column;
@@ -43,6 +48,16 @@
 .audiocall__answers {
   display: flex;
   justify-content: center;
+}
+
+.right-btn:disabled {
+  background-color: #46e94d !important;
+  color:black !important;
+}
+
+.error-btn:disabled {
+  background-color: red !important;
+  color:black !important;
 }
 
 .audiocall__next-btn {

@@ -1,10 +1,15 @@
+.result {
+  width: 100%;
+  margin-top: 50px;
+  margin-bottom: auto;
+}
+
 .result__title {
   margin-bottom: 30px;
+  font-size: 40px;
   font-weight: 500;
-  line-height: 160%;
-  text-align: center;
-  letter-spacing: 0.15px;
-  color: var(--lightTextPrimaryColor);
+  letter-spacing: 0.25px;
+	color: var(--lightTextSecondaryColor);
 }
 
 .result__container {
@@ -17,6 +22,13 @@
 .result__diagramm {
   background-color: red;
   border-radius: 50%;
+  color: #46e94d !important;
+}
+
+.result__diagramm-error {
+  border-radius: 50%;
+  background-color: red;
+  color: red !important;
 }
 
 .result__diagramm-text-container {

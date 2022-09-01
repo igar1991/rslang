@@ -18,6 +18,20 @@
 	gap: 40px;
 }
 
+.poins__container {
+	position: relative;
+}
+
+.points__current {
+	position: absolute;
+	right: -30px;
+	top: -15px;
+	font-size: 25px;
+	font-weight: 600;
+	opacity: .4 !important;
+	color: var(--lightSecondaryMainColor);
+}
+
 .sprint__time-text-container {
 	position: absolute;
 	display: flex;
@@ -29,7 +43,7 @@
 	justify-content: center;
 }
 
-.sprint__points,
+.points,
 .sprint__time-text {
 	display: flex;
 	justify-content: center;

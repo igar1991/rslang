@@ -1,41 +1,55 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { Button, Box } from '@mui/material';
+import { Button, Box, Rating, Grow } from '@mui/material';
 import { Container } from '@mui/system';
+import Stack from '@mui/material/Stack';
 import CircularProgress from '@mui/material/CircularProgress';
-import { useAppSelector } from '../../../redux/hooks';
-import {
-  setGroup,
-  setPage,
-  setStage,
-  setCurrentWord,
-  setTrueAnswers,
-  setFalseAnswers,
-  clearGame,
-  selectGames,
-} from '../../../redux/slices/gamesSlice';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { setPage, selectGames } from '../../../redux/slices/gamesSlice';
 import { wordsAPI } from '../../../api/wordsService';
 import { Word } from '../../../types/types';
-import { API_BASE_URL } from '../../../api/api';
 import { Result } from '../components/result/result';
-import { Start } from '../components/start/start';
 import { Background } from '../components/background';
+
 import './sprint.css';
 
+type QuestionsType = {
+  word: Word;
+  answer: string;
+  translate: string;
+};
 
 export default function Sprint() {
-  const dispatch = useDispatch();
-  const { page, group, stage, currentWord } = useAppSelector(selectGames);
-  const { data } = wordsAPI.useGetWordsQuery({ page, group });
+  const dispatch = useAppDispatch();
+  const { page, group, fromVoc } = useAppSelector(selectGames);
 
-  const random = (num: number) => Math.floor(Math.random() * num);
-  const [option, setOption] = useState<null | number>(null);
-  const [points, setPoints] = useState<number>(0);
+  const { data } = wordsAPI.useGetWordsQuery({ page, group });
+  const [arr, setArr] = useState<QuestionsType[]>([]);
+  const [answers, setAnswers] = useState<{ right: Word[]; errors: Word[] }>({ right: [], errors: [] });
   const [seconds, setSeconds] = useState<number>(30);
+  const [points, setPoints] = useState<number>(0);
+  const [showPoint, setShowPoint] = useState<boolean>(false);
+  const [series, setSeries] = useState<number>(0);
+  const [curId, setCurId] = useState<number>(0);
+  const [stage, setStage] = useState<string>('game');
 
   useEffect(() => {
-    dispatch(clearGame());
-  }, []);
+    if (data) {
+      const array = data.map((item, index) => {
+        const random = Math.floor(Math.random() * 2);
+        if (random === 0) {
+          return { word: item, answer: 'true', translate: item.wordTranslate };
+        } else {
+          let randomAnswer: number;
+          do {
+            randomAnswer = Math.floor(Math.random() * 20);
+          } while (randomAnswer === index);
+          return { word: item, answer: 'false', translate: data[randomAnswer].wordTranslate };
+        }
+      });
+      array.sort(() => Math.random() - 0.5);
+      setArr([...arr, ...array]);
+    }
+  }, [data]);
 
   useEffect(() => {
     const myInterval = setInterval(() => {
@@ -43,83 +57,73 @@ export default function Sprint() {
         setSeconds(seconds - 1);
       } else {
         clearInterval(myInterval);
-        dispatch(setStage('result'));
+        setStage('result');
       }
     }, 1000);
     return () => {
       clearInterval(myInterval);
     };
-  });
+  }, [seconds]);
 
-  const startCall = () => {
-    addQuest(0);
-    dispatch(setStage('pending'));
-    setPoints(0);
-  };
+  useEffect(() => {
+    if (stage === 'game') {
+      setArr([]);
+      dispatch(setPage(Math.floor(Math.random() * 30)));
+      setSeconds(30);
+      setPoints(0);
+      setSeries(0);
+      setCurId(0);
+      setAnswers({ right: [], errors: [] });
+      setArr(arr.sort(() => Math.random() - 0.5));
+    }
+  }, [stage]);
 
-  const audioStartHandler = (audioFile: string) => {
-    const audioFiles = new Audio(`${[API_BASE_URL, audioFile].join('/')}`);
-    audioFiles.play();
-  };
-
-  const onClickHandler = useCallback((group: number) => {
-    const randomPage = random(30);
-    startCall();
-    dispatch(setPage(randomPage));
-    dispatch(setGroup(group));
+  const playAgain = useCallback(() => {
+    setStage('game');
   }, []);
 
-  const addQuest = (answer: number) => {
-    const num = random(2);
-    if (num === 0) {
-      setOption(answer);
+  const checkAnswer = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const btn = event.target as HTMLButtonElement;
+    const btnName = btn.name;
+    if (btnName === arr[curId].answer) {
+      setShowPoint(true);
+      const audioFiles = new Audio('/assets/audio/right.mp3');
+      audioFiles.play();
+      if (series != 3) setSeries(series + 1);
+      setPoints(points + 10 * (series != 3 ? series + 1 : series));
+      setAnswers({ errors: [...answers.errors], right: [...answers.right, arr[curId].word] });
     } else {
-      const item = random(20);
-      setOption(item);
+      const audioFiles = new Audio('/assets/audio/error.mp3');
+      audioFiles.play();
+      setSeries(0);
+      setAnswers({ errors: [...answers.errors, arr[curId].word], right: [...answers.right] });
     }
-  };
-
-  const checkAnsewr = (word: Word, answer: boolean) => {
-    if (data) {
-      if ((data[currentWord].id === word.id && answer) || data[currentWord].id !== word.id && !answer) {
-        dispatch(setTrueAnswers(word));
-        setPoints((prev) => prev + 10);
-        const audioFiles = new Audio('/assets/audio/right.mp3');
-        audioFiles.play();
-      } else {
-        dispatch(setFalseAnswers(data[currentWord]));
-        const audioFiles = new Audio('/assets/audio/error.mp3');
-        audioFiles.play();
-      }
+    if (curId === arr.length - 1) return setStage('result');
+    if (curId > arr.length - 5) {
+      if (fromVoc === true && page != 0) dispatch(setPage(page - 1));
+      if (fromVoc === false) dispatch(setPage(page === 0 ? 20 : page - 1));
     }
-    nextQuest(currentWord);
-  };
-
-  const nextQuest = (currentIndex: number) => {
-    if (data && currentIndex >= data?.length - 1) {
-      dispatch(setStage('result'));
-      return;
-    }
-    const index = currentIndex + 1;
-    addQuest(index);
-    dispatch(setCurrentWord(index));
+    setCurId(curId + 1);
   };
 
   return (
     <Container component='main' className='games__container'>
-      {stage === 'start' && (
-        <Start
-          onClickHandler={onClickHandler}
-          title='Sprint'
-          description='Sprint - training for speed. Try to guess as many words as you can in 30 seconds.'
-        />
-      )}
-      {stage === 'pending' && (
+      {!(arr.length > 0) ? (
+        <Stack sx={{ color: 'grey.500' }} spacing={2} direction='row'>
+          <CircularProgress color='secondary' />
+        </Stack>
+      ) : (
         <>
-          {data && (
+          {stage === 'game' && (
             <Box className='sprint__container'>
               <Box className='sprint__time-point'>
-                <p className='sprint__points'>{points}</p>
+                <Box className='poins__container'>
+                  <p className='points'>{points}</p>
+                  <Rating name='read-only' value={series} readOnly max={3}/>
+                  <Grow in={showPoint} timeout={500} onTransitionEnd={() => setShowPoint(false)} className='points__current'>
+                    <p>+{10 * series}</p>
+                  </Grow>
+                </Box>
                 <Box sx={{ position: 'relative', display: 'inline-flex' }}>
                   <CircularProgress
                     variant='determinate'
@@ -134,8 +138,8 @@ export default function Sprint() {
                 </Box>
               </Box>
               <Box className='sprint__words'>
-                <p className='sprint__word-en'>{data[currentWord].word}</p>
-                <p className='sprint__word-ru'>{data[option ?? 0].wordTranslate}</p>
+                <p className='sprint__word-en'>{arr[curId].word.word}</p>
+                <p className='sprint__word-ru'>{arr[curId].translate}</p>
               </Box>
               <Box className='sprint__buttons'>
                 <Button
@@ -143,26 +147,21 @@ export default function Sprint() {
                   className='sprint__btn'
                   color='error'
                   size='large'
-                  onClick={() => checkAnsewr(data[option ?? 0], false)}
+                  name='false'
+                  onClick={checkAnswer}
                 >
                   False
                 </Button>
-                <Button
-                  variant='contained'
-                  className='sprint__btn'
-                  color='success'
-                  size='large'
-                  onClick={() => checkAnsewr(data[option ?? 0], true)}
-                >
+                <Button variant='contained' className='sprint__btn' color='success' name='true' onClick={checkAnswer}>
                   True
                 </Button>
               </Box>
             </Box>
           )}
+          {stage === 'result' && <Result playAgain={playAgain} answers={answers} />}
+          <Background word='SPRINTSPRINT' />
         </>
       )}
-      {stage === 'result' && <Result audioStartHandler={audioStartHandler} />}
-      <Background word='SPRINTSPRINT' />
     </Container>
   );
 }

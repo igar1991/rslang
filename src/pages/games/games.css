@@ -4,3 +4,83 @@
   align-items: center;
   text-align: center;
 }
+
+.games__title {
+  margin: 10px auto  30px auto;
+  font-size: 34px;
+  font-weight: 400;
+  line-height: 123.5%;
+  letter-spacing: 0.25px;
+  color: var(--lightTextSecondaryColor);
+}
+
+.games__selected-container {
+  display: flex;
+  gap: 50px;
+}
+
+.games__cards {
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.games__card {
+  display: flex;
+  max-width: 320px;
+  flex-direction: column;
+  justify-content: space-between !important;
+  text-decoration: none !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  text-align: center;
+}
+
+.games__card-img {
+  object-fit: contain !important;
+}
+
+.games__card-text {
+  padding: 0 !important;
+}
+
+.games__card-title {
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: 0.25px;
+}
+
+.games__card-description {
+  margin-top: 10px;
+  font-weight: 400;
+  line-height: 123.5%;
+  letter-spacing: 0.25px;
+}
+
+.games__buttons {
+  display: flex;
+  flex-direction: column !important;
+  justify-content: space-around;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.games__button {
+  padding: 0.3rem 3rem !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+}
+
+.games__start-btn {
+  padding: 0.5rem 4rem !important;
+  margin-top: 50px !important;
+}
+
+@media (max-width: 900px) {
+  .games__selected-container {
+    flex-direction: column;
+  }
+
+  .games__buttons {
+    flex-direction: row !important;
+  }
+}

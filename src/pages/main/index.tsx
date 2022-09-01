@@ -14,7 +14,7 @@ type InMainType = {
 
 export default function Main({ openRegisterModal, openAuthorizationModal }: InMainType): JSX.Element {
   return (
-    <Box  className='main'>
+    <Box className='main'>
       <Container component='main'>
         <Banner openRegisterModal={openRegisterModal} openAuthorizationModal={openAuthorizationModal} />
         <Advantages />

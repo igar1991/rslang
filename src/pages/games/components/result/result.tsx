@@ -1,84 +1,78 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Box, Link } from '@mui/material';
 import { NavLink } from 'react-router-dom';
-import { useAppSelector } from '../../../../redux/hooks';
-import { clearGame, selectGames } from '../../../../redux/slices/gamesSlice';
-import { useDispatch } from 'react-redux';
 import CircularProgress from '@mui/material/CircularProgress';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import Slide from '@mui/material/Slide';
 
 import ResultList from './result-list';
+import { Word } from '../../../../types/types';
 import './result.css';
-import React from 'react';
 
 interface ResultAnswers {
-  audioStartHandler: (audioFile: string) => void;
+  playAgain: () => void,
+  answers: { right: Word[]; errors: Word[] }
 }
 
-export const Result = ({ audioStartHandler }: ResultAnswers) => {
-  const { trueAnswers, falseAnswers } = useAppSelector(selectGames);
-
+export const Result = ({ playAgain, answers }: ResultAnswers) => {
   const [showMore, setShowMore] = useState(false);
-  const dispatch = useDispatch();
-  
+
   const getTitle = () => {
-    if (trueAnswers.length === 0) return 'Maybe another time...';
-    const persent = (trueAnswers.length / (trueAnswers.length + falseAnswers.length)) * 100;
+    if (answers.right.length === 0) return 'Maybe another time...';
+    const persent = (answers.right.length / (answers.right.length + answers.errors.length)) * 100;
     if (persent < 40) return 'Next time will be better!';
     if (persent < 70) return 'Not a bad result!';
+    if (persent < 90) return 'Good result!';
     return 'Excellent result!';
   };
 
   return (
-    <Box>
+    <Box  className='result'>
       <h2 className='result__title'>{getTitle()}</h2>
       <Box className='result__container'>
         <Box sx={{ position: 'relative', display: 'inline-flex' }}>
           <CircularProgress
             variant='determinate'
-            color={trueAnswers.length === 0 ? 'error' : 'success'}
-            className='result__diagramm'
+            color='success'
+            className={answers.right.length === 0 ? 'result__diagramm-error' : 'result__diagramm'}
             size={150}
-            value={(trueAnswers.length / (trueAnswers.length + falseAnswers.length)) * 100}
+            value={(answers.right.length / (answers.right.length + answers.errors.length)) * 100}
             thickness={20}
           />
           <Box className='result__diagramm-text-container'>
-            <p className='result__diagramm-text'>{`${trueAnswers.length}/${trueAnswers.length + falseAnswers.length}`}</p>
+            <p className='result__diagramm-text'>{`${answers.right.length}/${
+              answers.right.length + answers.errors.length
+            }`}</p>
           </Box>
         </Box>
         <Box className='result__button-container'>
-          <Button
-            variant='contained'
-            color='secondary'
-            onClick={() => dispatch(clearGame())}
-          >
+          <Button variant='contained' color='secondary' onClick={playAgain}>
             Play again
           </Button>
-          <Button
-            variant='contained'
-            color='secondary'
-            component={NavLink}
-            to='/games'
-          >
+          <Button variant='contained' color='secondary' component={NavLink} to='/games'>
             To games list
           </Button>
         </Box>
       </Box>
-      <Link
-        color='secondary'
-        className='result__show-more-btn'
-        onClick={() => setShowMore(!showMore)}
-      >
-        {showMore ? <>Show less <KeyboardArrowUpIcon /></>  : <>Show more <KeyboardArrowDownIcon /></> }
+      <Link color='secondary' className='result__show-more-btn' onClick={() => setShowMore(!showMore)}>
+        {showMore ? (
+          <>
+            Show less <KeyboardArrowUpIcon />
+          </>
+        ) : (
+          <>
+            Show more <KeyboardArrowDownIcon />
+          </>
+        )}
       </Link>
-      
-      {showMore ? 
+      <Slide direction='up' in={showMore} mountOnEnter unmountOnExit>
         <Box className='result__table'>
-          <ResultList name='Right answers' arr={trueAnswers} audioStartHandler={audioStartHandler} />
-          <ResultList name='Errors' arr={falseAnswers} audioStartHandler={audioStartHandler} />
-          <ResultList name='New words' arr={trueAnswers} audioStartHandler={audioStartHandler} />
-        </Box> : ''}
+          <ResultList name='Right answers' arr={answers.right} />
+          <ResultList name='Errors' arr={answers.errors} />
+          <ResultList name='New words' arr={answers.right}/>
+        </Box>
+      </Slide>
     </Box>
   );
 };

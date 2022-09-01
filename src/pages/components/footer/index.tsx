@@ -11,7 +11,7 @@ export default function Footer(): JSX.Element {
     <Container component='footer'>
       <Box className='footer'>
         <Link href='https://rs.school/js/'>
-          <img src='assets/rs.svg' alt='Rs school' className='footer__rs' />
+          <img src='/assets/rs.svg' alt='Rs school' className='footer__rs' />
         </Link>
         <Box className='footer__git-links'>
           <p className='footer__git-text'>&#169;,&nbsp;2022</p>
