@@ -3,31 +3,42 @@ import { Card } from './components/card';
 import './statistics.css';
 import { useState, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
-
-interface series {
-  name: string;
-  data: number[]
-}
+import { wordsAPI } from 'api/wordsService';
+import { useAppSelector } from 'redux/hooks';
+import { selectAuth } from 'redux/slices/authUserSlice';
+import { UserWordData } from 'types/types';
 
 export default function Statistics() {
 
-  const [categories, setСategories] = useState<number[]>([]);
-  const [series, setSeries] = useState<series[]>([]);
+  const [categories, setСategories] = useState<string[]>([]);
+  const [seriesNew, setSeriesNew] = useState<number[]>([]);
+  const [seriesLearned, setSeriesNewLearned] = useState<number[]>([]);
+  const {id} = useAppSelector(selectAuth);
+
+  const { data } = wordsAPI.useGetUserWordsQuery(id);
   
   useEffect(() => {
-    setSeries([
-      {
-        name: 'New words',
-        data: [0, 2, 3, 4, 5, 6, 7]
-      },
-      {
-        name: 'Learned words',
-        data: [2, 3, 4, 5, 6, 7, 4]
-      }
-    ]);
-    setСategories([1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998]);
+    if(data)createFilter(data);
+    
+  }, [data]);
 
-  }, []);
+  const createFilter =(data: UserWordData[])=>{
+    const dataFilter = data?.filter((item)=> Object.keys(item.optional).includes('date') && item.optional.learned);
+    const res = dataFilter?.reduce((previousValue:{[key: string]: number}, currentValue)=>{
+      if(Object.keys(previousValue).includes(currentValue.optional.date as string)) {
+        if(currentValue.optional.date) {
+          previousValue[currentValue.optional.date]+=1;
+        }
+      } else {
+        if(currentValue.optional.date) {
+          previousValue[currentValue.optional.date] = 1;
+        }
+      }
+      return previousValue;
+    }, {});
+    setSeriesNewLearned(Object.values(res));
+    setСategories(Object.keys(res));
+  };
 
   return (
     <Container className='container'>
@@ -73,7 +84,16 @@ export default function Statistics() {
         xaxis: {
           categories: categories
         }
-      }} series={series} type="area" height={450} />
+      }} series={[
+        {
+          name: 'New words',
+          data: seriesNew
+        },
+        {
+          name: 'Learned words',
+          data: seriesLearned
+        }
+      ]} type="area" height={450} />
     </Container>
   );
 }
