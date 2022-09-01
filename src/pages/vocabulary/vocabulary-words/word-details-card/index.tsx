@@ -8,6 +8,7 @@ import { selectWords } from 'redux/slices/wordsSlice';
 import { useAppSelector } from 'redux/hooks';
 import { DIFFICULTY } from '../constants';
 import { selectAuth } from 'redux/slices/authUserSlice';
+import { useCallback } from 'react';
 
 export const WordDetailsCard = () => {
   const { isAuth: isUserLoggedIn, id: userId } = useAppSelector(selectAuth);
@@ -41,7 +42,7 @@ export const WordDetailsCard = () => {
   const isHardWord = word && usersHardWordsIds.includes(word.id);
   const isLearnedWord = word && usersLearnedWordsIds.includes(word.id);
 
-  const handleClickHardWord = () => {
+  const handleClickHardWord = useCallback(() => {
     if (word && isNeedToCreate) {
       addUserWord({
         id: userId,
@@ -69,9 +70,9 @@ export const WordDetailsCard = () => {
         }
       });
     }
-  };
+  }, [addUserWord, isNeedToCreate, isUpdating, updateUserWord, userId, usersWords, word]);
 
-  const handleClickLearnedWord = () => {
+  const handleClickLearnedWord = useCallback(() => {
     if (word && isNeedToCreate) {
       addUserWord({
         id: userId,
@@ -99,7 +100,7 @@ export const WordDetailsCard = () => {
         }
       });
     }
-  };
+  }, [addUserWord, isNeedToCreate, isUpdating, updateUserWord, userId, word]);
 
   return isWordLoaded ? (
     <Box className='word__details-card'>

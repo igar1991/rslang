@@ -39,7 +39,7 @@ export default function Sprint() {
       const array = getArraySprint(data);
       setArr([...arr, ...array]);
     }
-  }, [data]);
+  }, [data, arr]);
 
   useEffect(() => {
     const myInterval = setInterval(() => {
@@ -66,7 +66,7 @@ export default function Sprint() {
       setAnswers({ right: [], errors: [] });
       setArr(arr.sort(() => Math.random() - 0.5));
     }
-  }, [stage]);
+  }, [stage, arr, dispatch]);
 
   const playAgain = useCallback(() => {
     setStage('game');
