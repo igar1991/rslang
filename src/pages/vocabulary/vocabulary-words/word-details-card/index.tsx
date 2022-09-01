@@ -4,7 +4,6 @@ import './word-details-card.css';
 import { wordsAPI } from 'api/wordsService';
 import { API_BASE_URL } from 'api/api';
 import { DetailsCardButton } from './details-card-button';
-import { useCallback } from 'react';
 import { selectWords } from 'redux/slices/wordsSlice';
 import { useAppSelector } from 'redux/hooks';
 import { DIFFICULTY } from '../constants';
@@ -16,8 +15,6 @@ export const WordDetailsCard = () => {
 
   const { data: word, isSuccess: isWordLoaded } = wordsAPI.useGetWordByIdQuery(selectedWordId);
   const { data: usersWords, isSuccess: isUserWordsLoaded } = wordsAPI.useGetUserWordsQuery(userId);
-
-  console.log('usersWords', usersWords);
 
   const usersHardWordsIds = isUserWordsLoaded ? usersWords
     .reduce((acc, word) => {
@@ -44,7 +41,7 @@ export const WordDetailsCard = () => {
   const isHardWord = word && usersHardWordsIds.includes(word.id);
   const isLearnedWord = word && usersLearnedWordsIds.includes(word.id);
 
-  const handleClickHardWord = useCallback(() => {
+  const handleClickHardWord = () => {
     if (word && isNeedToCreate) {
       addUserWord({
         id: userId,
@@ -59,20 +56,22 @@ export const WordDetailsCard = () => {
     }
 
     if (word && !isUpdating && !isNeedToCreate) {
+      const currentWordDifficulty = usersWords?.find((userWord) => userWord.wordId === word.id)?.difficulty;
+
       updateUserWord({
         id: userId,
         wordId: word.id,
         body: {
-          difficulty: DIFFICULTY.EASY,
+          difficulty: currentWordDifficulty === 'easy' ? DIFFICULTY.HARD : DIFFICULTY.EASY,
           optional: {
             learned: false
           }
         }
       });
     }
-  }, [word, addUserWord, isUpdating, updateUserWord, userId, isNeedToCreate]);
+  };
 
-  const handleClickLearnedWord = useCallback(() => {
+  const handleClickLearnedWord = () => {
     if (word && isNeedToCreate) {
       addUserWord({
         id: userId,
@@ -100,7 +99,7 @@ export const WordDetailsCard = () => {
         }
       });
     }
-  }, [word, addUserWord, isUpdating, updateUserWord, userId, isNeedToCreate]);
+  };
 
   return isWordLoaded ? (
     <Box className='word__details-card'>
