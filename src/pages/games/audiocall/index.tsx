@@ -47,11 +47,11 @@ export default function AudioCall() {
       setArr([...arr, ...array]);
       if (curId === 0) audioStartHandler(array[curId].word.audio);
     }
-  }, [data]);
+  }, [data, arr, curId, dispatch, fromVoc, page]);
 
   useEffect(() => {
     if (arr.length > 0 && curId != 0) audioStartHandler(arr[curId].word.audio);
-  }, [curId]);
+  }, [curId, arr]);
 
   useEffect(() => {
     if (stage === 'game') {
@@ -66,7 +66,7 @@ export default function AudioCall() {
       setCurId(0);
       setAnswers({ right: [], errors: [] });
     }
-  }, [stage]);
+  }, [stage, arr, isUserLoggedIn, dispatch]);
 
   const playAgain = useCallback(() => {
     setStage('game');
