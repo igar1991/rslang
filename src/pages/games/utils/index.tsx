@@ -7,29 +7,25 @@ export const audioStartHandler = (audioFile: string) => {
   audioFiles.play();
 };
 
-export const userWordGame = (usersWords: undefined | UserWordData[], wordId: string, answer: boolean) => {
-  const word = usersWords ? usersWords.find((item) => item.wordId === wordId) : null;
-  const newValue = {
-    date: new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }),
-    answer: answer,
-  };
-  if (word) {
-    const optional = { ...word.optional };
-    optional.games ? optional.games.push(newValue) : (optional.games = [newValue]);
-    if (optional.games.slice(word.difficulty === 'hard' ? 5 : 3).every(item => item.answer === true)) {
-      optional.learned = true;
-      optional.date = new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
-    }
-    if (optional.learned && !answer) {
-      optional.learned = false;
-      delete optional.date;
-    }
-    const updateWord = { difficulty: word.difficulty, optional: { ...optional } };
-    // [] = wordsAPI.useUpdateUserWordMutation({ id: word.id, wordId: wordId, body: updateWord });
-    console.log(updateWord);  
-  }
+export const userWordGame = (userWord: UserWordData, answer: boolean) => {
+  const date = new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
 
-  // return { data: data, id: userId };
+  const trueAnswersLength = userWord.difficulty === 'hard' ? 5 : 3;
+  const optional = { ...userWord.optional };
+
+  optional.games && optional.games.answers ? optional.games = { firstDate: optional.games.firstDate, answers: [...optional.games.answers, answer] } : (optional.games = { firstDate: date, answers: [answer] });
+  if (
+    optional.games.answers.length >= trueAnswersLength &&
+    optional.games.answers.slice(-trueAnswersLength).every((item) => item)
+  ) {
+    optional.learned = true;
+    optional.date = date;
+  }
+  if (optional.learned && !answer) {
+    optional.learned = false;
+    delete optional.date;
+  }
+  return { difficulty: userWord.difficulty, optional: { ...optional } };
 };
 
 export const getArrayAudiocall = (data: Word[]) => {
@@ -68,4 +64,21 @@ export const getArraySprint = (data: Word[]) => {
   array.sort(() => Math.random() - 0.5);
 
   return array;
+};
+
+export const newLocalStatistic = (
+  game: string,
+  series: number,
+  answers: { right: Word[]; errors: Word[]; new: Word[] }
+) => {
+  const statistic = {
+    date: new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }),
+    [game]: {
+      rightAnswers: answers.right.length,
+      errorAnswers: answers.errors.length,
+      newWords: answers.new.length,
+      series: series,
+    },
+  };
+  localStorage.setItem('localStatistic', JSON.stringify(statistic));
 };

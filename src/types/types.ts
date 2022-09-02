@@ -45,7 +45,7 @@ export interface UserWordData {
   optional: {
     learned: boolean;
     date?: string;
-    games?: {date: string, answer: boolean}[];
+    games?: {firstDate: string, answers: boolean[]};
   };
   id: string;
   wordId: string;

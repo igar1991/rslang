@@ -8,12 +8,14 @@ import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { setPage, selectGames } from 'redux/slices/gamesSlice';
 import { Word } from 'types/types';
 import { API_BASE_URL } from 'api/api';
-import { Result } from 'pages/games/components/result/result';
+import { Result, ResultsType } from 'pages/games/components/result/result';
 import { Background } from 'pages/games/components/background';
 
-import { AUDIOCALL_QUESTIONS, POINTS, SERIES_LENGTH } from '../constants';
-import { audioStartHandler, getArrayAudiocall, userWordGame } from '../utils';
+import { POINTS, SERIES_LENGTH } from '../constants';
+import { audioStartHandler, getArrayAudiocall } from '../utils';
 import { selectAuth } from 'redux/slices/authUserSlice';
+import AnswerBtnAudioCall from './answer-btn-audio-call';
+import LogInAnswerBtnAudioCall from './login-answer-btn-audio-call';
 import 'pages/games/audiocall/audiocall.css';
 
 type QuestionsType = {
@@ -25,85 +27,68 @@ export default function AudioCall() {
   const dispatch = useAppDispatch();
   const { page, group, fromVoc } = useAppSelector(selectGames);
   const { data } = wordsAPI.useGetWordsQuery({ page, group });
-  const { isAuth: isUserLoggedIn, id: userId } = useAppSelector(selectAuth);
-  const { data: usersWords } = wordsAPI.useGetUserWordsQuery(userId);
+
+  const { isAuth: isUserLoggedIn } = useAppSelector(selectAuth);
 
   const [arr, setArr] = useState<QuestionsType[]>([]);
-  const [answers, setAnswers] = useState<{ right: Word[]; errors: Word[] }>({ right: [], errors: [] });
+  const [answers, setAnswers] = useState<ResultsType>({ right: [], errors: [], new: [] });
+
   const [points, setPoints] = useState<number>(0);
   const [showPoint, setShowPoint] = useState<boolean>(false);
   const [isAnswer, setIsAnswer] = useState<null | string>(null);
   const [series, setSeries] = useState<number>(0);
+  const [longestSeries, setLongestSeries] = useState<number>(0);
   const [curId, setCurId] = useState<number>(0);
   const [stage, setStage] = useState<string>('game');
 
   useEffect(() => {
     if (data) {
       const array = getArrayAudiocall(data);
-      if (arr.length + array.length < AUDIOCALL_QUESTIONS) {
-        if (fromVoc === true && page != 0) dispatch(setPage(page - 1));
-        if (fromVoc === false) dispatch(setPage(page === 0 ? 30 : page - 1));
-      }
-      setArr([...arr, ...array]);
-      if (curId === 0) audioStartHandler(array[curId].word.audio);
+      setArr((prev) => [...prev, ...array]);
     }
-  }, [data, arr, curId, dispatch, fromVoc, page]);
+  }, [data]);
 
   useEffect(() => {
-    if (arr.length > 0 && curId != 0) audioStartHandler(arr[curId].word.audio);
+    if (arr.length > 0) audioStartHandler(arr[curId].word.audio);
   }, [curId, arr]);
 
-  useEffect(() => {
-    if (stage === 'game') {
-      if (isUserLoggedIn) {
-        console.log(arr);
-      } else {
-        setArr([]);
-        dispatch(setPage(Math.floor(Math.random() * 30)));
-      }
-      setPoints(0);
-      setSeries(0);
-      setCurId(0);
-      setAnswers({ right: [], errors: [] });
-    }
-  }, [stage, arr, isUserLoggedIn, dispatch]);
-
   const playAgain = useCallback(() => {
-    setStage('game');
-  }, []);
-
-  const checkAnswer = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const btn = event.target as HTMLButtonElement;
-    const btnName = btn.name;
-    setIsAnswer(btnName);
-    if (btnName === arr[curId].word.id) {
-      setShowPoint(true);
-      const audioFiles = new Audio('/assets/audio/right.mp3');
-      audioFiles.play();
-      if (series != SERIES_LENGTH) setSeries(series + 1);
-      setPoints(points + POINTS * (series != SERIES_LENGTH ? series + 1 : series));
-      setAnswers({ errors: [...answers.errors], right: [...answers.right, arr[curId].word] });
+    if (fromVoc) {
+      arr.sort(() => Math.random() - 0.5);
     } else {
-      const audioFiles = new Audio('/assets/audio/error.mp3');
-      audioFiles.play();
-      setSeries(0);
-      setAnswers({ errors: [...answers.errors, arr[curId].word], right: [...answers.right] });
+      setArr([]);
+      dispatch(setPage(Math.floor(Math.random() * 30)));
     }
+    setPoints(0);
+    setSeries(0);
+    setCurId(0);
+    setAnswers({ right: [], errors: [], new: [] });
+    setStage('game');
+  }, [arr, dispatch, fromVoc]);
 
-    if (isUserLoggedIn) userWordGame(usersWords, arr[curId].word.id, true);
+  const rightAnswer = (isNew = true) => {
+    setShowPoint(true);
+    const audioFiles = new Audio('/assets/audio/right.mp3');
+    audioFiles.play();
+    setSeries(series + 1);
+    setPoints(points + POINTS + POINTS * Math.trunc(series / SERIES_LENGTH));
+    const newArray = isNew ? [...answers.new, arr[curId].word] : [...answers.new];
+    setAnswers({ errors: [...answers.errors], new: [...newArray], right: [...answers.right, arr[curId].word] });
+  };
+
+  const errorAnswer = (isNew = true) => {
+    const audioFiles = new Audio('/assets/audio/error.mp3');
+    audioFiles.play();
+    if (series > longestSeries) setLongestSeries(series);
+    setSeries(0);
+    const newArray = isNew ? [...answers.new, arr[curId].word] : [...answers.new];
+    setAnswers({ errors: [...answers.errors, arr[curId].word], new: [...newArray], right: [...answers.right] });
   };
 
   const onNextClick = () => {
     setIsAnswer(null);
-    if (curId === AUDIOCALL_QUESTIONS - 1) return setStage('result');
+    if (curId === arr.length - 1) return setStage('result');
     setCurId(curId + 1);
-  };
-
-  const chooseClass = (id: string) => {
-    if (isAnswer === null) return 'audiocall__answer-btn';
-    if (id === arr[curId].word.id) return 'audiocall__answer-btn right-btn';
-    if (isAnswer === id) return 'audiocall__answer-btn error-btn';
-    return 'audiocall__answer-btn';
   };
 
   return (
@@ -120,14 +105,19 @@ export default function AudioCall() {
                 <Box sx={{ width: '150px', height: '150px' }}></Box>
                 <Box className='poins__audiocall'>
                   <p className='points'>{points}</p>
-                  <Rating name='read-only' value={series} readOnly max={SERIES_LENGTH} />
+                  <Rating
+                    name='read-only'
+                    value={series % SERIES_LENGTH || (Math.trunc(series / SERIES_LENGTH) === 0 ? 0 : SERIES_LENGTH)}
+                    readOnly
+                    max={SERIES_LENGTH}
+                  />
                   <Grow
                     in={showPoint}
                     timeout={500}
                     className='points__current'
                     onTransitionEnd={() => setShowPoint(false)}
                   >
-                    <p>+{POINTS * series}</p>
+                    <p>+{POINTS + POINTS * Math.trunc(series / SERIES_LENGTH)}</p>
                   </Grow>
                 </Box>
               </Box>
@@ -166,20 +156,30 @@ export default function AudioCall() {
               </Box>
               <Box className='audiocall__answers'>
                 {arr[curId].answers.map((answer) => {
-                  return (
-                    <Button
-                      key={answer.id}
-                      name={answer.id}
-                      variant='outlined'
-                      disabled={!!isAnswer}
-                      color='secondary'
-                      onClick={checkAnswer}
-                      sx={{ margin: '5px' }}
-                      className={chooseClass(answer.id)}
-                    >
-                      {answer.translate}
-                    </Button>
-                  );
+                  if (isUserLoggedIn)
+                    return (
+                      <LogInAnswerBtnAudioCall
+                        key={answer.id}
+                        answer={answer}
+                        currentWord={arr[curId].word}
+                        isAnswer={isAnswer}
+                        setIsAnswer={setIsAnswer}
+                        rightAnswer={rightAnswer}
+                        errorAnswer={errorAnswer}
+                      />
+                    );
+                  else
+                    return (
+                      <AnswerBtnAudioCall
+                        key={answer.id}
+                        answer={answer}
+                        currentWord={arr[curId].word}
+                        isAnswer={isAnswer}
+                        setIsAnswer={setIsAnswer}
+                        rightAnswer={rightAnswer}
+                        errorAnswer={errorAnswer}
+                      />
+                    );
                 })}
               </Box>
               {isAnswer != null ? (
@@ -191,7 +191,9 @@ export default function AudioCall() {
               )}
             </>
           )}
-          {stage === 'result' && <Result playAgain={playAgain} answers={answers} />}
+          {stage === 'result' && (
+            <Result playAgain={playAgain} answers={answers} game='audioCall' series={longestSeries} />
+          )}
           <Background word='AUDIOCHALLENGE' />
         </>
       )}
