@@ -42,7 +42,7 @@ export const wordsAPI = api.injectEndpoints({
       }),
       invalidatesTags: (result, error, { wordId }) => [{ type: 'Words', wordId }]
     }),
-    getUserWordById: build.query<Word, { id: string, wordId: string }>({
+    getUserWordById: build.query<UserWordData, { id: string, wordId: string }>({
       query: ({ id, wordId }) => ({
         url: `/users/${id}/words/${wordId}`
       })

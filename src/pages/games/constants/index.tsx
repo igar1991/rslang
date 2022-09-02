@@ -28,6 +28,6 @@ export const POINTS = 10;
 
 export const SPRINT_SECONDS = 30;
 
-export const AUDIOCALL_QUESTIONS = 20;
+export const AUDIOCALL_QUESTIONS = 3;
 
 export const AUDIOCALL_ANSWERS = 5;

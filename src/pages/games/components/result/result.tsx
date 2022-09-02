@@ -9,14 +9,57 @@ import { Word } from 'types/types';
 
 import ResultList from 'pages/games/components/result/result-list';
 import 'pages/games/components/result/result.css';
+import { newLocalStatistic } from 'pages/games/utils';
 
 interface ResultAnswers {
-  playAgain: () => void,
-  answers: { right: Word[]; errors: Word[] }
+  playAgain: () => void;
+  answers: ResultsType;
+  game: string;
+  series: number;
 }
 
-export const Result = ({ playAgain, answers }: ResultAnswers) => {
+export type ResultsType = {
+  right: Word[];
+  errors: Word[];
+  new: Word[];
+};
+
+export const Result = ({ playAgain, answers, game, series }: ResultAnswers) => {
   const [showMore, setShowMore] = useState(false);
+
+  const localStatistic = localStorage.getItem('localStatistic');
+
+  if (localStatistic) {
+    const statistic = JSON.parse(localStatistic);
+    const newDate = new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+    if (statistic.date !== newDate) newLocalStatistic(game, series, answers);
+    else {
+      const statGame = statistic[game];
+      let newStatistic = {};
+      if (statGame) {
+        const newStatGame = {
+          rightAnswers: statGame.rightAnswers + answers.right.length,
+          errorAnswers: statGame.errorAnswers + answers.errors.length,
+          newWords: statGame.newWords + answers.new.length,
+          series: statGame.series > series ? statGame.series : series,
+        };
+        newStatistic = { ...statistic, [game]: { ...newStatGame } };
+      } else {
+        newStatistic = {
+          ...statistic,
+          [game]: {
+            rightAnswers: answers.right.length,
+            errorAnswers: answers.errors.length,
+            newWords: answers.new.length,
+            series: series,
+          },
+        };
+      }
+      localStorage.setItem('localStatistic', JSON.stringify(newStatistic));
+    }
+  } else {
+    newLocalStatistic(game, series, answers);
+  }
 
   const getTitle = () => {
     if (answers.right.length === 0) return 'Maybe another time...';
@@ -28,7 +71,7 @@ export const Result = ({ playAgain, answers }: ResultAnswers) => {
   };
 
   return (
-    <Box  className='result'>
+    <Box className='result'>
       <h2 className='result__title'>{getTitle()}</h2>
       <Box className='result__container'>
         <Box sx={{ position: 'relative', display: 'inline-flex' }}>
@@ -70,7 +113,7 @@ export const Result = ({ playAgain, answers }: ResultAnswers) => {
         <Box className='result__table'>
           <ResultList name='Right answers' arr={answers.right} />
           <ResultList name='Errors' arr={answers.errors} />
-          <ResultList name='New words' arr={answers.right}/>
+          <ResultList name='New words' arr={answers.new} />
         </Box>
       </Slide>
     </Box>

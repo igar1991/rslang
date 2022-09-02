@@ -7,7 +7,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import Snackbar from '@mui/material/Snackbar';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
-import { setGroup, setPage } from 'redux/slices/gamesSlice';
+import { setFromVoc, setGroup, setPage } from 'redux/slices/gamesSlice';
 import { Background } from 'pages/games/components/background';
 
 import { GAMES, LEVELS } from 'pages/games/constants';
@@ -34,6 +34,7 @@ export default function Games(): JSX.Element {
   };
 
   const onStartGame = () => {
+    dispatch(setFromVoc(false));
     if (selectedGame && selectedLevel) return navigate(selectedGame);
     if (!selectedGame && !selectedLevel) return setErrorMessage({ show: true, message: 'Select game and level' });
     if (!selectedGame) return setErrorMessage({ show: true, message: 'Select game' });
