@@ -104,16 +104,16 @@ export default function Statistics() {
       <h2 className="title">Statistics for today</h2>
       <div className="container_result">
         <Box>
-          <h2 className="title_num">{stat && countNewWords(stat)}</h2>
+          <h2 className="title_num">{stat ? countNewWords(stat) : 0}</h2>
           <h4>New words</h4>
         </Box>
         <Box>
           <h2 className="title_num">
-            {stat &&
+            {stat ?
               precentWord(
                 stat.sprint.rightAnswers + stat.audioCall.rightAnswers,
                 stat.sprint.errorAnswers + stat.audioCall.errorAnswers
-              )}
+              ) : 0}
             %
           </h2>
           <h4>Сorrect answers</h4>
