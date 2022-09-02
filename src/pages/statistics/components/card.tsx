@@ -24,7 +24,7 @@ export const Card = ({ img, title, word, trueans, long }: Props) => {
       />
       <Box sx={{marginTop: '20px'}}>
         <Typography variant='h5' className='game-title'>{title}</Typography>
-        <Typography variant='body1' className='game-description'>{`Learned ${word} words`}</Typography>
+        <Typography variant='body1' className='game-description'>{`New words: ${word}`}</Typography>
         <Typography variant='body1' className='game-description'>{`Correct answers: ${trueans}%`}</Typography>
         <Typography variant='body1' className='game-description'>{`Longest series of correct answers: ${long}`}</Typography>
       </Box>
