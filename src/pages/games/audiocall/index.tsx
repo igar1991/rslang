@@ -17,6 +17,7 @@ import { selectAuth } from 'redux/slices/authUserSlice';
 import AnswerBtnAudioCall from './answer-btn-audio-call';
 import LogInAnswerBtnAudioCall from './login-answer-btn-audio-call';
 import 'pages/games/audiocall/audiocall.css';
+import { HARD_WORDS_PER_PAGE } from 'pages/vocabulary/vocabulary-words/constants';
 
 type QuestionsType = {
   word: Word;
@@ -27,7 +28,7 @@ export default function AudioCall() {
   const dispatch = useAppDispatch();
   const { page, group, fromVoc } = useAppSelector(selectGames);
   const { data } = wordsAPI.useGetWordsQuery({ page, group });
-
+  const {id} = useAppSelector(selectAuth);
   const { isAuth: isUserLoggedIn } = useAppSelector(selectAuth);
 
   const [arr, setArr] = useState<QuestionsType[]>([]);
@@ -41,15 +42,33 @@ export default function AudioCall() {
   const [curId, setCurId] = useState<number>(0);
   const [stage, setStage] = useState<string>('game');
 
-  useEffect(() => {
-    if (data) {
-      const array = getArrayAudiocall(data);
-      setArr((prev) => [...prev, ...array]);
-    }
-  }, [data]);
+  const { data: learnedWords } = wordsAPI.useGetAllAggregatedWordsQuery({
+    id: id,
+    wordsPerPage: HARD_WORDS_PER_PAGE,
+    filter: '{"userWord.optional.learned":true}'
+  });
 
   useEffect(() => {
-    if (arr.length > 0) audioStartHandler(arr[curId].word.audio);
+    
+    if (data) {
+      const array = getArrayAudiocall(data);
+      if(fromVoc){
+        if(learnedWords) {
+          const filterArr = learnedWords[0].paginatedResults.map((item)=>item._id);
+          const curArr = array.filter((el)=>!(filterArr.includes(el.word.id)));
+          setArr((prev) => [...prev, ...curArr].slice(0,20));
+        }
+      } else {
+        setArr((prev) => [...prev, ...array]);
+      }
+    }
+  }, [data, learnedWords, fromVoc]);
+
+  
+  useEffect(() => {
+    if(arr.length > 0) {
+      audioStartHandler(arr[curId].word.audio);
+    }
   }, [curId, arr]);
 
   const playAgain = useCallback(() => {
@@ -87,6 +106,9 @@ export default function AudioCall() {
 
   const onNextClick = () => {
     setIsAnswer(null);
+    if (arr.length < 20 && fromVoc) {
+      if (page !== 0) dispatch(setPage(page - 1));
+    }
     if (curId === arr.length - 1) return setStage('result');
     setCurId(curId + 1);
   };

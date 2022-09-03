@@ -16,6 +16,7 @@ import { getArraySprint } from '../utils';
 import { selectAuth } from 'redux/slices/authUserSlice';
 import LogInAnswerBtnSprint from './login-answer-btn-sprint';
 import AnswerBtnSprint from './answer-btn-sprint';
+import { HARD_WORDS_PER_PAGE } from 'pages/vocabulary/vocabulary-words/constants';
 
 export type QuestionsType = {
   word: Word;
@@ -27,7 +28,7 @@ export default function Sprint() {
   const dispatch = useAppDispatch();
   const { page, group, fromVoc } = useAppSelector(selectGames);
 
-  const { isAuth: isUserLoggedIn } = useAppSelector(selectAuth);
+  const { isAuth: isUserLoggedIn, id } = useAppSelector(selectAuth);
 
   const { data } = wordsAPI.useGetWordsQuery({ page, group });
   const [arr, setArr] = useState<QuestionsType[]>([]);
@@ -39,13 +40,26 @@ export default function Sprint() {
   const [longestSeries, setLongestSeries] = useState<number>(0);
   const [curId, setCurId] = useState<number>(0);
   const [stage, setStage] = useState<string>('game');
+  const { data: learnedWords } = wordsAPI.useGetAllAggregatedWordsQuery({
+    id: id,
+    wordsPerPage: HARD_WORDS_PER_PAGE,
+    filter: '{"userWord.optional.learned":true}'
+  });
 
   useEffect(() => {
-    if (data ) {
+    if (data) {
       const array = getArraySprint(data);
-      setArr((prev) => [...prev, ...array]);
+      if(fromVoc){
+        if(learnedWords) {
+          const filterArr = learnedWords[0].paginatedResults.map((item)=>item._id);
+          const curArr = array.filter((el)=>!(filterArr.includes(el.word.id)));
+          setArr((prev) => [...prev, ...curArr]);
+        }
+      } else {
+        setArr((prev) => [...prev, ...array]);
+      }
     }
-  }, [data]);
+  }, [data, learnedWords, fromVoc]);
 
   useEffect(() => {
     const myInterval = setInterval(() => {
