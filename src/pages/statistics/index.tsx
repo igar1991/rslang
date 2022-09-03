@@ -101,7 +101,6 @@ export default function Statistics() {
 
   return (
     <Container className="container">
-      <button onClick={()=>console.log(categories)}>cfccccccccc</button>
       <h2 className="title">Statistics for today</h2>
       <div className="container_result">
         <Box>
