@@ -94,13 +94,14 @@ export default function Statistics() {
   };
 
   const countNewWords = (stat: statData): number =>
-    stat.sprint.newWords + stat.audioCall.newWords;
+    (stat?.sprint ? stat.sprint?.newWords : 0) + (stat?.audioCall ? stat.audioCall?.newWords : 0);
 
   const precentWord = (trueAns: number, wrongAns: number) =>
     Math.floor((trueAns * 100) / (trueAns + wrongAns));
 
   return (
     <Container className="container">
+      <button onClick={()=>console.log(categories)}>cfccccccccc</button>
       <h2 className="title">Statistics for today</h2>
       <div className="container_result">
         <Box>
@@ -111,8 +112,8 @@ export default function Statistics() {
           <h2 className="title_num">
             {stat ?
               precentWord(
-                stat.sprint.rightAnswers + stat.audioCall.rightAnswers,
-                stat.sprint.errorAnswers + stat.audioCall.errorAnswers
+                (stat?.sprint ? stat.sprint?.rightAnswers : 0) + (stat?.audioCall ? stat.audioCall?.rightAnswers : 0),
+                (stat?.sprint ? stat.sprint?.errorAnswers : 0) + (stat?.audioCall ? stat.audioCall?.errorAnswers : 0)
               ) : 0}
             %
           </h2>
@@ -124,32 +125,32 @@ export default function Statistics() {
           <Card
             img="/assets/game-sprint.png"
             title="Sprint"
-            word={stat ? stat.sprint.newWords : 0}
+            word={stat?.sprint ? stat.sprint.newWords : 0}
             trueans={
-              stat
+              stat?.sprint
                 ? precentWord(
                   stat.sprint.rightAnswers,
                   stat.sprint.errorAnswers
                 )
                 : 0
             }
-            long={stat ? stat.sprint.series : 0}
+            long={stat?.sprint ? stat.sprint.series : 0}
           />
         </Box>
         <Box className="game__card">
           <Card
             img="/assets/game-listen.png"
             title="Audio Challenge"
-            word={stat ? stat.audioCall.newWords : 0}
+            word={stat?.audioCall ? stat.audioCall.newWords : 0}
             trueans={
-              stat
+              stat?.audioCall
                 ? precentWord(
                   stat.audioCall.rightAnswers,
                   stat.audioCall.errorAnswers
                 )
                 : 0
             }
-            long={stat ? stat.audioCall.series : 0}
+            long={stat?.audioCall ? stat.audioCall.series : 0}
           />
         </Box>
       </div>
@@ -170,7 +171,7 @@ export default function Statistics() {
               },
             },
             dataLabels: {
-              enabled: true,
+              enabled: false,
             },
             stroke: {
               curve: 'smooth',
@@ -180,7 +181,7 @@ export default function Statistics() {
               strokeDashArray: 0,
             },
             xaxis: {
-              categories: categories,
+              categories: categories ? Array.from(categories) : [],
             },
           }}
           series={[
