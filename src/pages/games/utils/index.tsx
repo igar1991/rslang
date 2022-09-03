@@ -1,6 +1,7 @@
 import { API_BASE_URL } from 'api/api';
 import { UserWordData, Word } from 'types/types';
 import { AUDIOCALL_ANSWERS } from '../constants';
+import { DIFFICULTY } from 'pages/vocabulary/vocabulary-words/constants';
 
 export const audioStartHandler = (audioFile: string) => {
   const audioFiles = new Audio(`${[API_BASE_URL, audioFile].join('/')}`);
@@ -18,8 +19,14 @@ export const userWordGame = (userWord: UserWordData, answer: boolean) => {
     optional.games.answers.length >= trueAnswersLength &&
     optional.games.answers.slice(-trueAnswersLength).every((item) => item)
   ) {
-    optional.learned = true;
-    optional.date = date;
+    return {
+      difficulty: DIFFICULTY.EASY,
+      optional: {
+        ...optional,
+        learned: true,
+        date
+      }
+    };
   }
   if (optional.learned && !answer) {
     optional.learned = false;
@@ -77,8 +84,8 @@ export const newLocalStatistic = (
       rightAnswers: answers.right.length,
       errorAnswers: answers.errors.length,
       newWords: answers.new.length,
-      series: series,
-    },
+      series: series
+    }
   };
   localStorage.setItem('localStatistic', JSON.stringify(statistic));
 };

@@ -23,7 +23,7 @@ export default function LogInAnswerBtnAudioCall({
   isAnswer,
   setIsAnswer,
   rightAnswer,
-  errorAnswer,
+  errorAnswer
 }: AnswerBtnType): JSX.Element {
   const { id: userId } = useAppSelector(selectAuth);
   const { data: userWords } = wordsAPI.useGetUserWordsQuery(userId);
@@ -53,12 +53,11 @@ export default function LogInAnswerBtnAudioCall({
         difficulty: 'easy',
         optional: {
           learned: false,
-          games: 
-            {
-              firstDate: new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }),
-              answer: [currentAnswer],
-            },
-        },
+          games: {
+            firstDate: new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }),
+            answer: [currentAnswer]
+          }
+        }
       };
       addUserWord({ id: userId, wordId: currentWord.id, body: body });
     }
