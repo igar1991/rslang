@@ -1,6 +1,6 @@
 .words__words-list {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   width: 100%;
   column-gap: 0.7rem;
   row-gap: 1.5rem;

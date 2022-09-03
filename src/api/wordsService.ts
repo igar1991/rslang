@@ -1,4 +1,4 @@
-import { AggregatedWords, NewWordRequestParams, UserWordData, Word, WordsRequestParams } from '../types/types';
+import { AggregatedWords, NewWordRequestParams, UserWordData, Word, WordsRequestParams } from 'types/types';
 import { api } from './api';
 
 export const wordsAPI = api.injectEndpoints({
@@ -45,7 +45,11 @@ export const wordsAPI = api.injectEndpoints({
     getUserWordById: build.query<UserWordData, { id: string, wordId: string }>({
       query: ({ id, wordId }) => ({
         url: `/users/${id}/words/${wordId}`
-      })
+      }),
+      providesTags: (result) =>
+        result ?
+          [({ type: 'Words', id: result.id } as const), { type: 'Words', id: 'LIST' }] :
+          [{ type: 'Words', id: 'LIST' }]
     }),
     removeUserWord: build.mutation<{ id: string, wordId: string }, { id: string, wordId: string }>({
       query: ({ id, wordId }) => ({

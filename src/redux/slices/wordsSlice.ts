@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { VocabularyTab, Word } from '../../types/types';
+import { VocabularyTab, Word } from 'types/types';
 import { RootState } from '../store';
-import { Colors } from '../../pages/vocabulary/vocabulary-words/words-view/words-levels/constants';
+import { Colors } from 'pages/vocabulary/vocabulary-words/words-view/words-levels/constants';
 
 export interface WordsState {
   items: Word[];
