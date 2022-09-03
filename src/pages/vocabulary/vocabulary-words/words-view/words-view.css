@@ -1,6 +1,6 @@
 .words {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1.75fr 1fr;
   column-gap: 1rem;
   padding: 2rem 0;
   width: 100%;

@@ -33,16 +33,18 @@ export const DetailsCardDescription = ({ selectedWord }: Props) => {
         transcription={transcription}
         audio={[audio, audioMeaning, audioExample]}
       />
-      <Meaning
-        device={device}
-        textMeaning={textMeaning}
-        textMeaningTranslate={textMeaningTranslate}
-      />
-      <Example
-        device={device}
-        textExample={textExample}
-        textExampleTranslate={textExampleTranslate}
-      />
+      <Box className='word__details-card_description-info'>
+        <Meaning
+          device={device}
+          textMeaning={textMeaning}
+          textMeaningTranslate={textMeaningTranslate}
+        />
+        <Example
+          device={device}
+          textExample={textExample}
+          textExampleTranslate={textExampleTranslate}
+        />
+      </Box>
     </Box>
   );
 };

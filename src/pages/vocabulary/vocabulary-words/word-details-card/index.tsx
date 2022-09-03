@@ -1,6 +1,5 @@
 import { Box } from '@mui/material';
 import { DetailsCardDescription } from './card-description';
-import './word-details-card.css';
 import { wordsAPI } from 'api/wordsService';
 import { API_BASE_URL } from 'api/api';
 import { DetailsCardButton } from './details-card-button';
@@ -9,8 +8,13 @@ import { useAppSelector } from 'redux/hooks';
 import { DIFFICULTY } from '../constants';
 import { selectAuth } from 'redux/slices/authUserSlice';
 import { useCallback } from 'react';
+import { UserWordData } from 'types/types';
+import { DetailsCardStatistics } from 'pages/vocabulary/vocabulary-words/word-details-card/word-statistics';
+import { useDevice } from 'pages/hooks';
+import './word-details-card.css';
 
 export const WordDetailsCard = () => {
+  const device = useDevice();
   const { isAuth: isUserLoggedIn, id: userId } = useAppSelector(selectAuth);
   const { selectedWordColor, selectedWordId } = useAppSelector(selectWords);
 
@@ -33,7 +37,7 @@ export const WordDetailsCard = () => {
       }
 
       return acc;
-    }, [] as string[]): [];
+    }, [] as string[]) : [];
 
   const [addUserWord] = wordsAPI.useAddUserWordMutation();
   const [updateUserWord, { isLoading: isUpdating }] = wordsAPI.useUpdateUserWordMutation();
@@ -41,6 +45,7 @@ export const WordDetailsCard = () => {
   const isNeedToCreate = word && isUserWordsLoaded && !usersWords.map(({ wordId }) => wordId).includes(word.id);
   const isHardWord = word && usersHardWordsIds.includes(word.id);
   const isLearnedWord = word && usersLearnedWordsIds.includes(word.id);
+  const currentWord = word && usersWords?.find((userWord) => userWord.wordId === word.id) as UserWordData;
 
   const handleClickHardWord = useCallback(() => {
     if (word && isNeedToCreate) {
@@ -50,27 +55,21 @@ export const WordDetailsCard = () => {
         body: {
           difficulty: DIFFICULTY.HARD,
           optional: {
-            learned: false,
+            learned: false
           }
         }
       });
     }
 
     if (word && !isUpdating && !isNeedToCreate) {
-      const currentWordDifficulty = usersWords?.find((userWord) => userWord.wordId === word.id)?.difficulty;
-
-      updateUserWord({
-        id: userId,
-        wordId: word.id,
-        body: {
-          difficulty: currentWordDifficulty === 'easy' ? DIFFICULTY.HARD : DIFFICULTY.EASY,
-          optional: {
-            learned: false
-          }
-        }
+      const requestPayload = Object.assign({}, {
+        optional: (currentWord as UserWordData).optional,
+        difficulty: currentWord?.difficulty === 'easy' ? DIFFICULTY.HARD : DIFFICULTY.EASY
       });
+
+      updateUserWord({ id: userId, wordId: word.id, body: requestPayload });
     }
-  }, [addUserWord, isNeedToCreate, isUpdating, updateUserWord, userId, usersWords, word]);
+  }, [addUserWord, isNeedToCreate, isUpdating, updateUserWord, userId, word, currentWord]);
 
   const handleClickLearnedWord = useCallback(() => {
     if (word && isNeedToCreate) {
@@ -81,52 +80,59 @@ export const WordDetailsCard = () => {
           difficulty: DIFFICULTY.EASY,
           optional: {
             learned: true,
-            date: (new Date()).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }),
+            date: (new Date()).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
           }
         }
       });
     }
 
     if (word && !isUpdating && !isNeedToCreate) {
-      updateUserWord({
-        id: userId,
-        wordId: word.id,
-        body: {
-          difficulty: DIFFICULTY.EASY,
-          optional: {
-            learned: true,
-            date: (new Date()).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }),
-          }
-        }
+      const requestPayload = Object.assign({}, {
+        optional: {
+          ...(currentWord as UserWordData).optional,
+          learned: true,
+          date: (new Date()).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
+        },
+        difficulty: DIFFICULTY.EASY
       });
+
+      updateUserWord({ id: userId, wordId: word.id, body: requestPayload });
     }
-  }, [addUserWord, isNeedToCreate, isUpdating, updateUserWord, userId, word]);
+  }, [addUserWord, isNeedToCreate, isUpdating, updateUserWord, userId, word, currentWord]);
 
   return isWordLoaded ? (
     <Box className='word__details-card'>
-      <Box
-        component='img'
-        alt='Word image'
-        src={`${[API_BASE_URL, word.image].join('/')}`}
-        className='word__details-card_image'
-      />
-      {isUserLoggedIn &&
-        <Box className='word__details-card-buttons-group'>
-          <DetailsCardButton
-            handleClick={handleClickHardWord}
-            color={selectedWordColor}
-            title={isHardWord ? 'Easy word' : 'Hard word'}
-            disabled={isLearnedWord ?? false}
-          />
-          <DetailsCardButton
-            handleClick={handleClickLearnedWord}
-            color={selectedWordColor}
-            title={'Learned word'}
-            disabled={isLearnedWord ?? false}
-          />
-        </Box>
-      }
-      <DetailsCardDescription selectedWord={word} />
+      <Box className='word__details-card-wrapper'>
+        <Box
+          component='img'
+          alt='Word image'
+          src={`${[API_BASE_URL, word.image].join('/')}`}
+          className='word__details-card_image'
+        />
+        {isUserLoggedIn &&
+          <Box className='word__details-card-buttons-group'>
+            <DetailsCardButton
+              handleClick={handleClickHardWord}
+              color={selectedWordColor}
+              title={isHardWord ? 'Easy word' : 'Hard word'}
+              disabled={isLearnedWord ?? false}
+            />
+            <DetailsCardButton
+              handleClick={handleClickLearnedWord}
+              color={selectedWordColor}
+              title={'Learned word'}
+              disabled={isLearnedWord ?? false}
+            />
+          </Box>
+        }
+        <DetailsCardDescription selectedWord={word} />
+      </Box>
+      {isUserLoggedIn && <DetailsCardStatistics
+        device={device}
+        color={selectedWordColor}
+        wordId={selectedWordId}
+        userId={userId}
+      />}
     </Box>
   ) : null;
 };

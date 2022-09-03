@@ -11,6 +11,12 @@
   column-gap: 0.2rem;
 }
 
+.word__details-card_description-info {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.5rem;
+}
+
 h5.word-title {
   font-weight: 700;
 }

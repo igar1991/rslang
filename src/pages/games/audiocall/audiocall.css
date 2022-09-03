@@ -51,13 +51,15 @@
 }
 
 .right-btn:disabled {
-  background-color: #46e94d !important;
-  color:black !important;
+  background-color: #86CB92 !important;
+  color:white !important;
+  border: none !important;
 }
 
 .error-btn:disabled {
-  background-color: red !important;
-  color:black !important;
+  background-color: #E15554 !important;
+  color:white !important;
+  border: none !important;
 }
 
 .audiocall__next-btn {

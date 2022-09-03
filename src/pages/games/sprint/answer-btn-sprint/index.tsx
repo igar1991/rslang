@@ -20,10 +20,10 @@ export default function AnswerBtnSprint({ question, rightAnswer, errorAnswer }: 
 
   return (
     <Box className='sprint__buttons'>
-      <Button variant='contained' className='sprint__btn' color='error' name='false' onClick={checkAnswer}>
+      <Button variant='contained' className='sprint__btn' color='proficiency' name='false' onClick={checkAnswer}>
         False
       </Button>
-      <Button variant='contained' className='sprint__btn' color='success' name='true' onClick={checkAnswer}>
+      <Button variant='contained' className='sprint__btn' color='intermediate' name='true' onClick={checkAnswer}>
         True
       </Button>
     </Box>
