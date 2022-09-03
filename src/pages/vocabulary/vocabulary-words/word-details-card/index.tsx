@@ -10,11 +10,12 @@ import { selectAuth } from 'redux/slices/authUserSlice';
 import { useCallback } from 'react';
 import { UserWordData } from 'types/types';
 import { DetailsCardStatistics } from 'pages/vocabulary/vocabulary-words/word-details-card/word-statistics';
-import { useDevice } from 'pages/hooks';
+import { useDevice, useLearnedWordsData } from 'pages/hooks';
 import './word-details-card.css';
 
 export const WordDetailsCard = () => {
   const device = useDevice();
+  const data = useLearnedWordsData();
   const { isAuth: isUserLoggedIn, id: userId } = useAppSelector(selectAuth);
   const { selectedWordColor, selectedWordId } = useAppSelector(selectWords);
 
@@ -100,14 +101,16 @@ export const WordDetailsCard = () => {
     }
   }, [addUserWord, isNeedToCreate, isUpdating, updateUserWord, userId, word, currentWord]);
 
+  const isAllWordsLearned = isUserLoggedIn && data && data.length === 20;
+
   return isWordLoaded ? (
-    <Box className='word__details-card'>
+    <Box className={isAllWordsLearned ? 'word__details-card disabled' : 'word__details-card'}>
       <Box className='word__details-card-wrapper'>
         <Box
           component='img'
           alt='Word image'
           src={`${[API_BASE_URL, word.image].join('/')}`}
-          className='word__details-card_image'
+          className={isAllWordsLearned ? 'word__details-card_image disabled' : 'word__details-card_image'}
         />
         {isUserLoggedIn &&
           <Box className='word__details-card-buttons-group'>

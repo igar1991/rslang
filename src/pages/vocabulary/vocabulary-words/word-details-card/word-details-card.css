@@ -11,6 +11,11 @@
   transition: 2s ease;
 }
 
+div.word__details-card.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
 .word__details-card-wrapper {
   display: flex;
   flex-direction: column;
@@ -20,7 +25,7 @@
   width: 100%;
 }
 
-.word__details-card_image {
+img.word__details-card_image {
   height: 210px;
   width: 210px;
   border-radius: 50%;
@@ -59,7 +64,7 @@ Button.details-card-button {
 }
 
 @media (max-width: 900px) {
-  .word__details-card_image {
+  img.word__details-card_image {
     height: 160px;
     width: 160px;
   }

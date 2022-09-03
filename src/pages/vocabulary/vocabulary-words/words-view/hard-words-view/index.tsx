@@ -4,7 +4,7 @@ import { WordsList } from '../words-list';
 import { wordsAPI } from 'api/wordsService';
 import { useAppSelector } from 'redux/hooks';
 import { selectAuth } from 'redux/slices/authUserSlice';
-import { HARD_WORDS_PER_PAGE } from '../../constants';
+import { WORDS_PER_PAGE } from '../../constants';
 import '../words-view.css';
 
 interface ViewProps {
@@ -15,7 +15,7 @@ export const HardWordsView = ({ isMobile }: ViewProps) => {
   const { id: userId } = useAppSelector(selectAuth);
   const { data, isSuccess } = wordsAPI.useGetAllAggregatedWordsQuery({
     id: userId,
-    wordsPerPage: HARD_WORDS_PER_PAGE,
+    wordsPerPage: WORDS_PER_PAGE,
     filter: '{"userWord.difficulty":"hard"}'
   });
 

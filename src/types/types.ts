@@ -35,9 +35,13 @@ export interface NewWordRequestParams {
   optional: Record<string, unknown>;
 }
 
+interface TotalCount {
+  count: number
+}
+
 export interface AggregatedWords {
   paginatedResults: AggregatedWord[];
-  totalCount: number;
+  totalCount: TotalCount[];
 }
 
 export interface UserWordData {

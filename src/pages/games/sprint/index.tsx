@@ -16,7 +16,7 @@ import { getArraySprint } from '../utils';
 import { selectAuth } from 'redux/slices/authUserSlice';
 import LogInAnswerBtnSprint from './login-answer-btn-sprint';
 import AnswerBtnSprint from './answer-btn-sprint';
-import { HARD_WORDS_PER_PAGE } from 'pages/vocabulary/vocabulary-words/constants';
+import { WORDS_PER_PAGE } from 'pages/vocabulary/vocabulary-words/constants';
 
 export type QuestionsType = {
   word: Word;
@@ -42,7 +42,7 @@ export default function Sprint() {
   const [stage, setStage] = useState<string>('game');
   const { data: learnedWords } = wordsAPI.useGetAllAggregatedWordsQuery({
     id: id,
-    wordsPerPage: HARD_WORDS_PER_PAGE,
+    wordsPerPage: WORDS_PER_PAGE,
     filter: '{"userWord.optional.learned":true}'
   });
 
