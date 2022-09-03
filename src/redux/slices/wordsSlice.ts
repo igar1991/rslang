@@ -10,6 +10,7 @@ export interface WordsState {
   selectedWordId: string;
   selectedWordColor: Colors;
   selectedTab: number;
+  isPlayingWord: boolean;
   error: null | string;
   status: string;
 }
@@ -21,6 +22,7 @@ const initialState: WordsState = {
   selectedWordId: localStorage.getItem('selectedWordId') ?? '5e9f5ee35eb9e72bc21af4a4',
   selectedWordColor: localStorage.getItem('selectedWordColor') as Colors ?? 'elementary',
   selectedTab: Number(localStorage.getItem('selectedTab')) ?? VocabularyTab.VOCABULARY,
+  isPlayingWord: false,
   error: null,
   status: 'idle'
 };
@@ -49,6 +51,9 @@ export const wordsSlice = createSlice({
       localStorage.setItem('selectedWordColor', color);
       state.selectedWordColor = color;
     },
+    setIsPlayingWord: (state, { payload: isPlaying }: { payload: boolean }) => {
+      state.isPlayingWord = isPlaying;
+    },
   }
 });
 
@@ -60,6 +65,7 @@ export const {
   setSelectedWordId,
   setSelectedTab,
   setSelectedWordColor,
+  setIsPlayingWord,
 } = wordsSlice.actions;
 
 export default wordsSlice.reducer;
