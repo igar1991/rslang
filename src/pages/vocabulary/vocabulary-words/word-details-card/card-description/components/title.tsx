@@ -3,7 +3,8 @@ import { VolumeUp } from '@mui/icons-material';
 import '../card-description.css';
 import { API_BASE_URL } from 'api/api';
 import { Device } from 'types/types';
-import { useAppSelector } from 'redux/hooks';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
+import { selectWords, setIsPlayingWord } from 'redux/slices/wordsSlice';
 
 interface Props {
   device: string;
@@ -17,14 +18,25 @@ const playAudio = (audio: HTMLAudioElement) => () => {
 };
 
 export const Title = ({ device, title, transcription, audio }: Props) => {
-  const color = useAppSelector((state) => state.words.selectedWordColor);
+  const dispatch = useAppDispatch();
+  const { selectedWordColor: color, isPlayingWord } = useAppSelector(selectWords);
   const audioFiles = audio.map((audioFile) => new Audio(`${[API_BASE_URL, audioFile].join('/')}`));
   const [audioWord, audioMeaning, audioExample] = audioFiles;
 
   const audioStartHandler = () => {
+    if (isPlayingWord) {
+      audioWord.pause();
+      return;
+    }
+
+    dispatch(setIsPlayingWord(true));
+
     audioWord.play();
     audioWord.addEventListener('ended', playAudio(audioMeaning));
     audioMeaning.addEventListener('ended', playAudio(audioExample));
+    audioExample.addEventListener('ended', () => {
+      dispatch(setIsPlayingWord(false));
+    });
   };
 
   return (

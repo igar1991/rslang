@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
-import { Button, Typography, Box, IconButton, Stack, CircularProgress, Rating, Grow } from '@mui/material';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Box, Button, CircularProgress, Grow, IconButton, Rating, Stack, Typography } from '@mui/material';
 import { Container } from '@mui/system';
 import { VolumeUp } from '@mui/icons-material';
 import VolumeUpOutlinedIcon from '@mui/icons-material/VolumeUpOutlined';
 import { wordsAPI } from 'api/wordsService';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
-import { setPage, selectGames } from 'redux/slices/gamesSlice';
+import { selectGames, setPage } from 'redux/slices/gamesSlice';
 import { Word } from 'types/types';
 import { API_BASE_URL } from 'api/api';
 import { Result, ResultsType } from 'pages/games/components/result/result';
@@ -49,7 +49,7 @@ export default function AudioCall() {
   });
 
   useEffect(() => {
-    
+
     if (data) {
       const array = getArrayAudiocall(data);
       if(fromVoc){
@@ -64,8 +64,14 @@ export default function AudioCall() {
     }
   }, [data, learnedWords, fromVoc]);
 
-  
+  const firstUpdate = useRef(true);
+
   useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
+
     if(arr.length > 0) {
       audioStartHandler(arr[curId].word.audio);
     }

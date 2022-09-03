@@ -1,12 +1,12 @@
 import './word-card.css';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { selectWords, setSelectedWordColor, setSelectedWordId } from '../../../../../../redux/slices/wordsSlice';
+import { selectWords, setSelectedWordColor, setSelectedWordId } from 'redux/slices/wordsSlice';
 import { StyledWordCardWrapper } from './StyledWordCardWrapper';
-import { useAppSelector } from '../../../../../../redux/hooks';
+import { useAppSelector } from 'redux/hooks';
 import { GROUPS } from '../../../constants';
 import { Colors, ColorsByGroupMap } from '../../words-levels/constants';
-import { Word } from '../../../../../../types/types';
+import { Word } from 'types/types';
 import { WordWithTranslation } from './word-with-translation';
 import { HardLearnedIconsGroup } from './hard-learned-icons';
 
