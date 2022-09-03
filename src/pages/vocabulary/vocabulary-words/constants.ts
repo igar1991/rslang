@@ -18,7 +18,7 @@ export const GROUPS = [
 
 export const PAGES = 29;
 
-export const HARD_WORDS_PER_PAGE = '10000000';
+export const WORDS_PER_PAGE = '10000000';
 
 export enum DIFFICULTY {
   HARD = 'hard',

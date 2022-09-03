@@ -57,10 +57,10 @@ export const wordsAPI = api.injectEndpoints({
         method: 'DELETE'
       })
     }),
-    getAllAggregatedWords: build.query<AggregatedWords[], { id: string, wordsPerPage: string, filter: string }>({
-      query: ({ id, wordsPerPage, filter }) => ({
+    getAllAggregatedWords: build.query<AggregatedWords[], { id: string, wordsPerPage: string, filter: string, group?: number, page?: number }>({
+      query: ({ id, wordsPerPage, filter, group, page }) => ({
         url: `/users/${id}/aggregatedWords/`,
-        params: { wordsPerPage, filter }
+        params: { wordsPerPage, filter, group, page }
       }),
       providesTags: (result) =>
         result ?
