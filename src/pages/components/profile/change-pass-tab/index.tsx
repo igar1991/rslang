@@ -56,8 +56,8 @@ export default function EditPassTab({ tab, setMessage, setTab }: EditPassTabType
     if (!values.confirmPass) newErrors.confirmPass = { error: true, message: 'The field is empty' };
     if (!values.newPass || !values.confirmPass) textErrorMessage.push('Fill in all the fields');
     if (values.newPass.length < 8) {
-      newErrors.newPass = { error: true, message: 'Password is too short' };
-      textErrorMessage.push('Password is too short');
+      newErrors.newPass = { error: true, message: 'Password is shorter than 8 characters' };
+      textErrorMessage.push('Password is shorter than 8 characters');
     }
     if (values.newPass && values.confirmPass && values.newPass !== values.confirmPass) {
       newErrors.confirmPass = { error: true, message: 'Passwords do not match' };

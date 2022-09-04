@@ -44,4 +44,8 @@ Button.game__card-button {
   .card-description__details {
     row-gap: 0.5rem;
   }
+
+  .card-description__statistics-details {
+    row-gap: unset;
+  }
 }

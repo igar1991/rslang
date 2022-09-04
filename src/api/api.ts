@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { RootState } from '../redux/store';
+import { RootState } from 'redux/store';
 
 export const API_BASE_URL = 'https://rslanglishbe.herokuapp.com';
 

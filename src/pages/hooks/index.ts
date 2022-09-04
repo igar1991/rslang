@@ -22,11 +22,11 @@ export const useDevice = () => {
     return () => window.removeEventListener('resize', updateWidth);
   }, []);
 
-  if (width >= 900) {
+  if (width > 900) {
     return Device.DESKTOP;
   }
 
-  if (width >= 600) {
+  if (width > 600) {
     return Device.TABLET;
   }
 
