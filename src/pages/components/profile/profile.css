@@ -1,3 +1,32 @@
 .profile-modal {
-    padding: 15px  !important;
+  padding: 15px !important;
+}
+
+.profile__text {
+  margin-bottom: 15px;
+  font-size: 16px;
+  line-height: 143%;
+  letter-spacing: 0.17px;
+}
+
+.profile__button-container {
+  display: flex;
+  margin-top: 30px;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.edit-profile__text {
+  font-size: 13px;
+  line-height: 170%;
+  letter-spacing: 0.17px;
+  color: var(--lightActionActiveColor);
+  text-align: center;
+}
+
+.edit-profile__button {
+  display: block !important;
+  width: 100px;
+  margin: 10px auto 0 auto !important;
 }

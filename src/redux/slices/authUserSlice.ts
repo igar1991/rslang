@@ -42,6 +42,9 @@ export const authUserSlice = createSlice({
         name: null,
       };
     },
+    changeName: (state, { payload: newName }: { payload: string }) => {
+      state.name = newName;
+    },
   },
   extraReducers: (bulder) => {
     bulder
@@ -80,6 +83,6 @@ export const authUserSlice = createSlice({
 
 export const selectAuth = (state: RootState) => state.auth;
 
-export const { logout } = authUserSlice.actions;
+export const { logout, changeName } = authUserSlice.actions;
 
 export default authUserSlice.reducer;

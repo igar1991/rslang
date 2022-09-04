@@ -12,19 +12,19 @@ const DEVELOPERS = [
     name: 'Anastasiya Sazonava',
     github: 'nensty',
     description:
-      'Start your learning from the most common words that can provide you with the vocabulary you need to hold basic conversations.',
+      'Design creator. Git God. Sole creator of the dictionary.',
   },
   {
     name: 'Ihar Charnyshou',
     github: 'igar1991',
     description:
-      'Start your learning from the most common words that can provide you with the vocabulary you need to hold basic conversations.',
+      'API founder. Master of statistics. One of the games creators.',
   },
   {
     name: 'Natalia Chinarova',
     github: 'philonena',
     description:
-      'Start your learning from the most common words that can provide you with the vocabulary you need to hold basic conversations.',
+      'Registration and authorization master. One of the games creators.',
   },
 ];
 

@@ -130,7 +130,7 @@ export default function AudioCall() {
           {stage === 'game' && (
             <>
               <Box className='sprint__time-point'>
-                <Box sx={{ width: '150px', height: '150px' }}></Box>
+                <Box sx={{ width: '150px', height: '10px' }}></Box>
                 <Box className='poins__audiocall'>
                   <p className='points'>{points}</p>
                   <Rating

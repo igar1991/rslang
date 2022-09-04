@@ -5,13 +5,14 @@ import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 
 import { authAPI } from 'api/authService';
+import { MessageType } from '../modal-message';
 import FormInput, { ErrorsType, ValuesType } from '../form-input';
 
 type InRegistrationType = {
   authorizationModal: boolean;
   closeAuthorizationModal: () => void;
   openRegisterModal: () => void;
-  setMessageModal: React.Dispatch<React.SetStateAction<{ open: boolean; text: string }>>;
+  setMessage: React.Dispatch<React.SetStateAction<MessageType>>;
 };
 
 const AUTORIZATION__INPUT = [
@@ -23,7 +24,7 @@ export default function Authorization({
   authorizationModal,
   closeAuthorizationModal,
   openRegisterModal,
-  setMessageModal,
+  setMessage,
 }: InRegistrationType): JSX.Element {
   const [loginUser] = authAPI.useLoginUserMutation();
 
@@ -38,28 +39,24 @@ export default function Authorization({
     if (errorsChecking()) {
       const authUser = await loginUser({ email: values.email, password: values.pass });
       if ('data' in authUser) {
-        setMessageModal({ open: true, text: `Welcome ${authUser.data.name}!` });
+        setMessage({ show: true, text: `Welcome ${authUser.data.name}!`, severity: 'success' });
         setValues({ email: '', pass: '' });
         closeAuthorizationModal();
-        setTimeout(() => {
-          setMessageModal({ open: false, text: '' });
-        }, 2000);
       }
       if ('error' in authUser) {
-        console.log(authUser.error);
+        let errorText = 'Unknown error. Try again';
+
         if ('originalStatus' in authUser.error && authUser.error.originalStatus === 404) {
           setErrors({ ...errors, email: { error: true, message: 'User with this email was not found' } });
-          setMessageModal({ open: true, text: 'User with this email was not found' });
+          errorText = 'User with this email was not found';
         } else if ('originalStatus' in authUser.error && authUser.error.originalStatus === 403) {
           setErrors({ ...errors, pass: { error: true, message: 'Invalid password' } });
-          setMessageModal({ open: true, text: 'Invalid password' });
-        } else if ('error' in authUser.error) setMessageModal({ open: true, text: `${authUser.error.error}!` });
-        else if ('message' in authUser.error) setMessageModal({ open: true, text: `${authUser.error.message}!` });
-        else setMessageModal({ open: true, text: 'Unknown error. Try again' });
+          errorText = 'Invalid password';
+        } else if ('error' in authUser.error) errorText = authUser.error.error;
+        else if ('message' in authUser.error) errorText = authUser.error.message as string;
+
+        setMessage({ show: true, text: errorText, severity: 'error' });
         clearPass();
-        setTimeout(() => {
-          setMessageModal({ open: false, text: '' });
-        }, 3000);
       }
     }
   };
@@ -115,7 +112,10 @@ export default function Authorization({
           </Button>
         </form>
         <p className='modal__text'>
-          I don’t have an account, <Link className='modal__link' onClick={onSignUpClick}>Sign Up</Link>
+          I don’t have an account,{' '}
+          <Link className='modal__link' onClick={onSignUpClick}>
+            Sign Up
+          </Link>
         </p>
       </Box>
     </Modal>

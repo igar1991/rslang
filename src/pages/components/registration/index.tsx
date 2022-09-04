@@ -6,6 +6,7 @@ import Link from '@mui/material/Link';
 
 import { authAPI } from 'api/authService';
 import FormInput, { ErrorsType, ValuesType } from '../form-input';
+import { MessageType } from '../modal-message';
 
 import './registration.css';
 
@@ -13,7 +14,7 @@ type InRegistrationType = {
   registerModal: boolean;
   closeRegisterModal: () => void;
   openAuthorizationModal: () => void;
-  setMessageModal: React.Dispatch<React.SetStateAction<{ open: boolean; text: string }>>;
+  setMessage: React.Dispatch<React.SetStateAction<MessageType>>;
 };
 
 const REGISTER__INPUT = [
@@ -27,7 +28,7 @@ export default function Registration({
   registerModal,
   closeRegisterModal,
   openAuthorizationModal,
-  setMessageModal,
+  setMessage,
 }: InRegistrationType): JSX.Element {
   const [createUser] = authAPI.useCreateUserMutation();
   const [loginUser] = authAPI.useLoginUserMutation();
@@ -48,26 +49,21 @@ export default function Registration({
       if ('data' in newUser) {
         const authUser = await loginUser({ email: values.email, password: values.pass });
         if ('data' in authUser) {
-          setMessageModal({ open: true, text: `Welcome ${authUser.data.name}!` });
+          setMessage({ show: true, text: `Welcome ${authUser.data.name}!`, severity: 'success' });
           setValues({ name: '', email: '', pass: '', confirmPass: '' });
           closeRegisterModal();
         }
-        setTimeout(() => {
-          setMessageModal({ open: false, text: '' });
-        }, 2000);
       }
 
       if ('error' in newUser) {
+        let errorText = 'Unknown error. Try again';
         if ('originalStatus' in newUser.error && newUser.error.originalStatus === 417) {
           setErrors({ ...errors, email: { error: true, message: 'User with this e-mail exists' } });
-          setMessageModal({ open: true, text: 'User with this e-mail exists' });
-        } else if ('error' in newUser.error) setMessageModal({ open: true, text: `${newUser.error.error}!` });
-        else if ('message' in newUser.error) setMessageModal({ open: true, text: `${newUser.error.message}!` });
-        else setMessageModal({ open: true, text: 'Unknown error. Try again' });
+          errorText = 'User with this e-mail exists';
+        } else if ('error' in newUser.error) errorText = newUser.error.error;
+        else if ('message' in newUser.error) errorText = newUser.error.message as string;
         clearPass();
-        setTimeout(() => {
-          setMessageModal({ open: false, text: '' });
-        }, 3000);
+        setMessage({ show: true, text: errorText, severity: 'error' });
       }
     }
   };
@@ -130,7 +126,10 @@ export default function Registration({
           </Button>
         </form>
         <p className='modal__text'>
-          I have an account, <Link className='modal__link' onClick={onSignInClick}>Sign In</Link>
+          I have an account,{' '}
+          <Link className='modal__link' onClick={onSignInClick}>
+            Sign In
+          </Link>
         </p>
       </Box>
     </Modal>
