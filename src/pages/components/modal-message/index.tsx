@@ -1,24 +1,31 @@
 import React from 'react';
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
+import { Alert, Snackbar } from '@mui/material';
 
-import './modal-message.css';
-
-type ModalMessageType = {
-  messageModal: { open: boolean; text: string };
-  setMessageModal: React.Dispatch<React.SetStateAction<{ open: boolean; text: string }>>;
+export type MessageType = {
+  show: boolean;
+  text: string;
+  severity: 'error' | 'success' | undefined;
 };
 
-export default function ModalMessage({ messageModal, setMessageModal }: ModalMessageType): JSX.Element {
-  const onClose = () => {
-    setMessageModal({ open: false, text: '' });
+type ModalMessageType = {
+  message: MessageType;
+  setMessage: React.Dispatch<React.SetStateAction<MessageType>>;
+};
+
+export default function ModalMessage({ message, setMessage }: ModalMessageType): JSX.Element {
+  
+  const onCloseError = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setMessage({ show: false, text: '', severity: message.severity });
   };
 
   return (
-    <Modal open={messageModal.open} onClose={onClose}>
-      <Box className='modal modal-message'>
-        <p className='modal-message__text'>{messageModal.text}</p>
-      </Box>
-    </Modal>
+    <Snackbar open={message.show} autoHideDuration={4000} onClose={onCloseError}>
+      <Alert onClose={onCloseError} severity={message.severity} variant='filled'>
+        {message.text}
+      </Alert>
+    </Snackbar>
   );
 }

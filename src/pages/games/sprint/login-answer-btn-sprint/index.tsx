@@ -46,7 +46,7 @@ export default function LogInAnswerBtnSprint({
           learned: false,
           games: {
             firstDate: new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }),
-            answer: [currentAnswer],
+            answers: [currentAnswer],
           },
         },
       };

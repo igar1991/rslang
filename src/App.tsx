@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Authorization from './pages/components/authorization';
 import Footer from './pages/components/footer';
 import Header from './pages/components/header';
-import ModalMessage from './pages/components/modal-message';
+import ModalMessage, { MessageType } from './pages/components/modal-message';
 import ProfileModal from './pages/components/profile';
 import Registration from './pages/components/registration';
 import Games from './pages/games';
@@ -13,11 +13,14 @@ import Main from './pages/main';
 import Statistics from './pages/statistics';
 import Vocabulary from './pages/vocabulary';
 
+
+
 function App(): JSX.Element {
   const [registerModal, setRegisterModal] = useState(false);
   const [authorizationModal, setAuthorizationModal] = useState(false);
   const [profileModal, setProfileModal] = useState(false);
-  const [messageModal, setMessageModal] = useState({ open: false, text: '' });
+  const [message, setMessage] = useState<MessageType>({ show: false, text: '', severity: undefined });
+
 
   const openRegisterModal = () => setRegisterModal(true);
   const closeRegisterModal = () => setRegisterModal(false);
@@ -26,7 +29,6 @@ function App(): JSX.Element {
   const closeAuthorizationModal = () => setAuthorizationModal(false);
 
   const openProfileModal = () => setProfileModal(true);
-  const closeProfileModal = () => setProfileModal(false);
 
   return (
     <>
@@ -40,10 +42,10 @@ function App(): JSX.Element {
           <Route path='/games/sprint' element={<Sprint />} />
           <Route path='/statistics' element={<Statistics />} />
         </Routes>
-        <Registration openAuthorizationModal={openAuthorizationModal} registerModal={registerModal} closeRegisterModal={closeRegisterModal} setMessageModal={setMessageModal} />
-        <Authorization openRegisterModal={openRegisterModal} authorizationModal={authorizationModal} closeAuthorizationModal={closeAuthorizationModal} setMessageModal={setMessageModal} />
-        <ProfileModal profileModal={profileModal} closeProfileModal={closeProfileModal} />
-        <ModalMessage messageModal={messageModal} setMessageModal={setMessageModal} />
+        <Registration openAuthorizationModal={openAuthorizationModal} registerModal={registerModal} closeRegisterModal={closeRegisterModal} setMessage={setMessage} />
+        <Authorization openRegisterModal={openRegisterModal} authorizationModal={authorizationModal} closeAuthorizationModal={closeAuthorizationModal} setMessage={setMessage} />
+        <ProfileModal profileModal={profileModal} setProfileModal={setProfileModal} setMessage={setMessage} />
+        <ModalMessage message={message} setMessage={setMessage} />
         <Footer />
       </Router>
     </>

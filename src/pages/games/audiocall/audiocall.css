@@ -48,6 +48,7 @@
 .audiocall__answers {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .right-btn:disabled {
