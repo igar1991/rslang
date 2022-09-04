@@ -60,6 +60,30 @@ export interface User {
   password: string;
 }
 
+export interface Statistics {
+  learnedWords: number;
+  optional: {
+    achievements: {
+      achievement1?: Achievement;
+      achievement2?: Achievement;
+      achievement3?: Achievement;
+      achievement4?: Achievement;
+      achievement5?: Achievement;
+      achievement6?: Achievement;
+    };
+    newWordsCounter?: number;
+  }
+}
+
+export interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  img: string;
+  achieved: boolean;
+  shown: boolean;
+}
+
 export enum Device {
   DESKTOP = 'desktop',
   TABLET = 'tablet',

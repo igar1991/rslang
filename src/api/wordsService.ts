@@ -1,4 +1,4 @@
-import { AggregatedWords, NewWordRequestParams, UserWordData, Word, WordsRequestParams } from 'types/types';
+import { AggregatedWords, NewWordRequestParams, Statistics, UserWordData, Word, WordsRequestParams } from 'types/types';
 import { api } from './api';
 
 export const wordsAPI = api.injectEndpoints({
@@ -69,6 +69,20 @@ export const wordsAPI = api.injectEndpoints({
             id: 'LIST'
           }] :
           [{ type: 'Words', id: 'LIST' }]
+    }),
+    getUserStatistics: build.query<Statistics, string>({
+      query: (id) => ({
+        url: `/users/${id}/statistics`
+      }),
+      providesTags: ['Statistic']
+    }),
+    updateUserStatistics: build.mutation<Statistics, { id: string, body: Statistics }>({
+      query: ({ id, body }) => ({
+        url: `/users/${id}/statistics`,
+        method: 'PUT',
+        body: body
+      }),
+      invalidatesTags: ['Statistic']
     })
   })
 });
