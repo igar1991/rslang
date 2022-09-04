@@ -9,6 +9,9 @@ import FormInput, { ErrorsType, ValuesType } from '../form-input';
 import { MessageType } from '../modal-message';
 
 import './registration.css';
+import { ACHIEVEMENTS } from 'pages/statistics/components/achievements/constants';
+import { wordsAPI } from 'api/wordsService';
+import { AchievementPopup } from 'pages/statistics/components/achievements/achievement-popup';
 
 type InRegistrationType = {
   registerModal: boolean;
@@ -21,25 +24,30 @@ const REGISTER__INPUT = [
   { id: 'name', text: 'Name' },
   { id: 'email', text: 'E-mail' },
   { id: 'pass', text: 'Password' },
-  { id: 'confirmPass', text: 'Confirm password' },
+  { id: 'confirmPass', text: 'Confirm password' }
 ];
 
 export default function Registration({
   registerModal,
   closeRegisterModal,
   openAuthorizationModal,
-  setMessage,
+  setMessage
 }: InRegistrationType): JSX.Element {
   const [createUser] = authAPI.useCreateUserMutation();
   const [loginUser] = authAPI.useLoginUserMutation();
+  const [createStatistics] = wordsAPI.useUpdateUserStatisticsMutation();
 
   const [values, setValues] = useState<ValuesType>({ name: '', email: '', pass: '', confirmPass: '' });
   const [errors, setErrors] = useState<ErrorsType>({
     name: { error: false, message: ' ' },
     email: { error: false, message: ' ' },
     pass: { error: false, message: ' ' },
-    confirmPass: { error: false, message: ' ' },
+    confirmPass: { error: false, message: ' ' }
   });
+  const [show, setShow] = useState(false);
+  const [achievementImage, setAchievementImage] = useState('');
+  const [achievementTitle, setAchievementTitle] = useState('');
+  const [achievementDescription, setAchievementDescription] = useState('');
 
   const onSubmitForm = async (ev: FormEvent) => {
     ev.preventDefault();
@@ -52,6 +60,24 @@ export default function Registration({
           setMessage({ show: true, text: `Welcome ${authUser.data.name}!`, severity: 'success' });
           setValues({ name: '', email: '', pass: '', confirmPass: '' });
           closeRegisterModal();
+
+          ACHIEVEMENTS[0].achieved = true;
+          const achievementsObj = ACHIEVEMENTS.reduce((acc, achievement, index) => {
+            return {
+              ...acc,
+              [`achievement${index + 1}`]: achievement
+            };
+          }, {});
+
+          createStatistics({
+            id: newUser.data.id,
+            body: { learnedWords: 0, optional: { achievements: achievementsObj } }
+          });
+
+          setShow(true);
+          setAchievementImage(ACHIEVEMENTS[0].img);
+          setAchievementTitle(ACHIEVEMENTS[0].name);
+          setAchievementDescription(ACHIEVEMENTS[0].description);
         }
       }
 
@@ -74,7 +100,10 @@ export default function Registration({
 
     if (!regexp.test(values.email)) newErrors.email = { error: true, message: 'Incorrect email' };
     if (values.name.length < 3) newErrors.name = { error: true, message: 'Field Name is shorter than 3 characters' };
-    if (values.pass.length < 8) newErrors.pass = { error: true, message: 'Field Password is shorter than 8 characters' };
+    if (values.pass.length < 8) newErrors.pass = {
+      error: true,
+      message: 'Field Password is shorter than 8 characters'
+    };
     if (values.pass !== values.confirmPass) newErrors.confirmPass = { error: true, message: 'Password mismatch' };
     else newErrors.confirmPass = { error: false, message: ' ' };
 
@@ -96,7 +125,7 @@ export default function Registration({
       name: { error: false, message: ' ' },
       email: { error: false, message: ' ' },
       pass: { error: false, message: ' ' },
-      confirmPass: { error: false, message: ' ' },
+      confirmPass: { error: false, message: ' ' }
     });
     closeRegisterModal();
   };
@@ -106,32 +135,59 @@ export default function Registration({
     openAuthorizationModal();
   };
 
+  const handleCloseDialog = () => {
+    setShow(false);
+  };
+
   return (
-    <Modal open={registerModal} onClose={onModalClose}>
-      <Box className='modal'>
-        <h3 className='modal__title'>Create your profile</h3>
-        <form onSubmit={onSubmitForm} className='modal__form'>
-          {REGISTER__INPUT.map((input) => (
-            <FormInput
-              key={input.id}
-              input={input}
-              values={values}
-              setValues={setValues}
-              errors={errors}
-              setErrors={setErrors}
-            />
-          ))}
-          <Button variant='contained' color='secondary' type='submit' className='modal__button'>
-            Start learning
-          </Button>
-        </form>
-        <p className='modal__text'>
-          I have an account,{' '}
-          <Link className='modal__link' onClick={onSignInClick}>
-            Sign In
-          </Link>
-        </p>
-      </Box>
-    </Modal>
+    <>
+      <AchievementPopup
+        show={show}
+        handleCloseDialog={handleCloseDialog}
+        title={achievementTitle}
+        description={achievementDescription}
+        image={achievementImage}
+      />
+      <Modal
+        open={registerModal}
+        onClose={onModalClose}
+      >
+        <Box className='modal'>
+          <h3 className='modal__title'>Create your profile</h3>
+          <form
+            onSubmit={onSubmitForm}
+            className='modal__form'
+          >
+            {REGISTER__INPUT.map((input) => (
+              <FormInput
+                key={input.id}
+                input={input}
+                values={values}
+                setValues={setValues}
+                errors={errors}
+                setErrors={setErrors}
+              />
+            ))}
+            <Button
+              variant='contained'
+              color='secondary'
+              type='submit'
+              className='modal__button'
+            >
+              Start learning
+            </Button>
+          </form>
+          <p className='modal__text'>
+            I have an account,{' '}
+            <Link
+              className='modal__link'
+              onClick={onSignInClick}
+            >
+              Sign In
+            </Link>
+          </p>
+        </Box>
+      </Modal>
+    </>
   );
 }
