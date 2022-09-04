@@ -30,8 +30,6 @@ export const GameCard = ({ img, title, description, url }: Props) => {
   const { page, group } = useAppSelector(selectWords);
   const { isAuth } = useAppSelector(selectAuth);
 
-  console.log('data', data);
-
   const onStartGame = () => {
     dispatch(setPage(page));
     dispatch(setGroup(group));

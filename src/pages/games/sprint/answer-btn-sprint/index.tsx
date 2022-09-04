@@ -1,5 +1,5 @@
 import { Button, Box } from '@mui/material';
-import { QuestionsType } from '..';
+import { QuestionsType } from '../sprint-render';
 
 type AnswerBtnType = {
   question: QuestionsType;
