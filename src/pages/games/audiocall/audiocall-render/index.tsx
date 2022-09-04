@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Box, Button, CircularProgress, Grow, IconButton, Rating, Stack, Typography } from '@mui/material';
 import { Container } from '@mui/system';
 import { VolumeUp } from '@mui/icons-material';
@@ -40,6 +40,7 @@ export default function AudioCallRender({ learnedWords }: { learnedWords: Aggreg
   const [longestSeries, setLongestSeries] = useState<number>(0);
   const [curId, setCurId] = useState<number>(0);
   const [stage, setStage] = useState<string>('game');
+  const [updateArr, setUpdateArr] = useState<boolean>(false);
 
   useEffect(() => {
     if (data) {
@@ -53,33 +54,26 @@ export default function AudioCallRender({ learnedWords }: { learnedWords: Aggreg
       } else {
         setArr([...array]);
       }
-      firstUpdate.current = true;
+      setUpdateArr(true);
     }
   }, [data, learnedWords, fromVoc, isUserLoggedIn]);
 
-  const firstUpdate = useRef(true);
-
   useEffect(() => {
-    if (arr.length > 0 && firstUpdate.current && curId === 0) {
-      firstUpdate.current = false;
+    if (arr.length > 0 && updateArr && curId === 0) {
+      setUpdateArr(false);
       audioStartHandler(arr[curId].word.audio);
-    } 
-  }, [curId, arr]);
+    }
+  }, [arr, curId, updateArr]);
 
   const playAgain = useCallback(() => {
-    if (fromVoc) {
-      arr.sort(() => Math.random() - 0.5);
-      firstUpdate.current = true;
-    } else {
-      setArr([]);
-      dispatch(setPage(Math.floor(Math.random() * 30)));
-    }
+    arr.sort(() => Math.random() - 0.5);
+    setUpdateArr(true);
     setPoints(0);
     setSeries(0);
     setCurId(0);
     setAnswers({ right: [], errors: [], new: [] });
     setStage('game');
-  }, [arr, dispatch, fromVoc]);
+  }, [arr]);
 
   const rightAnswer = (isNew = true) => {
     setShowPoint(true);
