@@ -3,7 +3,7 @@ import { useAppSelector } from 'redux/hooks';
 import { wordsAPI } from 'api/wordsService';
 import { selectAuth } from 'redux/slices/authUserSlice';
 import { userWordGame } from 'pages/games/utils';
-import { QuestionsType } from '..';
+import { QuestionsType } from '../sprint-render';
 import 'pages/games/audiocall/audiocall.css';
 
 type AnswerBtnType = {
