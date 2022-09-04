@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { authAPI } from '../../api/authService';
 import { RootState } from '../store';
 
@@ -21,6 +21,20 @@ const initialState: AuthState = {
   status: 'idle',
   name: localStorage.getItem('name') || null,
 };
+
+export const getNewTokenAsync = createAsyncThunk(
+  'counter/fetchCount',
+  async ({refreshToken, id}: {refreshToken: string; id: string}) => {
+    const response = await fetch(`https://rslanglishbe.herokuapp.com/users/${id}/tokens`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${refreshToken}`,
+      },
+    });
+    const data = await response.json();
+    return data;
+  }
+);
 
 export const authUserSlice = createSlice({
   name: 'auth',
@@ -47,7 +61,20 @@ export const authUserSlice = createSlice({
     },
   },
   extraReducers: (bulder) => {
-    bulder
+    bulder      
+      .addCase(getNewTokenAsync.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(getNewTokenAsync.fulfilled, (state, action) => {
+        state.status = 'idle';
+        localStorage.setItem('token', action.payload.token);
+        localStorage.setItem('refreshToken', action.payload.refreshToken);
+        state.token = action.payload.token;
+        state.refreshToken = action.payload.refreshToken;
+      })
+      .addCase(getNewTokenAsync.rejected, (state) => {
+        state.status = 'failed';
+      })
       .addMatcher(authAPI.endpoints.loginUser.matchPending, (state) => {
         state.status = 'loading';
       })
