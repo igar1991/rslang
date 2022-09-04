@@ -1,9 +1,10 @@
 .container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: flex !important;
+  flex-direction: column;
   text-align: center;
+  width: 100%;
   min-height: 80vh;
+  row-gap: 1.5rem;
 }
 
 .title {
@@ -16,11 +17,17 @@
 }
 
 .container_result {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 1rem;
+}
+
+.container_result-games {
   display: flex;
-  justify-content: space-around;
+  flex-direction: column;
   align-items: center;
-  text-align: center;
-  margin-top: 20px;
+  row-gap: 1rem;
+  width: 100%;
 }
 
 .title_num {
@@ -30,4 +37,49 @@
   text-align: center;
   letter-spacing: 0.15px;
   color: var(--lightTextPrimaryColor);
+}
+
+.game__card.game__card-statistics {
+  max-width: 450px;
+  width: unset;
+}
+
+.game__card-description.game__card-description-statistics {
+  padding: 0.5rem;
+}
+
+@media (max-width: 900px) {
+  .title, .title_num {
+    font-size: 34px;
+  }
+
+  .game__card.game__card-statistics {
+    height: 150px;
+    padding: 0.5rem;
+  }
+
+  .game__card-description.game__card-description-statistics {
+    padding: 0.5rem;
+    grid-template-columns: 1.5fr 2fr;
+  }
+
+  h4.long-term-statistics {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .game__card.game__card-statistics {
+    padding: 0.5rem;
+  }
+
+  .container_result {
+    grid-template-columns: unset;
+    row-gap: 2rem;
+  }
+
+  .container_result-games {
+    display: grid;
+    grid-template-columns: 0.8fr 2.2fr;
+  }
 }

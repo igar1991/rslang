@@ -1,12 +1,13 @@
 import { Box, Container, Typography } from '@mui/material';
 import { Card } from './components/card';
 import './statistics.css';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { wordsAPI } from 'api/wordsService';
 import { useAppSelector } from 'redux/hooks';
 import { selectAuth } from 'redux/slices/authUserSlice';
 import { UserWordData } from 'types/types';
+import { Achievements } from 'pages/statistics/components/achievements';
 
 interface statData {
   date: string;
@@ -29,7 +30,7 @@ export default function Statistics() {
   const [seriesNew, setSeriesNew] = useState<number[]>([]);
   const [seriesLearned, setSeriesNewLearned] = useState<number[]>([]);
   const [stat, setStat] = useState<statData>();
-  const { id } = useAppSelector(selectAuth);
+  const { id, isAuth: isUserLoggedIn } = useAppSelector(selectAuth);
 
   const { data } = wordsAPI.useGetUserWordsQuery(id);
   const localStatistic = localStorage.getItem('localStatistic');
@@ -100,65 +101,75 @@ export default function Statistics() {
     Math.floor((trueAns * 100) / (trueAns + wrongAns));
 
   return (
-    <Container className="container">
-      <h2 className="title">Statistics for today</h2>
-      <div className="container_result">
-        <Box>
-          <h2 className="title_num">{stat ? countNewWords(stat) : 0}</h2>
-          <h4>New words</h4>
+    <Container className='container'>
+      <h2 className='title'>Statistics for today</h2>
+      <div className='container_result'>
+        <Box className='container_result-games'>
+          <Box>
+            <h2 className='title_num'>{stat ? countNewWords(stat) : 0}</h2>
+            <h4>New words</h4>
+          </Box>
+          <Box className='game__card game__card-statistics'>
+            <Card
+              img='/assets/game-sprint.png'
+              title='Sprint'
+              word={stat?.sprint ? stat.sprint.newWords : 0}
+              trueans={
+                stat?.sprint
+                  ? precentWord(
+                    stat.sprint.rightAnswers,
+                    stat.sprint.errorAnswers
+                  )
+                  : 0
+              }
+              long={stat?.sprint ? stat.sprint.series : 0}
+            />
+          </Box>
         </Box>
-        <Box>
-          <h2 className="title_num">
-            {stat ?
-              precentWord(
-                (stat?.sprint ? stat.sprint?.rightAnswers : 0) + (stat?.audioCall ? stat.audioCall?.rightAnswers : 0),
-                (stat?.sprint ? stat.sprint?.errorAnswers : 0) + (stat?.audioCall ? stat.audioCall?.errorAnswers : 0)
-              ) : 0}
-            %
-          </h2>
-          <h4>Сorrect answers</h4>
+        <Box className='container_result-games'>
+          <Box>
+            <h2 className='title_num'>
+              {stat ?
+                precentWord(
+                  (stat?.sprint ? stat.sprint?.rightAnswers : 0) + (stat?.audioCall ? stat.audioCall?.rightAnswers : 0),
+                  (stat?.sprint ? stat.sprint?.errorAnswers : 0) + (stat?.audioCall ? stat.audioCall?.errorAnswers : 0)
+                ) : 0}
+              %
+            </h2>
+            <h4>Correct answers</h4>
+          </Box>
+          <Box className='game__card game__card-statistics'>
+            <Card
+              img='/assets/game-listen.png'
+              title='Audio Challenge'
+              word={stat?.audioCall ? stat.audioCall.newWords : 0}
+              trueans={
+                stat?.audioCall
+                  ? precentWord(
+                    stat.audioCall.rightAnswers,
+                    stat.audioCall.errorAnswers
+                  )
+                  : 0
+              }
+              long={stat?.audioCall ? stat.audioCall.series : 0}
+            />
+          </Box>
         </Box>
       </div>
-      <div className="container_result">
-        <Box className="game__card">
-          <Card
-            img="/assets/game-sprint.png"
-            title="Sprint"
-            word={stat?.sprint ? stat.sprint.newWords : 0}
-            trueans={
-              stat?.sprint
-                ? precentWord(
-                  stat.sprint.rightAnswers,
-                  stat.sprint.errorAnswers
-                )
-                : 0
-            }
-            long={stat?.sprint ? stat.sprint.series : 0}
-          />
-        </Box>
-        <Box className="game__card">
-          <Card
-            img="/assets/game-listen.png"
-            title="Audio Challenge"
-            word={stat?.audioCall ? stat.audioCall.newWords : 0}
-            trueans={
-              stat?.audioCall
-                ? precentWord(
-                  stat.audioCall.rightAnswers,
-                  stat.audioCall.errorAnswers
-                )
-                : 0
-            }
-            long={stat?.audioCall ? stat.audioCall.series : 0}
-          />
-        </Box>
-      </div>
-      <Typography sx={{ marginTop: '60px' }} variant="h4">
+      {isUserLoggedIn && <Achievements />}
+      <Typography
+        sx={{ marginTop: '40px' }}
+        variant='h4'
+        className='long-term-statistics'
+      >
         Statistics for all time
       </Typography>
-      <Typography sx={{ marginTop: '20px' }} variant="h6">
+      {!isUserLoggedIn && <Typography
+        sx={{ marginTop: '20px' }}
+        variant='h6'
+      >
         Statistics are available only to authorized users
-      </Typography>
+      </Typography>}
       {id && (
         <ReactApexChart
           options={{
@@ -166,34 +177,34 @@ export default function Statistics() {
               height: 450,
               type: 'area',
               toolbar: {
-                show: false,
-              },
+                show: false
+              }
             },
             dataLabels: {
-              enabled: false,
+              enabled: false
             },
             stroke: {
               curve: 'smooth',
-              width: 2,
+              width: 2
             },
             grid: {
-              strokeDashArray: 0,
+              strokeDashArray: 0
             },
             xaxis: {
-              categories: categories ? Array.from(categories) : [],
-            },
+              categories: categories ? Array.from(categories) : []
+            }
           }}
           series={[
             {
               name: 'New words',
-              data: seriesNew,
+              data: seriesNew
             },
             {
               name: 'Learned words',
-              data: seriesLearned,
-            },
+              data: seriesLearned
+            }
           ]}
-          type="area"
+          type='area'
           height={450}
         />
       )}

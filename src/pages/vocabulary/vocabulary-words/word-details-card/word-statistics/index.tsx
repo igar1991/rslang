@@ -14,9 +14,12 @@ interface WordStatisticsProps {
 }
 
 export const DetailsCardStatistics = ({ device, color, userId, wordId }: WordStatisticsProps) => {
-  const { data, isSuccess } = wordsAPI.useGetUserWordByIdQuery({ id: userId, wordId });
-  const correctAnswersCount = data?.optional.games?.answers?.filter((value) => !!value).length || 0;
-  const failedAnswersCount = data?.optional.games?.answers?.filter((value) => !value).length || 0;
+  const { data: userWords, isSuccess } = wordsAPI.useGetUserWordsQuery(userId);
+
+  const selectedWord = userWords?.find(item => item.wordId === wordId);
+
+  const correctAnswersCount = selectedWord?.optional.games?.answers?.filter((value) => !!value).length || 0;
+  const failedAnswersCount = selectedWord?.optional.games?.answers?.filter((value) => !value).length || 0;
 
   return (
     <StyledWordStatistics

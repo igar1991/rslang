@@ -73,8 +73,8 @@ export default function Registration({
     const regexp = /^[\w\d%$:.-]+@\w+\.\w{2,5}$/;
 
     if (!regexp.test(values.email)) newErrors.email = { error: true, message: 'Incorrect email' };
-    if (values.name.length < 3) newErrors.name = { error: true, message: 'Field Name is too short' };
-    if (values.pass.length < 8) newErrors.pass = { error: true, message: 'Field Password is too short' };
+    if (values.name.length < 3) newErrors.name = { error: true, message: 'Field Name is shorter than 3 characters' };
+    if (values.pass.length < 8) newErrors.pass = { error: true, message: 'Field Password is shorter than 8 characters' };
     if (values.pass !== values.confirmPass) newErrors.confirmPass = { error: true, message: 'Password mismatch' };
     else newErrors.confirmPass = { error: false, message: ' ' };
 
