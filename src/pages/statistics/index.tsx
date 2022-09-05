@@ -20,7 +20,15 @@ export interface statData {
 }
 
 export default function Statistics() {
-  const { isAuth: isUserLoggedIn } = useAppSelector(selectAuth);
+  const { isAuth: isUserLoggedIn, createStatistic } = useAppSelector(selectAuth);
 
-  return <>{isUserLoggedIn ? <AuthStatisticRender /> : <StatisticsRender data={undefined} dataStatistic={undefined} />}</>;
+  return (
+    <>
+      {isUserLoggedIn && createStatistic ? (
+        <AuthStatisticRender />
+      ) : (
+        <StatisticsRender data={undefined} dataStatistic={undefined} />
+      )}
+    </>
+  );
 }

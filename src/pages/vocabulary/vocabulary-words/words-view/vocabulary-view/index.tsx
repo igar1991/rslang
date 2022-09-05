@@ -18,7 +18,7 @@ interface ViewProps {
 
 export const VocabularyView = ({ isMobile }: ViewProps) => {
   const { data, isSuccess } = useVocabularyWordsData();
-  const { isAuth } = useAppSelector(selectAuth);
+  const { isAuth, createStatistic } = useAppSelector(selectAuth);
 
   const dispatch = useDispatch();
   const onClickHandler = useCallback(
@@ -33,7 +33,7 @@ export const VocabularyView = ({ isMobile }: ViewProps) => {
       {isMobile ? (
         <>
           <WordsLevels onClickHandler={onClickHandler} />
-          {isAuth ? (
+          {isAuth && createStatistic? (
             <>
               <AuthWordDetailsCard />
               <AuthWordList data={data} isSuccess={isSuccess} />
@@ -49,13 +49,13 @@ export const VocabularyView = ({ isMobile }: ViewProps) => {
         <>
           <Box className='words__words-column'>
             <WordsLevels onClickHandler={onClickHandler} />
-            {isAuth ? (
+            {isAuth && createStatistic ? (
               <AuthWordList data={data} isSuccess={isSuccess} />
             ) : (
               <WordsList data={data} isSuccess={isSuccess} usersWords={undefined} />
             )}
           </Box>
-          {isAuth ? <AuthWordDetailsCard /> : <WordDetailsCard data={undefined} usersWords={undefined} userStatistics={undefined} />}
+          {isAuth && createStatistic ? <AuthWordDetailsCard /> : <WordDetailsCard data={undefined} usersWords={undefined} userStatistics={undefined} />}
         </>
       )}
     </Box>

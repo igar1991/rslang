@@ -15,7 +15,7 @@ export interface AuthState {
 
 const initialState: AuthState = {
   isAuth: !!localStorage.getItem('userId'),
-  createStatistic: true,
+  createStatistic: !!localStorage.getItem('userId'),
   id: localStorage.getItem('userId') || '',
   refreshToken: localStorage.getItem('refreshToken') || null,
   token: localStorage.getItem('token') || null,
@@ -50,7 +50,7 @@ export const authUserSlice = createSlice({
       localStorage.removeItem('selectedTab');
       return {
         isAuth: false,
-        createStatistic: true,
+        createStatistic: false,
         id: '',
         refreshToken: null,
         token: null,

@@ -29,7 +29,7 @@ const GAMES = [
 
 export const GamesLinks = () => {
   const device = useDevice();
-  const { isAuth } = useAppSelector(selectAuth);
+  const { isAuth, createStatistic } = useAppSelector(selectAuth);
 
   return (
     <Box className='vocabulary__games-links'>
@@ -37,7 +37,7 @@ export const GamesLinks = () => {
         Check your skills by playing games!
       </Typography>
       <Box className='game-cards__wrapper'>
-        {isAuth
+        {isAuth && createStatistic
           ? GAMES.map((item) => (
             <AuthGameCard key={item.title} img={item.img} title={item.title} description={item.description} url={item.url} />
           ))

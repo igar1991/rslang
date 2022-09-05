@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
-import { Button, Box, Link } from '@mui/material';
 import { NavLink } from 'react-router-dom';
+import { Button, Box, Link } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Slide from '@mui/material/Slide';
-import { Statistics, Word } from 'types/types';
-
+import { Word } from 'types/types';
 import ResultList from 'pages/games/components/result/result-list';
-import 'pages/games/components/result/result.css';
 import { newLocalStatistic } from 'pages/games/utils';
+import 'pages/games/components/result/result.css';
 
 interface ResultAnswers {
   playAgain: () => void;

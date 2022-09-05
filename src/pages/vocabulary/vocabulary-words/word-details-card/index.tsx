@@ -1,16 +1,16 @@
+import { useCallback } from 'react';
 import { Box } from '@mui/material';
-import { DetailsCardDescription } from './card-description';
 import { wordsAPI } from 'api/wordsService';
 import { API_BASE_URL } from 'api/api';
-import { DetailsCardButton } from './details-card-button';
 import { selectWords } from 'redux/slices/wordsSlice';
-import { useAppSelector } from 'redux/hooks';
-import { DIFFICULTY } from '../constants';
 import { selectAuth } from 'redux/slices/authUserSlice';
-import { useCallback } from 'react';
+import { useAppSelector } from 'redux/hooks';
 import { AggregatedWord, Statistics, UserWordData } from 'types/types';
-import { DetailsCardStatistics } from 'pages/vocabulary/vocabulary-words/word-details-card/word-statistics';
 import { useDevice } from 'pages/hooks';
+import { DetailsCardButton } from './details-card-button';
+import { DIFFICULTY } from '../constants';
+import { DetailsCardStatistics } from 'pages/vocabulary/vocabulary-words/word-details-card/word-statistics';
+import { DetailsCardDescription } from './card-description';
 import './word-details-card.css';
 
 interface Props {

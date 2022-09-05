@@ -1,5 +1,5 @@
-import { Backdrop, Box, Button, Typography } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
+import { Backdrop, Box, Button, Typography } from '@mui/material';
 import { useDevice } from 'pages/hooks';
 import { useNavigate } from 'react-router-dom';
 import { wordsAPI } from 'api/wordsService';
@@ -32,6 +32,7 @@ export const AchievementPopup = () => {
     if (userStatistics) {
       const learnedWords = userStatistics.learnedWords;
       const achievements = userStatistics.optional.achievements;
+      const newWords = userStatistics.optional.newWords;
 
       if (achievements.achievement1?.achieved && !achievements.achievement1.shown) {
         setShow(true);
@@ -45,7 +46,7 @@ export const AchievementPopup = () => {
         });
       }
 
-      if (learnedWords === 5) {
+      if (learnedWords >= 10) {
         if (!achievements.achievement2?.achieved) {
           updateStatistics({
             id: userId,
@@ -64,7 +65,7 @@ export const AchievementPopup = () => {
           });
         }
       }
-      if (learnedWords === 20) {
+      if (learnedWords >= 50) {
         if (!achievements.achievement3?.achieved) {
           updateStatistics({
             id: userId,
@@ -83,6 +84,55 @@ export const AchievementPopup = () => {
           });
         }
       }
+      if (newWords >= 100) {
+        if (!achievements.achievement4?.achieved) {
+          updateStatistics({
+            id: userId,
+            body: getRequestBody('achievement4', achievements.achievement4, 'achieved', learnedWords, userStatistics),
+          });
+        }
+        if (achievements.achievement4?.achieved && !achievements.achievement4?.shown) {
+          setShow(true);
+          setImage(achievements.achievement4.img);
+          setTitle(achievements.achievement4.name);
+          setDescription(achievements.achievement4.description);
+
+          updateStatistics({
+            id: userId,
+            body: getRequestBody('achievement4', achievements.achievement4, 'shown', learnedWords, userStatistics),
+          });
+        }
+      }
+      if (newWords >= 500) {
+        if (!achievements.achievement5?.achieved) {
+          updateStatistics({
+            id: userId,
+            body: getRequestBody('achievement5', achievements.achievement5, 'achieved', learnedWords, userStatistics),
+          });
+        }
+        if (achievements.achievement5?.achieved && !achievements.achievement5?.shown) {
+          setShow(true);
+          setImage(achievements.achievement5.img);
+          setTitle(achievements.achievement5.name);
+          setDescription(achievements.achievement5.description);
+
+          updateStatistics({
+            id: userId,
+            body: getRequestBody('achievement5', achievements.achievement5, 'shown', learnedWords, userStatistics),
+          });
+        }
+      }
+      if (achievements.achievement6?.achieved && !achievements.achievement6?.shown) {
+        setShow(true);
+        setImage(achievements.achievement6.img);
+        setTitle(achievements.achievement6.name);
+        setDescription(achievements.achievement6.description);
+
+        updateStatistics({
+          id: userId,
+          body: getRequestBody('achievement6', achievements.achievement6, 'shown', learnedWords, userStatistics),
+        });
+      }
     }
   }, [updateStatistics, userId, userStatistics]);
 
@@ -92,7 +142,32 @@ export const AchievementPopup = () => {
 
   const handleCloseDialog = () => {
     setShow(false);
+    if (
+      userStatistics &&
+      userStatistics.optional.achievements.achievement1?.shown &&
+      userStatistics.optional.achievements.achievement2?.shown &&
+      userStatistics.optional.achievements.achievement3?.shown &&
+      userStatistics.optional.achievements.achievement4?.shown &&
+      userStatistics.optional.achievements.achievement5?.shown
+    )
+      showLastAchievement();
   };
+
+  const showLastAchievement = () => {
+    if (userStatistics) {
+      const learnedWords = userStatistics.learnedWords;
+      const achievements = userStatistics.optional.achievements;
+
+      if (!achievements.achievement6?.achieved) {
+        updateStatistics({
+          id: userId,
+          body: getRequestBody('achievement6', achievements.achievement6, 'achieved', learnedWords, userStatistics),
+        });
+      }
+      
+    }
+  };
+
   return (
     <Backdrop
       sx={{

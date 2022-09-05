@@ -4,15 +4,14 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 
+import { useAppDispatch } from 'redux/hooks';
+import { changeStatistic } from 'redux/slices/authUserSlice';
 import { authAPI } from 'api/authService';
+import { wordsAPI } from 'api/wordsService';
 import FormInput, { ErrorsType, ValuesType } from '../form-input';
 import { MessageType } from '../modal-message';
 import { ACHIEVEMENTS } from 'pages/statistics/components/achievements/constants';
-import { wordsAPI } from 'api/wordsService';
-
 import './registration.css';
-import { useAppDispatch } from 'redux/hooks';
-import { changeStatistic } from 'redux/slices/authUserSlice';
 
 type InRegistrationType = {
   registerModal: boolean;
@@ -53,7 +52,6 @@ export default function Registration({
       const newUser = await createUser({ name: values.name, email: values.email, password: values.pass });
 
       if ('data' in newUser) {
-        dispatch(changeStatistic(false));
         const authUser = await loginUser({ email: values.email, password: values.pass });
         if ('data' in authUser) {
           setMessage({ show: true, text: `Welcome ${authUser.data.name}!`, severity: 'success' });
@@ -67,12 +65,13 @@ export default function Registration({
               [`achievement${index + 1}`]: achievement
             };
           }, {});
+
           const newDate = new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
-          createStatistics({
+          const stat = await updateStatistics({
             id: newUser.data.id,
             body: { learnedWords: 0, optional: { achievements: achievementsObj, statToday: {date: newDate, sprint:{rightAnswers:0,errorAnswers:0,newWords:0,series:0}, audioCall: {rightAnswers:0,errorAnswers:0,newWords:0,series:0}}, newWords: 0 } }
           });
-          dispatch(changeStatistic(true));
+          if ('data' in stat) dispatch(changeStatistic(true));
         }
       }
 
