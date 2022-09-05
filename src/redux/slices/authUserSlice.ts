@@ -4,6 +4,7 @@ import { RootState } from '../store';
 
 export interface AuthState {
   isAuth: boolean;
+  createStatistic: boolean;
   id: string;
   refreshToken: string | null;
   token: string | null;
@@ -14,6 +15,7 @@ export interface AuthState {
 
 const initialState: AuthState = {
   isAuth: !!localStorage.getItem('userId'),
+  createStatistic: true,
   id: localStorage.getItem('userId') || '',
   refreshToken: localStorage.getItem('refreshToken') || null,
   token: localStorage.getItem('token') || null,
@@ -48,6 +50,7 @@ export const authUserSlice = createSlice({
       localStorage.removeItem('selectedTab');
       return {
         isAuth: false,
+        createStatistic: true,
         id: '',
         refreshToken: null,
         token: null,
@@ -58,6 +61,9 @@ export const authUserSlice = createSlice({
     },
     changeName: (state, { payload: newName }: { payload: string }) => {
       state.name = newName;
+    },
+    changeStatistic: (state, { payload: createStatistic }: { payload: boolean }) => {
+      state.createStatistic = createStatistic;
     },
   },
   extraReducers: (bulder) => {
@@ -110,6 +116,6 @@ export const authUserSlice = createSlice({
 
 export const selectAuth = (state: RootState) => state.auth;
 
-export const { logout, changeName } = authUserSlice.actions;
+export const { logout, changeName, changeStatistic } = authUserSlice.actions;
 
 export default authUserSlice.reducer;

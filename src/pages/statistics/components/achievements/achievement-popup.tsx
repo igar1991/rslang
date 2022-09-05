@@ -1,16 +1,12 @@
 import { Backdrop, Box, Button, Typography } from '@mui/material';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDevice } from 'pages/hooks';
-import './achievements.css';
 import { useNavigate } from 'react-router-dom';
-
-interface PopupProps {
-  show: boolean;
-  handleCloseDialog: () => void;
-  title: string;
-  image: string;
-  description: string;
-}
+import { wordsAPI } from 'api/wordsService';
+import { useAppSelector } from 'redux/hooks';
+import { selectAuth } from 'redux/slices/authUserSlice';
+import { getRequestBody } from './utils';
+import './achievements.css';
 
 const headingByDeviceMap: Map<string, 'h4' | 'h5' | 'h6'> = new Map([
   ['desktop', 'h4'],
@@ -18,30 +14,98 @@ const headingByDeviceMap: Map<string, 'h4' | 'h5' | 'h6'> = new Map([
   ['mobile', 'h6'],
 ]);
 
-export const AchievementPopup = ({ show, handleCloseDialog, title, description, image }: PopupProps) => {
+export const AchievementPopup = () => {
   const device = useDevice();
   const navigate = useNavigate();
+
+  const { id: userId } = useAppSelector(selectAuth);
+
+  const { data: userStatistics } = wordsAPI.useGetUserStatisticsQuery(userId);
+  const [updateStatistics] = wordsAPI.useUpdateUserStatisticsMutation();
+
+  const [show, setShow] = useState(false);
+  const [image, setImage] = useState('');
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+
+  useEffect(() => {
+    if (userStatistics) {
+      const learnedWords = userStatistics.learnedWords;
+      const achievements = userStatistics.optional.achievements;
+
+      if (achievements.achievement1?.achieved && !achievements.achievement1.shown) {
+        setShow(true);
+        setImage(achievements.achievement1.img);
+        setTitle(achievements.achievement1.name);
+        setDescription(achievements.achievement1.description);
+
+        updateStatistics({
+          id: userId,
+          body: getRequestBody('achievement1', achievements.achievement1, 'shown', learnedWords, userStatistics),
+        });
+      }
+
+      if (learnedWords === 5) {
+        if (!achievements.achievement2?.achieved) {
+          updateStatistics({
+            id: userId,
+            body: getRequestBody('achievement2', achievements.achievement2, 'achieved', learnedWords, userStatistics),
+          });
+        }
+        if (achievements.achievement2?.achieved && !achievements.achievement2?.shown) {
+          setShow(true);
+          setImage(achievements.achievement2.img);
+          setTitle(achievements.achievement2.name);
+          setDescription(achievements.achievement2.description);
+
+          updateStatistics({
+            id: userId,
+            body: getRequestBody('achievement2', achievements.achievement2, 'shown', learnedWords, userStatistics),
+          });
+        }
+      }
+      if (learnedWords === 20) {
+        if (!achievements.achievement3?.achieved) {
+          updateStatistics({
+            id: userId,
+            body: getRequestBody('achievement3', achievements.achievement3, 'achieved', learnedWords, userStatistics),
+          });
+        }
+        if (achievements.achievement3?.achieved && !achievements.achievement3?.shown) {
+          setShow(true);
+          setImage(achievements.achievement3.img);
+          setTitle(achievements.achievement3.name);
+          setDescription(achievements.achievement3.description);
+
+          updateStatistics({
+            id: userId,
+            body: getRequestBody('achievement3', achievements.achievement3, 'shown', learnedWords, userStatistics),
+          });
+        }
+      }
+    }
+  }, [updateStatistics, userId, userStatistics]);
 
   const handleClick = useCallback(() => {
     navigate('/statistics');
   }, [navigate]);
 
+  const handleCloseDialog = () => {
+    setShow(false);
+  };
   return (
     <Backdrop
       sx={{
         color: '#fff',
         zIndex: (theme) => theme.zIndex.drawer + 1,
         backgroundColor: 'rgba(9,8,12,0.9)',
-        backdropFilter: 'blur(5px)'
+        backdropFilter: 'blur(5px)',
       }}
       open={show}
       onClick={handleCloseDialog}
       className='achievement-popup'
     >
-      <Typography
-        variant={headingByDeviceMap.get(device)}
-        className='achievement-popup-title'
-      >
+      <Typography variant={headingByDeviceMap.get(device)} className='achievement-popup-title'>
         You've unlocked a new achievement!
       </Typography>
       <Box className='achievement-details'>
@@ -51,12 +115,16 @@ export const AchievementPopup = ({ show, handleCloseDialog, title, description, 
           sx={{
             height: {
               xs: 100,
-              md: 200
-            }
+              md: 200,
+            },
           }}
         />
-        <Typography variant='h6' className='game-title achievement-popup-title'>{title}</Typography>
-        <Typography variant='body1' className='game-description achievement-popup-title'>{description}</Typography>
+        <Typography variant='h6' className='game-title achievement-popup-title'>
+          {title}
+        </Typography>
+        <Typography variant='body1' className='game-description achievement-popup-title'>
+          {description}
+        </Typography>
       </Box>
       <Button className='achievement-button' variant='contained' onClick={handleClick}>
         See my achievements

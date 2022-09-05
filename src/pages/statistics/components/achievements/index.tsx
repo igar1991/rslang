@@ -1,11 +1,11 @@
 import { Box, Typography } from '@mui/material';
-import './achievements.css';
 import { AchievementCard } from 'pages/statistics/components/achievements/achievement-card';
 import { wordsAPI } from 'api/wordsService';
 import { useAppSelector } from 'redux/hooks';
 import { selectAuth } from 'redux/slices/authUserSlice';
 import { useEffect, useState } from 'react';
 import { Achievement } from 'types/types';
+import './achievements.css';
 
 export const Achievements = () => {
   const { id } = useAppSelector(selectAuth);
