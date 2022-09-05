@@ -1,5 +1,8 @@
+import { AchievementPopup } from 'pages/statistics/components/achievements/achievement-popup';
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useAppSelector } from 'redux/hooks';
+import { selectAuth } from 'redux/slices/authUserSlice';
 import Authorization from './pages/components/authorization';
 import Footer from './pages/components/footer';
 import Header from './pages/components/header';
@@ -13,14 +16,13 @@ import Main from './pages/main';
 import Statistics from './pages/statistics';
 import Vocabulary from './pages/vocabulary';
 
-
-
 function App(): JSX.Element {
+  const { isAuth, createStatistic } = useAppSelector(selectAuth);
+
   const [registerModal, setRegisterModal] = useState(false);
   const [authorizationModal, setAuthorizationModal] = useState(false);
   const [profileModal, setProfileModal] = useState(false);
   const [message, setMessage] = useState<MessageType>({ show: false, text: '', severity: undefined });
-
 
   const openRegisterModal = () => setRegisterModal(true);
   const closeRegisterModal = () => setRegisterModal(false);
@@ -46,6 +48,7 @@ function App(): JSX.Element {
         <Authorization openRegisterModal={openRegisterModal} authorizationModal={authorizationModal} closeAuthorizationModal={closeAuthorizationModal} setMessage={setMessage} />
         <ProfileModal profileModal={profileModal} setProfileModal={setProfileModal} setMessage={setMessage} />
         <ModalMessage message={message} setMessage={setMessage} />
+        {isAuth && createStatistic && <AchievementPopup />}
         <Footer />
       </Router>
     </>

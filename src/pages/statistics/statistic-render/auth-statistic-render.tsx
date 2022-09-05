@@ -12,7 +12,7 @@ export default function AuthStatisticRender() {
   return (
     <>
       {isSuccess ? (
-        <StatisticsRender data={data} dataStatistic={dataStatistic}/>
+        <StatisticsRender data={data} dataStatistic={dataStatistic} />
       ) : (
         <Stack sx={{ color: 'grey.500' }} spacing={2} direction='row'>
           <CircularProgress color='secondary' />

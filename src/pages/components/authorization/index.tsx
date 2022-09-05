@@ -7,6 +7,8 @@ import Link from '@mui/material/Link';
 import { authAPI } from 'api/authService';
 import { MessageType } from '../modal-message';
 import FormInput, { ErrorsType, ValuesType } from '../form-input';
+import { useAppDispatch } from 'redux/hooks';
+import { changeStatistic } from 'redux/slices/authUserSlice';
 
 type InRegistrationType = {
   authorizationModal: boolean;
@@ -25,7 +27,9 @@ export default function Authorization({
   closeAuthorizationModal,
   openRegisterModal,
   setMessage,
-}: InRegistrationType): JSX.Element {
+}: InRegistrationType): JSX.Element { 
+  const dispatch = useAppDispatch();
+
   const [loginUser] = authAPI.useLoginUserMutation();
 
   const [values, setValues] = useState<ValuesType>({ email: '', pass: '' });
@@ -42,6 +46,7 @@ export default function Authorization({
         setMessage({ show: true, text: `Welcome ${authUser.data.name}!`, severity: 'success' });
         setValues({ email: '', pass: '' });
         closeAuthorizationModal();
+        dispatch(changeStatistic(true));
       }
       if ('error' in authUser) {
         let errorText = 'Unknown error. Try again';

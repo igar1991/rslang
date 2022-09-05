@@ -24,12 +24,14 @@ interface statData {
   };
 }
 
-export default function StatisticsRender({data, dataStatistic} : {data: UserWordData[] | undefined; dataStatistic: Statistics | undefined}) {
+type Props = {data: UserWordData[] | undefined; dataStatistic: Statistics | undefined}
+
+export default function StatisticsRender({data, dataStatistic} : Props) {
   const [categories, setСategories] = useState<Set<string>>();
   const [seriesNew, setSeriesNew] = useState<number[]>([]);
   const [seriesLearned, setSeriesNewLearned] = useState<number[]>([]);
   const [stat, setStat] = useState<statData>();
-  const { id, isAuth: isUserLoggedIn } = useAppSelector(selectAuth);
+  const { id, isAuth: isUserLoggedIn, createStatistic } = useAppSelector(selectAuth);
 
   const localStatistic = localStorage.getItem('localStatistic');
 
@@ -42,7 +44,7 @@ export default function StatisticsRender({data, dataStatistic} : {data: UserWord
       setStat(dataStatistic.optional.statToday);
     }
     if (localStatistic && !dataStatistic) setStat(JSON.parse(localStatistic));
-  }, [localStatistic]);
+  }, [dataStatistic, localStatistic]);
 
   const createFilter = (data: UserWordData[]) => {
     const dataFilter = data?.filter(
@@ -157,7 +159,7 @@ export default function StatisticsRender({data, dataStatistic} : {data: UserWord
           </Box>
         </Box>
       </div>
-      {isUserLoggedIn && <Achievements />}
+      {isUserLoggedIn && createStatistic && <Achievements />}
       <Typography
         sx={{ marginTop: '40px' }}
         variant='h4'

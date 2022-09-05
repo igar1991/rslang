@@ -4,7 +4,7 @@ import GemesAuthRender from '../components/auth-render';
 import SprintRender from './sprint-render';
 
 export default function Sprint() {
-  const { isAuth: isUserLoggedIn } = useAppSelector(selectAuth);
+  const { isAuth: isUserLoggedIn, createStatistic } = useAppSelector(selectAuth);
 
-  return <>{isUserLoggedIn ? <GemesAuthRender game='sprint' /> : <SprintRender learnedWords={[]} dataStatistic={null} />}</>;
+  return <>{isUserLoggedIn && createStatistic ? <GemesAuthRender game='sprint' /> : <SprintRender learnedWords={[]} dataStatistic={null} />}</>;
 }

@@ -4,14 +4,14 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 
+import { useAppDispatch } from 'redux/hooks';
+import { changeStatistic } from 'redux/slices/authUserSlice';
 import { authAPI } from 'api/authService';
+import { wordsAPI } from 'api/wordsService';
 import FormInput, { ErrorsType, ValuesType } from '../form-input';
 import { MessageType } from '../modal-message';
-
-import './registration.css';
 import { ACHIEVEMENTS } from 'pages/statistics/components/achievements/constants';
-import { wordsAPI } from 'api/wordsService';
-import { AchievementPopup } from 'pages/statistics/components/achievements/achievement-popup';
+import './registration.css';
 
 type InRegistrationType = {
   registerModal: boolean;
@@ -33,9 +33,10 @@ export default function Registration({
   openAuthorizationModal,
   setMessage
 }: InRegistrationType): JSX.Element {
+  const dispatch = useAppDispatch();
   const [createUser] = authAPI.useCreateUserMutation();
   const [loginUser] = authAPI.useLoginUserMutation();
-  const [createStatistics] = wordsAPI.useUpdateUserStatisticsMutation();
+  const [updateStatistics] = wordsAPI.useUpdateUserStatisticsMutation();
 
   const [values, setValues] = useState<ValuesType>({ name: '', email: '', pass: '', confirmPass: '' });
   const [errors, setErrors] = useState<ErrorsType>({
@@ -44,10 +45,6 @@ export default function Registration({
     pass: { error: false, message: ' ' },
     confirmPass: { error: false, message: ' ' }
   });
-  const [show, setShow] = useState(false);
-  const [achievementImage, setAchievementImage] = useState('');
-  const [achievementTitle, setAchievementTitle] = useState('');
-  const [achievementDescription, setAchievementDescription] = useState('');
 
   const onSubmitForm = async (ev: FormEvent) => {
     ev.preventDefault();
@@ -68,16 +65,13 @@ export default function Registration({
               [`achievement${index + 1}`]: achievement
             };
           }, {});
+
           const newDate = new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
-          createStatistics({
+          const stat = await updateStatistics({
             id: newUser.data.id,
             body: { learnedWords: 0, optional: { achievements: achievementsObj, statToday: {date: newDate, sprint:{rightAnswers:0,errorAnswers:0,newWords:0,series:0}, audioCall: {rightAnswers:0,errorAnswers:0,newWords:0,series:0}}, newWords: 0 } }
           });
-
-          setShow(true);
-          setAchievementImage(ACHIEVEMENTS[0].img);
-          setAchievementTitle(ACHIEVEMENTS[0].name);
-          setAchievementDescription(ACHIEVEMENTS[0].description);
+          if ('data' in stat) dispatch(changeStatistic(true));
         }
       }
 
@@ -135,19 +129,8 @@ export default function Registration({
     openAuthorizationModal();
   };
 
-  const handleCloseDialog = () => {
-    setShow(false);
-  };
-
   return (
     <>
-      <AchievementPopup
-        show={show}
-        handleCloseDialog={handleCloseDialog}
-        title={achievementTitle}
-        description={achievementDescription}
-        image={achievementImage}
-      />
       <Modal
         open={registerModal}
         onClose={onModalClose}
