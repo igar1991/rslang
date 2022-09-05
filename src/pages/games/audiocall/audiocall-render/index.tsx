@@ -6,13 +6,13 @@ import VolumeUpOutlinedIcon from '@mui/icons-material/VolumeUpOutlined';
 import { wordsAPI } from 'api/wordsService';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { selectGames, setPage } from 'redux/slices/gamesSlice';
-import { AggregatedWord, Word } from 'types/types';
+import { AggregatedWord, Statistics, Word } from 'types/types';
 import { API_BASE_URL } from 'api/api';
 import { Result, ResultsType } from 'pages/games/components/result/result';
 import { Background } from 'pages/games/components/background';
 
 import { POINTS, SERIES_LENGTH } from '../../constants';
-import { audioStartHandler, getArrayAudiocall } from '../../utils';
+import { audioStartHandler, getArrayAudiocall, updateStat } from '../../utils';
 import { selectAuth } from 'redux/slices/authUserSlice';
 import AnswerBtnAudioCall from '../answer-btn-audio-call';
 import LogInAnswerBtnAudioCall from '../login-answer-btn-audio-call';
@@ -24,10 +24,10 @@ type QuestionsType = {
   answers: { id: string; translate: string }[];
 };
 
-export default function AudioCallRender({ learnedWords }: { learnedWords: AggregatedWord[] }) {
+export default function AudioCallRender({ learnedWords, dataStatistic }: { learnedWords: AggregatedWord[]; dataStatistic: Statistics | null }) {
   const dispatch = useAppDispatch();
   const { page, group, fromVoc } = useAppSelector(selectGames);
-  const { isAuth: isUserLoggedIn } = useAppSelector(selectAuth);
+  const { isAuth: isUserLoggedIn, id } = useAppSelector(selectAuth);
 
   const { data } = wordsAPI.useGetWordsQuery({ page, group });
 
@@ -41,6 +41,7 @@ export default function AudioCallRender({ learnedWords }: { learnedWords: Aggreg
   const [curId, setCurId] = useState<number>(0);
   const [stage, setStage] = useState<string>('game');
   const [updateArr, setUpdateArr] = useState<boolean>(false);
+  const [updateUserStatistics] = wordsAPI.useUpdateUserStatisticsMutation();
 
   useEffect(() => {
     if (data) {
@@ -99,8 +100,12 @@ export default function AudioCallRender({ learnedWords }: { learnedWords: Aggreg
     if (arr.length < 20 && fromVoc && isUserLoggedIn) {
       if (page !== 0) dispatch(setPage(page - 1));
     }
-    if (curId === arr.length - 1) return setStage('result');
-    else audioStartHandler(arr[curId + 1].word.audio);
+    if (curId === arr.length - 1) {
+      if(isUserLoggedIn) {
+        updateStat('audioCall', longestSeries, answers , dataStatistic, id, updateUserStatistics, learnedWords.length);
+      }
+      return setStage('result');
+    } else audioStartHandler(arr[curId + 1].word.audio);
     setCurId(curId + 1);
   };
 

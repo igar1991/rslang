@@ -7,11 +7,12 @@ import StatisticsRender from '.';
 export default function AuthStatisticRender() {
   const { id } = useAppSelector(selectAuth);
   const { data, isSuccess } = wordsAPI.useGetUserWordsQuery(id);
+  const { data: dataStatistic } = wordsAPI.useGetUserStatisticsQuery(id);
 
   return (
     <>
       {isSuccess ? (
-        <StatisticsRender data={data} />
+        <StatisticsRender data={data} dataStatistic={dataStatistic}/>
       ) : (
         <Stack sx={{ color: 'grey.500' }} spacing={2} direction='row'>
           <CircularProgress color='secondary' />

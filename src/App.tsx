@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from 'redux/hooks';
-import { getNewTokenAsync, selectAuth } from 'redux/slices/authUserSlice';
 import Authorization from './pages/components/authorization';
 import Footer from './pages/components/footer';
 import Header from './pages/components/header';
@@ -31,16 +29,6 @@ function App(): JSX.Element {
   const closeAuthorizationModal = () => setAuthorizationModal(false);
 
   const openProfileModal = () => setProfileModal(true);
-
-  const { id, refreshToken} = useAppSelector(selectAuth);
-
-  const dispatch = useAppDispatch();
-
-  useEffect(()=>{
-    if(id !== '' && refreshToken) {
-      dispatch(getNewTokenAsync({ id, refreshToken}));
-    }
-  }, []);
 
   return (
     <>

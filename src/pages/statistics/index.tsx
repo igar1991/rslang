@@ -1,7 +1,7 @@
 import { useAppSelector } from 'redux/hooks';
 import { selectAuth } from 'redux/slices/authUserSlice';
-import { UserWordData } from 'types/types';
-import { Achievements } from 'pages/statistics/components/achievements';
+import AuthStatisticRender from './statistic-render/auth-statistic-render';
+import StatisticsRender from './statistic-render';
 
 export interface statData {
   date: string;
@@ -22,5 +22,5 @@ export interface statData {
 export default function Statistics() {
   const { isAuth: isUserLoggedIn } = useAppSelector(selectAuth);
 
-  return <>{isUserLoggedIn ? <AuthStatisticRender /> : <StatisticsRender data={undefined} />}</>;
+  return <>{isUserLoggedIn ? <AuthStatisticRender /> : <StatisticsRender data={undefined} dataStatistic={undefined} />}</>;
 }

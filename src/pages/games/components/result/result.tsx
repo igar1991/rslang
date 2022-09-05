@@ -1,18 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Box, Link } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Slide from '@mui/material/Slide';
-import { Word } from 'types/types';
+import { Statistics, Word } from 'types/types';
 
 import ResultList from 'pages/games/components/result/result-list';
 import 'pages/games/components/result/result.css';
 import { newLocalStatistic } from 'pages/games/utils';
-import { useAppSelector } from 'redux/hooks';
-import { selectAuth } from 'redux/slices/authUserSlice';
-import { wordsAPI } from 'api/wordsService';
 
 interface ResultAnswers {
   playAgain: () => void;
@@ -31,68 +28,6 @@ export const Result = ({ playAgain, answers, game, series }: ResultAnswers) => {
   const [showMore, setShowMore] = useState(false);
 
   const localStatistic = localStorage.getItem('localStatistic');
-
-  const { id } = useAppSelector(selectAuth);
-  const { data } = wordsAPI.useGetUserStatisticsQuery(id);
-  const [updateUserStatistics] = wordsAPI.useUpdateUserStatisticsMutation();
-
-  useEffect(()=>{
-    if (id) {
-      const newDate = new Date().toLocaleDateString('en-US', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-      });
-      if (data) {
-        if (data.optional.statToday?.date !== newDate) {
-          updateUserStatistics({
-            id: id,
-            body: {
-              learnedWords: data.learnedWords,
-              optional: {
-                ...data.optional,
-                statToday: {
-                  ...data.optional.statToday,
-                  date: newDate,
-                  [game]: {
-                    rightAnswers: answers.right.length,
-                    errorAnswers: answers.errors.length,
-                    newWords: answers.new.length,
-                    series: series,
-                  },
-                },
-              },
-            },
-          });
-        } else {
-          const statGame = data.optional.statToday[game];
-          
-          const newStatGame = {
-            rightAnswers: statGame.rightAnswers + answers.right.length,
-            errorAnswers: statGame.errorAnswers + answers.errors.length,
-            newWords: statGame.newWords + answers.new.length,
-            series: statGame.series > series ? statGame.series : series,
-          };
-          updateUserStatistics({
-            id: id,
-            body: {
-              learnedWords: data.learnedWords,
-              optional: {
-                ...data.optional,
-                statToday: {
-                  ...data.optional.statToday,
-                  date: newDate,
-                  [game]: {
-                    ...newStatGame
-                  },
-                },
-              },
-            },
-          });
-        }
-      }
-    }
-  },[id]);
 
   if (localStatistic) {
     const statistic = JSON.parse(localStatistic);

@@ -73,8 +73,8 @@ export interface Statistics {
       achievement5?: Achievement;
       achievement6?: Achievement;
     };
-    newWordsCounter?: number;
-    statToday: statData
+    statToday: statData;
+    newWords: number
   }
 }
 
