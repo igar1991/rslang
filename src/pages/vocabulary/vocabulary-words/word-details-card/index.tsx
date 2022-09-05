@@ -10,15 +10,22 @@ import { selectAuth } from 'redux/slices/authUserSlice';
 import { useCallback, useEffect, useState } from 'react';
 import { Achievement, UserWordData } from 'types/types';
 import { DetailsCardStatistics } from 'pages/vocabulary/vocabulary-words/word-details-card/word-statistics';
-import { useDevice, useLearnedWordsData } from 'pages/hooks';
+import { useDevice } from 'pages/hooks';
 import './word-details-card.css';
 import { AchievementPopup } from 'pages/statistics/components/achievements/achievement-popup';
 
-export const WordDetailsCard = () => {
-  const device = useDevice();
-  const data = useLearnedWordsData();
+interface Props {
+  data: AggregatedWord[] | undefined;
+  usersWords: UserWordData[] | undefined;
+}
+
+export const WordDetailsCard = ({data, usersWords}: Props) => {
   const { isAuth: isUserLoggedIn, id: userId } = useAppSelector(selectAuth);
   const { selectedWordColor, selectedWordId } = useAppSelector(selectWords);
+  
+  const device = useDevice();
+
+  const device = useDevice();
 
   const { data: word, isSuccess: isWordLoaded } = wordsAPI.useGetWordByIdQuery(selectedWordId);
   const { data: usersWords, isSuccess: isUserWordsLoaded } = wordsAPI.useGetUserWordsQuery(userId);
@@ -66,7 +73,7 @@ export const WordDetailsCard = () => {
     setShow(false);
   };
 
-  const usersHardWordsIds = isUserWordsLoaded ? usersWords
+  const usersHardWordsIds = usersWords ? usersWords
     .reduce((acc, word) => {
       if (word.difficulty === DIFFICULTY.HARD) {
         acc.push(word.wordId);
@@ -75,7 +82,7 @@ export const WordDetailsCard = () => {
       return acc;
     }, [] as string[]) : [];
 
-  const usersLearnedWordsIds = isUserWordsLoaded ? usersWords
+  const usersLearnedWordsIds = usersWords ? usersWords
     .reduce((acc, word) => {
       if (word.optional.learned) {
         acc.push(word.wordId);
@@ -87,7 +94,7 @@ export const WordDetailsCard = () => {
   const [addUserWord] = wordsAPI.useAddUserWordMutation();
   const [updateUserWord, { isLoading: isUpdating }] = wordsAPI.useUpdateUserWordMutation();
 
-  const isNeedToCreate = word && isUserWordsLoaded && !usersWords.map(({ wordId }) => wordId).includes(word.id);
+  const isNeedToCreate = word && usersWords && !usersWords.map(({ wordId }) => wordId).includes(word.id);
   const isHardWord = word && usersHardWordsIds.includes(word.id);
   const isLearnedWord = word && usersLearnedWordsIds.includes(word.id);
   const currentWord = word && usersWords?.find((userWord) => userWord.wordId === word.id) as UserWordData;

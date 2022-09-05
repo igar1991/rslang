@@ -1,14 +1,17 @@
 import { Box, Button } from '@mui/material';
-import './game-card.css';
 import { CardDescription } from './card-description';
-import { useDevice, useLearnedWordsData } from 'pages/hooks';
+import { useDevice } from 'pages/hooks';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { useNavigate } from 'react-router-dom';
 import { setFromVoc, setGroup, setPage } from 'redux/slices/gamesSlice';
 import { selectWords } from 'redux/slices/wordsSlice';
 import { selectAuth } from 'redux/slices/authUserSlice';
+import { AggregatedWord } from 'types/types';
+
+import './game-card.css';
 
 interface Props {
+  data: false | AggregatedWord[] | undefined;
   img: string;
   title: string;
   description: string;
@@ -21,14 +24,13 @@ const buttonSizeByDevice: Map<string, 'medium' | 'small'> = new Map([
   ['mobile', 'small']
 ]);
 
-export const GameCard = ({ img, title, description, url }: Props) => {
+export const GameCard = ({ data, img, title, description, url }: Props) => {
+  const { page, group } = useAppSelector(selectWords);
+  const { isAuth } = useAppSelector(selectAuth);
+  
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const device = useDevice();
-  const data = useLearnedWordsData();
-
-  const { page, group } = useAppSelector(selectWords);
-  const { isAuth } = useAppSelector(selectAuth);
 
   const onStartGame = () => {
     dispatch(setPage(page));
