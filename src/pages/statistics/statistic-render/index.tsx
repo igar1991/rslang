@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { useAppSelector } from 'redux/hooks';
 import { selectAuth } from 'redux/slices/authUserSlice';
-import { UserWordData } from 'types/types';
+import { Statistics, UserWordData } from 'types/types';
 import { Achievements } from 'pages/statistics/components/achievements';
 import '../statistics.css';
 
@@ -24,7 +24,7 @@ interface statData {
   };
 }
 
-export default function StatisticsRender({data} : {data: UserWordData[] | undefined}) {
+export default function StatisticsRender({data, dataStatistic} : {data: UserWordData[] | undefined; dataStatistic: Statistics | undefined}) {
   const [categories, setСategories] = useState<Set<string>>();
   const [seriesNew, setSeriesNew] = useState<number[]>([]);
   const [seriesLearned, setSeriesNewLearned] = useState<number[]>([]);
@@ -38,7 +38,10 @@ export default function StatisticsRender({data} : {data: UserWordData[] | undefi
   }, [data]);
 
   useEffect(() => {
-    if (localStatistic) setStat(JSON.parse(localStatistic));
+    if(dataStatistic) {
+      setStat(dataStatistic.optional.statToday);
+    }
+    if (localStatistic && !dataStatistic) setStat(JSON.parse(localStatistic));
   }, [localStatistic]);
 
   const createFilter = (data: UserWordData[]) => {
@@ -96,7 +99,7 @@ export default function StatisticsRender({data} : {data: UserWordData[] | undefi
     (stat?.sprint ? stat.sprint?.newWords : 0) + (stat?.audioCall ? stat.audioCall?.newWords : 0);
 
   const precentWord = (trueAns: number, wrongAns: number) =>
-    Math.floor((trueAns * 100) / (trueAns + wrongAns));
+    (trueAns + wrongAns === 0) ? 0 : Math.floor((trueAns * 100) / (trueAns + wrongAns));
 
   return (
     <Container className='container'>

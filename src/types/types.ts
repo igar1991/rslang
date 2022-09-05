@@ -1,3 +1,5 @@
+import { statData } from 'pages/statistics';
+
 interface WordDetails {
   group: number;
   page: number;
@@ -71,7 +73,8 @@ export interface Statistics {
       achievement5?: Achievement;
       achievement6?: Achievement;
     };
-    newWordsCounter?: number;
+    statToday: statData;
+    newWords: number
   }
 }
 

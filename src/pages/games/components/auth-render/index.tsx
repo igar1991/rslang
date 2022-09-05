@@ -13,14 +13,15 @@ export default function GemesAuthRender({ game }: { game: string }) {
     wordsPerPage: WORDS_PER_PAGE,
     filter: '{"userWord.optional.learned":true}',
   });
+  const { data: dataStatistic } = wordsAPI.useGetUserStatisticsQuery(id);
 
   return (
     <>
       {learnedWords ? (
         game === 'audioCall' ? (
-          <AudioCallRender learnedWords={learnedWords[0].paginatedResults} />
+          <AudioCallRender learnedWords={learnedWords[0].paginatedResults} dataStatistic={dataStatistic ?? null}/>
         ) : (
-          <SprintRender learnedWords={learnedWords[0].paginatedResults} />
+          <SprintRender learnedWords={learnedWords[0].paginatedResults} dataStatistic={dataStatistic ?? null}/>
         )
       ) : (
         <Stack sx={{ color: 'grey.500' }} spacing={2} direction='row'>

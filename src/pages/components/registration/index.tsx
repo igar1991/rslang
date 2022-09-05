@@ -68,10 +68,10 @@ export default function Registration({
               [`achievement${index + 1}`]: achievement
             };
           }, {});
-
+          const newDate = new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
           createStatistics({
             id: newUser.data.id,
-            body: { learnedWords: 0, optional: { achievements: achievementsObj } }
+            body: { learnedWords: 0, optional: { achievements: achievementsObj, statToday: {date: newDate, sprint:{rightAnswers:0,errorAnswers:0,newWords:0,series:0}, audioCall: {rightAnswers:0,errorAnswers:0,newWords:0,series:0}}, newWords: 0 } }
           });
 
           setShow(true);

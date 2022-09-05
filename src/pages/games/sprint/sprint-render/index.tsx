@@ -6,13 +6,13 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { setPage, selectGames } from 'redux/slices/gamesSlice';
 import { wordsAPI } from 'api/wordsService';
-import { AggregatedWord, Word } from 'types/types';
+import { AggregatedWord, Statistics, Word } from 'types/types';
 import { Result, ResultsType } from 'pages/games/components/result/result';
 import { Background } from 'pages/games/components/background';
 
 import 'pages/games/sprint/sprint.css';
 import { POINTS, SERIES_LENGTH, SPRINT_SECONDS } from '../../constants';
-import { getArraySprint } from '../../utils';
+import { getArraySprint, updateStat } from '../../utils';
 import { selectAuth } from 'redux/slices/authUserSlice';
 import LogInAnswerBtnSprint from '../login-answer-btn-sprint';
 import AnswerBtnSprint from '../answer-btn-sprint';
@@ -23,10 +23,10 @@ export type QuestionsType = {
   translate: string;
 };
 
-export default function SprintRender({ learnedWords }: { learnedWords: AggregatedWord[] }) {
+export default function SprintRender({ learnedWords, dataStatistic }: { learnedWords: AggregatedWord[]; dataStatistic: Statistics | null }) {
   const dispatch = useAppDispatch();
   const { page, group, fromVoc } = useAppSelector(selectGames);
-  const { isAuth: isUserLoggedIn } = useAppSelector(selectAuth);
+  const { isAuth: isUserLoggedIn, id } = useAppSelector(selectAuth);
 
   const { data } = wordsAPI.useGetWordsQuery({ page, group });
 
@@ -39,6 +39,7 @@ export default function SprintRender({ learnedWords }: { learnedWords: Aggregate
   const [longestSeries, setLongestSeries] = useState<number>(0);
   const [curId, setCurId] = useState<number>(0);
   const [stage, setStage] = useState<string>('game');
+  const [updateUserStatistics] = wordsAPI.useUpdateUserStatisticsMutation();
 
   useEffect(() => {
     if (data) {
@@ -61,7 +62,11 @@ export default function SprintRender({ learnedWords }: { learnedWords: Aggregate
         setSeconds(seconds - 1);
       } else {
         clearInterval(myInterval);
+        if(isUserLoggedIn) {
+          updateStat('sprint', longestSeries, answers , dataStatistic, id, updateUserStatistics, learnedWords.length);
+        }
         setStage('result');
+        
       }
     }, 1000);
     return () => {
@@ -85,13 +90,18 @@ export default function SprintRender({ learnedWords }: { learnedWords: Aggregate
   }, [arr, dispatch, fromVoc]);
 
   const nextQestion = useCallback(() => {
-    if (curId === arr.length - 1) return setStage('result');
+    if (curId === arr.length - 1) {
+      if(isUserLoggedIn) {
+        updateStat('sprint', longestSeries, answers , dataStatistic, id, updateUserStatistics, learnedWords.length);
+      }
+      return setStage('result');
+    }
     if (curId > arr.length - 5) {
       if (fromVoc && page != 0) dispatch(setPage(page - 1));
       if (!fromVoc) dispatch(setPage(page === 0 ? 30 : page - 1));
     }
     setCurId(curId + 1);
-  }, [arr, curId, dispatch, fromVoc, page]);
+  }, [answers, arr.length, curId, dataStatistic, dispatch, fromVoc, id, isUserLoggedIn, learnedWords.length, longestSeries, page, updateUserStatistics]);
 
   const rightAnswer = useCallback(
     (isNew = true) => {

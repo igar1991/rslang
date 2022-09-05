@@ -1,5 +1,5 @@
 import { API_BASE_URL } from 'api/api';
-import { UserWordData, Word } from 'types/types';
+import { Statistics, UserWordData, Word } from 'types/types';
 import { AUDIOCALL_ANSWERS } from '../constants';
 import { DIFFICULTY } from 'pages/vocabulary/vocabulary-words/constants';
 
@@ -74,7 +74,7 @@ export const getArraySprint = (data: Word[]) => {
 };
 
 export const newLocalStatistic = (
-  game: string,
+  game: 'sprint' | 'audioCall',
   series: number,
   answers: { right: Word[]; errors: Word[]; new: Word[] }
 ) => {
@@ -88,4 +88,70 @@ export const newLocalStatistic = (
     }
   };
   localStorage.setItem('localStatistic', JSON.stringify(statistic));
+};
+
+export const updateStat = (  game: 'sprint' | 'audioCall',
+  series: number,
+  answers: { right: Word[]; errors: Word[]; new: Word[] },
+  dataStatistic: Statistics | null,
+  id: string,
+  updateUserStatistics: ({id, body}: {id: string; body: Statistics})=>void,
+  countLearned: number
+)=>{
+  
+  const newDate = new Date().toLocaleDateString('en-US', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
+  if(dataStatistic) {
+    if (dataStatistic.optional.statToday?.date !== newDate) {
+      updateUserStatistics({
+        id: id,
+        body: {
+          learnedWords: countLearned,
+          optional: {
+            ...dataStatistic.optional,
+            statToday: {
+              ...dataStatistic.optional.statToday,
+              date: newDate,
+              [game]: {
+                rightAnswers: answers.right.length,
+                errorAnswers: answers.errors.length,
+                newWords: answers.new.length,
+                series: series,
+              },
+            },
+            newWords: dataStatistic.optional.newWords + answers.new.length
+          },
+        },
+      });
+    } else {
+      const statGame = dataStatistic.optional.statToday[game];
+          
+      const newStatGame = {
+        rightAnswers: statGame.rightAnswers + answers.right.length,
+        errorAnswers: statGame.errorAnswers + answers.errors.length,
+        newWords: statGame.newWords + answers.new.length,
+        series: statGame.series > series ? statGame.series : series,
+      };
+      updateUserStatistics({
+        id: id,
+        body: {
+          learnedWords: dataStatistic.learnedWords,
+          optional: {
+            ...dataStatistic.optional,
+            statToday: {
+              ...dataStatistic.optional.statToday,
+              date: newDate,
+              [game]: {
+                ...newStatGame
+              },
+            },
+            newWords: dataStatistic.optional.newWords + answers.new.length
+          },
+        },
+      });
+    }
+  }
 };
