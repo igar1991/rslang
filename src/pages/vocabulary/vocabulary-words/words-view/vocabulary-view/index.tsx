@@ -6,6 +6,10 @@ import { setGroup } from 'redux/slices/wordsSlice';
 import { WordsLevels } from '../words-levels';
 import { WordDetailsCard } from '../../word-details-card';
 import { WordsList } from '../words-list';
+import { useAppSelector } from 'redux/hooks';
+import { selectAuth } from 'redux/slices/authUserSlice';
+import { AuthWordList } from '../words-list/auth-word-list';
+import { AuthWordDetailsCard } from '../../word-details-card/auth-word-details-card';
 import '../words-view.css';
 
 interface ViewProps {
@@ -14,33 +18,44 @@ interface ViewProps {
 
 export const VocabularyView = ({ isMobile }: ViewProps) => {
   const { data, isSuccess } = useVocabularyWordsData();
+  const { isAuth } = useAppSelector(selectAuth);
 
   const dispatch = useDispatch();
-  const onClickHandler = useCallback((group: number) => {
-    dispatch(setGroup(group));
-  }, [dispatch]);
+  const onClickHandler = useCallback(
+    (group: number) => {
+      dispatch(setGroup(group));
+    },
+    [dispatch]
+  );
 
   return isSuccess ? (
     <Box className='words'>
       {isMobile ? (
         <>
           <WordsLevels onClickHandler={onClickHandler} />
-          <WordDetailsCard />
-          <WordsList
-            data={data}
-            isSuccess={isSuccess}
-          />
+          {isAuth ? (
+            <>
+              <AuthWordDetailsCard />
+              <AuthWordList data={data} isSuccess={isSuccess} />
+            </>
+          ) : (
+            <>
+              <WordDetailsCard data={undefined} usersWords={undefined} userStatistics={undefined} />
+              <WordsList data={data} isSuccess={isSuccess} usersWords={undefined} />
+            </>
+          )}
         </>
       ) : (
         <>
           <Box className='words__words-column'>
             <WordsLevels onClickHandler={onClickHandler} />
-            <WordsList
-              data={data}
-              isSuccess={isSuccess}
-            />
+            {isAuth ? (
+              <AuthWordList data={data} isSuccess={isSuccess} />
+            ) : (
+              <WordsList data={data} isSuccess={isSuccess} usersWords={undefined} />
+            )}
           </Box>
-          <WordDetailsCard />
+          {isAuth ? <AuthWordDetailsCard /> : <WordDetailsCard data={undefined} usersWords={undefined} userStatistics={undefined} />}
         </>
       )}
     </Box>

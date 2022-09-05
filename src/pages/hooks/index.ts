@@ -43,16 +43,20 @@ export const useLearnedWordsData = () => {
   const { id } = useAppSelector(selectAuth);
   const { page, group } = useAppSelector(selectWords);
 
+  const { data: usersWords, isSuccess: isUserWordsLoaded } = wordsAPI.useGetUserWordsQuery(id);
+  const { data: userStatistics, isSuccess } = wordsAPI.useGetUserStatisticsQuery(id);
+
   const { data } = wordsAPI.useGetAllAggregatedWordsQuery({
     id,
     wordsPerPage: WORDS_PER_PAGE,
     filter: '{"userWord.optional.learned":true}',
   });
 
-  const filteredData = data && data[0].paginatedResults.filter(({
-    page: wordPage,
-    group: wordGroup
-  }) => wordPage === page && wordGroup === group);
+  const filteredData =
+    data &&
+    isUserWordsLoaded &&
+    isSuccess &&
+    data[0].paginatedResults.filter(({ page: wordPage, group: wordGroup }) => wordPage === page && wordGroup === group);
 
-  return filteredData;
+  return { data: filteredData, usersWords: usersWords, userStatistics: userStatistics };
 };

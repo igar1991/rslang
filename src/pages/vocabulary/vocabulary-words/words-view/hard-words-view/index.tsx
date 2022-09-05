@@ -1,10 +1,10 @@
 import { Box } from '@mui/material';
-import { WordDetailsCard } from '../../word-details-card';
 import { WordsList } from '../words-list';
 import { wordsAPI } from 'api/wordsService';
 import { useAppSelector } from 'redux/hooks';
 import { selectAuth } from 'redux/slices/authUserSlice';
 import { WORDS_PER_PAGE } from '../../constants';
+import { AuthWordDetailsCard } from '../../word-details-card/auth-word-details-card';
 import '../words-view.css';
 
 interface ViewProps {
@@ -16,18 +16,18 @@ export const HardWordsView = ({ isMobile }: ViewProps) => {
   const { data, isSuccess } = wordsAPI.useGetAllAggregatedWordsQuery({
     id: userId,
     wordsPerPage: WORDS_PER_PAGE,
-    filter: '{"userWord.difficulty":"hard"}'
+    filter: '{"userWord.difficulty":"hard"}',
   });
-
   return isSuccess ? (
     <Box className='words'>
       {isMobile ? (
         <>
-          <WordDetailsCard />
+          <AuthWordDetailsCard />
           <WordsList
             data={data[0].paginatedResults.map((word) => ({ ...word, id: word._id }))}
             isSuccess={isSuccess}
             hardView
+            usersWords={[]}
           />
         </>
       ) : (
@@ -37,9 +37,10 @@ export const HardWordsView = ({ isMobile }: ViewProps) => {
               data={data[0].paginatedResults.map((word) => ({ ...word, id: word._id }))}
               isSuccess={isSuccess}
               hardView
+              usersWords={[]}
             />
           </Box>
-          <WordDetailsCard />
+          <AuthWordDetailsCard />
         </>
       )}
     </Box>
