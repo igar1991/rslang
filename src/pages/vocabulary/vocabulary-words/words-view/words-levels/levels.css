@@ -1,0 +1,20 @@
+.words__levels {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+Button.level-button {
+  flex-grow: 1;
+}
+
+@media (max-width: 600px) {
+  .words__levels {
+    flex-wrap: wrap;
+  }
+
+  Button.level-button {
+    padding: 0.3rem 2.5rem;
+  }
+}

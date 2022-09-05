@@ -1,0 +1,71 @@
+.word__details-card {
+  background-color: white;
+  border-radius: 5px;
+  padding: 1.3rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 1rem;
+
+  transition: 2s ease;
+}
+
+div.word__details-card.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.word__details-card-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 1rem;
+  flex: 1;
+  width: 100%;
+}
+
+img.word__details-card_image {
+  height: 210px;
+  width: 210px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.word__details-card-buttons-group {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  column-gap: 0.3rem;
+}
+
+Button.details-card-button {
+  box-shadow: none;
+  border-radius: 20px;
+  font-size: 10px;
+}
+
+.word__details-card_statistics{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  align-self: flex-end;
+  justify-self: flex-end;
+}
+
+.word__details-card_statistics-details {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  column-gap: 0.5rem;
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  img.word__details-card_image {
+    height: 160px;
+    width: 160px;
+  }
+}

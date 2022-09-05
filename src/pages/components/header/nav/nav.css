@@ -1,0 +1,29 @@
+.nav {
+  display: flex;
+  padding: 0 25px;
+  gap: 23px;
+  align-items: center;
+  border-right: 1px solid var(--lightOtherDividerColor);
+}
+
+.nav__item {
+  color: var(--lightTextPrimaryColor);
+  font-weight: 500;
+  font-size: 14px;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: all .3s;
+}
+
+.nav__item:hover {
+  color: var(--lightSecondaryMainColor);
+}
+
+.nav__active-item {
+  border-color: var(--lightSecondaryMainColor);
+  cursor: default;
+}
+
+.nav__active-item:hover {
+  color: var(--lightTextPrimaryColor);
+}

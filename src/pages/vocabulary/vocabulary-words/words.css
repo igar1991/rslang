@@ -1,0 +1,5 @@
+.vocabulary__words-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

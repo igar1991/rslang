@@ -1,0 +1,31 @@
+.word__details-card_description {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.details-card_description-title {
+  display: flex;
+  align-items: center;
+  column-gap: 0.2rem;
+}
+
+.word__details-card_description-info {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.5rem;
+}
+
+h5.word-title {
+  font-weight: 700;
+}
+
+p.word-subtitle {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.word-transcription {
+  color: var(--lightTextSecondaryColor);
+}

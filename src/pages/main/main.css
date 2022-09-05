@@ -1,0 +1,40 @@
+.main {
+  background: url("data:image/svg+xml,%3Csvg width='2560' height='840' viewBox='0 0 1280 420' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M-208.732 142.218C-208.732 296.544 -227.531 230.673 -120.375 174.212C-13.2182 117.752 107.098 346.732 319.531 245.729C531.963 144.727 672.959 110.224 849.673 110.224C1024.51 110.224 1195.58 185.505 1289.58 277.724C1383.58 369.943 1377.94 512.977 1377.94 332.303C1377.94 151.628 1377.94 -0.815989 1377.94 -0.815989H1289.58C1201.22 -0.815989 1024.51 -0.815989 849.673 -0.815989C672.959 -0.815989 496.245 -0.815989 319.531 -0.815989C144.696 -0.815989 -32.0176 -0.815989 -120.375 -0.815989H-208.732C-208.732 -0.815989 -208.732 -12.1081 -208.732 142.218Z' fill='%23F9F9F9'/%3E%3C/svg%3E%0A"),
+  url("data:image/svg+xml,%3Csvg width='2560' height='840' viewBox='0 0 1280 420' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M-50.7317 277.782C-50.7317 123.456 -69.5311 189.327 37.6254 245.788C144.782 302.248 265.098 73.2684 477.531 174.271C689.963 275.273 830.959 309.776 1007.67 309.776C1182.51 309.776 1353.58 234.495 1447.58 142.276C1541.58 50.0568 1535.94 -92.9772 1535.94 87.6973C1535.94 268.372 1535.94 420.816 1535.94 420.816H1447.58C1359.22 420.816 1182.51 420.816 1007.67 420.816C830.959 420.816 654.245 420.816 477.531 420.816C302.696 420.816 125.982 420.816 37.6254 420.816H-50.7317C-50.7317 420.816 -50.7317 432.108 -50.7317 277.782Z' fill='%23F9F9F9'/%3E%3C/svg%3E%0A");
+  background-repeat: no-repeat, no-repeat;
+  background-position: 50% 70%, 50% 0;
+  background-size: auto, auto;
+}
+
+.section {
+  margin-top: 100px !important;
+}
+
+.section-title {
+  font-size: 34px;
+  font-weight: 400;
+  line-height: 123.5%;
+  text-align: center;
+  letter-spacing: 0.25px;
+  color: var(--lightTextSecondaryColor);
+}
+
+@media (max-width: 900px) {
+  .section-title {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .main {
+    background-position: 50% 40%, 60% 5%;
+  }
+
+  .section {
+    margin-top: 60px !important;
+  }
+
+  .section-title {
+    font-size: 20px;
+  }
+}

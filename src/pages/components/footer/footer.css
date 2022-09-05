@@ -1,0 +1,53 @@
+.footer {
+  display: flex;
+  padding: 20px;
+  justify-items: end;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.footer__rs {
+  height: 40px;
+  opacity: 0.1;
+  transition: all .3s;
+}
+
+.footer__git-links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.footer__git-link,
+.footer__git-text {
+  font-size: 14px;
+  line-height: 166%;
+  letter-spacing: 0.4px;
+  text-decoration: none !important;
+  color: var(--lightTextSecondaryShadesColor) !important;
+  transition: all .3s;
+}
+
+.footer__git-link:hover,
+.footer__rs:hover {
+  transform: scale(1.2);
+}
+
+@media (max-width: 600px) {
+  .footer {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footer__rs {
+    height: 30px;
+  }
+
+  .footer__git-links {
+    gap: 10px;
+  }
+
+  .footer__git-link  {
+    font-size: 12px;
+  }
+}
