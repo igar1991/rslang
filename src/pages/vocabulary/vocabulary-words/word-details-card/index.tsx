@@ -8,28 +8,25 @@ import { useAppSelector } from 'redux/hooks';
 import { DIFFICULTY } from '../constants';
 import { selectAuth } from 'redux/slices/authUserSlice';
 import { useCallback, useEffect, useState } from 'react';
-import { Achievement, UserWordData } from 'types/types';
+import { Achievement, AggregatedWord, Statistics, UserWordData } from 'types/types';
 import { DetailsCardStatistics } from 'pages/vocabulary/vocabulary-words/word-details-card/word-statistics';
 import { useDevice } from 'pages/hooks';
-import './word-details-card.css';
 import { AchievementPopup } from 'pages/statistics/components/achievements/achievement-popup';
+import './word-details-card.css';
 
 interface Props {
   data: AggregatedWord[] | undefined;
   usersWords: UserWordData[] | undefined;
+  userStatistics: Statistics | undefined
 }
 
-export const WordDetailsCard = ({data, usersWords}: Props) => {
+export const WordDetailsCard = ({data, usersWords, userStatistics}: Props) => {
   const { isAuth: isUserLoggedIn, id: userId } = useAppSelector(selectAuth);
   const { selectedWordColor, selectedWordId } = useAppSelector(selectWords);
   
   const device = useDevice();
 
-  const device = useDevice();
-
   const { data: word, isSuccess: isWordLoaded } = wordsAPI.useGetWordByIdQuery(selectedWordId);
-  const { data: usersWords, isSuccess: isUserWordsLoaded } = wordsAPI.useGetUserWordsQuery(userId);
-  const { data: userStatistics } = wordsAPI.useGetUserStatisticsQuery(userId);
   const [createStatistics] = wordsAPI.useUpdateUserStatisticsMutation();
 
   const [learnedWordsCount, setLearnedWordsCount] = useState(0);

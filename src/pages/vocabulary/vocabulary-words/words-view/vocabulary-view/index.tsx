@@ -8,9 +8,9 @@ import { WordDetailsCard } from '../../word-details-card';
 import { WordsList } from '../words-list';
 import { useAppSelector } from 'redux/hooks';
 import { selectAuth } from 'redux/slices/authUserSlice';
-import '../words-view.css';
 import { AuthWordList } from '../words-list/auth-word-list';
 import { AuthWordDetailsCard } from '../../word-details-card/auth-word-details-card';
+import '../words-view.css';
 
 interface ViewProps {
   isMobile: boolean;
@@ -40,8 +40,8 @@ export const VocabularyView = ({ isMobile }: ViewProps) => {
             </>
           ) : (
             <>
-              <WordDetailsCard data={[]} usersWords={[]} />
-              <WordsList data={data} isSuccess={isSuccess} usersWords={[]} />
+              <WordDetailsCard data={undefined} usersWords={undefined} userStatistics={undefined} />
+              <WordsList data={data} isSuccess={isSuccess} usersWords={undefined} />
             </>
           )}
         </>
@@ -52,10 +52,10 @@ export const VocabularyView = ({ isMobile }: ViewProps) => {
             {isAuth ? (
               <AuthWordList data={data} isSuccess={isSuccess} />
             ) : (
-              <WordsList data={data} isSuccess={isSuccess} usersWords={[]} />
+              <WordsList data={data} isSuccess={isSuccess} usersWords={undefined} />
             )}
           </Box>
-          {isAuth ? <AuthWordDetailsCard /> : <WordDetailsCard data={[]} usersWords={[]} />}
+          {isAuth ? <AuthWordDetailsCard /> : <WordDetailsCard data={undefined} usersWords={undefined} userStatistics={undefined} />}
         </>
       )}
     </Box>

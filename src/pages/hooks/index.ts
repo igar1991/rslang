@@ -42,8 +42,9 @@ export const useGroupColor = () => {
 export const useLearnedWordsData = () => {
   const { id } = useAppSelector(selectAuth);
   const { page, group } = useAppSelector(selectWords);
-  
+
   const { data: usersWords, isSuccess: isUserWordsLoaded } = wordsAPI.useGetUserWordsQuery(id);
+  const { data: userStatistics, isSuccess } = wordsAPI.useGetUserStatisticsQuery(id);
 
   const { data } = wordsAPI.useGetAllAggregatedWordsQuery({
     id,
@@ -54,7 +55,8 @@ export const useLearnedWordsData = () => {
   const filteredData =
     data &&
     isUserWordsLoaded &&
+    isSuccess &&
     data[0].paginatedResults.filter(({ page: wordPage, group: wordGroup }) => wordPage === page && wordGroup === group);
 
-  return { data: filteredData, usersWords: usersWords };
+  return { data: filteredData, usersWords: usersWords, userStatistics: userStatistics };
 };
